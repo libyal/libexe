@@ -437,7 +437,7 @@ int libexe_check_file_signature_file_io_handle(
 		}
 	}
 	if( memory_compare(
-	     exe_mz_file_signature,
+	     exe_mz_signature,
 	     signature,
 	     2 ) == 0 )
 	{

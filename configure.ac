@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20111018],
+ [20111019],
  [jbmetz@users.sourceforge.net])
 
 AC_CONFIG_SRCDIR(
@@ -57,6 +57,9 @@ AX_LIBUNA_CHECK_ENABLE
 
 dnl Check for enabling libbfio for basic file IO support
 AX_LIBBFIO_CHECK_ENABLE
+
+dnl Check for enabling libfdatetime for file date and time support
+AX_LIBFDATETIME_CHECK_ENABLE
 
 dnl Check if exetools should be build as static executables
 AX_COMMON_CHECK_ENABLE_STATIC_EXECUTABLES
@@ -118,6 +121,7 @@ AC_CONFIG_FILES([liberror/Makefile])
 AC_CONFIG_FILES([libnotify/Makefile])
 AC_CONFIG_FILES([libuna/Makefile])
 AC_CONFIG_FILES([libbfio/Makefile])
+AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libexe/Makefile])
 AC_CONFIG_FILES([libsystem/Makefile])
 AC_CONFIG_FILES([exetools/Makefile])
@@ -150,6 +154,7 @@ AC_MSG_NOTICE([
 Building:
    libuna support:                           $ac_cv_libuna
    libbfio support:                          $ac_cv_libbfio
+   libfdatetime support:                     $ac_cv_libfdatetime
 
 Features:
    Wide character type support:              $ac_cv_enable_wide_character_type

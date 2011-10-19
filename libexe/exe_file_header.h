@@ -29,12 +29,12 @@
 extern "C" {
 #endif
 
-typedef struct exe_mz_file_header exe_mz_file_header_t;
+typedef struct exe_mz_header exe_mz_header_t;
 
-struct exe_mz_file_header
+struct exe_mz_header
 {
 	/* Signature
-	 * Consists of 4 bytes
+	 * Consists of 2 bytes
 	 * "MZ"
 	 */
 	uint8_t signature[ 2 ];
@@ -98,6 +98,333 @@ struct exe_mz_file_header
 	 * Consists of 2 bytes
 	 */
 	uint8_t overlay_number[ 2 ];
+
+	/* Unknown
+	 * Consists of 32 bytes
+	 */
+	uint8_t unknown1[ 32 ];
+
+	/* The PE header offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t pe_header_offset[ 4 ];
+
+	/* Unknown
+	 * Consists of 112 bytes
+	 */
+	uint8_t unknown2[ 112 ];
+};
+
+typedef struct exe_pe_header exe_pe_header_t;
+
+struct exe_pe_header
+{
+	/* Signature
+	 * Consists of 4 bytes
+	 * "PE\x0\x0"
+	 */
+	uint8_t signature[ 4 ];
+};
+
+typedef struct exe_coff_header exe_coff_header_t;
+
+struct exe_coff_header
+{
+	/* The target architecture type
+	 * Consists of 2 bytes
+	 */
+	uint8_t target_architecture_type[ 2 ];
+
+	/* The number of sections
+	 * Consists of 2 bytes
+	 */
+	uint8_t number_of_sections[ 2 ];
+
+	/* The number of sections
+	 * Consists of 4 bytes
+	 * Contains a POSIX timestamp
+	 */
+	uint8_t creation_time[ 4 ];
+
+	/* The symbol table offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t symbol_table_offset[ 4 ];
+
+	/* The number of symbols
+	 * Consists of 4 bytes
+	 */
+	uint8_t number_of_symbols[ 4 ];
+
+	/* The optional header size
+	 * Consists of 2 bytes
+	 */
+	uint8_t optional_header_size[ 2 ];
+
+	/* The characteristic flags
+	 * Consists of 2 bytes
+	 */
+	uint8_t characteristic_flags[ 2 ];
+};
+
+typedef struct exe_coff_optional_header exe_coff_optional_header_t;
+
+struct exe_coff_optional_header
+{
+	/* The signature
+	 * Consists of 2 bytes
+	 */
+	uint8_t signature[ 2 ];
+
+	/* The major linker version
+	 * Consists of 1 byte
+	 */
+	uint8_t major_linker_version;
+
+	/* The minor linker version
+	 * Consists of 1 byte
+	 */
+	uint8_t minor_linker_version;
+
+	/* The text section size
+	 * Consists of 4 bytes
+	 */
+	uint8_t text_section_size[ 4 ];
+
+	/* The initialized data section size
+	 * Consists of 4 bytes
+	 */
+	uint8_t initialized_data_section_size[ 4 ];
+
+	/* The uninitialized data section size
+	 * Consists of 4 bytes
+	 */
+	uint8_t uninitialized_data_section_size[ 4 ];
+
+	/* The entry point offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t entry_point_offset[ 4 ];
+
+	/* The code base offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t code_base_offset[ 4 ];
+
+	/* The data base offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t data_base_offset[ 4 ];
+};
+
+typedef struct exe_coff_optional_header_pe32 exe_coff_optional_header_pe32_t;
+
+struct exe_coff_optional_header_pe32
+{
+	/* The image base offset
+	 * Consists of 4 bytes
+	 */
+	uint8_t image_base_offset[ 4 ];
+
+	/* The section alignment size
+	 * Consists of 4 bytes
+	 */
+	uint8_t section_alignment_size[ 4 ];
+
+	/* The file alignment size
+	 * Consists of 4 bytes
+	 */
+	uint8_t file_alignment_size[ 4 ];
+
+	/* The major operating system version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_operating_system_version[ 2 ];
+
+	/* The minor operating system version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_operating_system_version[ 2 ];
+
+	/* The major image version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_image_version[ 2 ];
+
+	/* The minor image version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_image_version[ 2 ];
+
+	/* The major subsystem version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_subsystem_version[ 2 ];
+
+	/* The minor subsystem version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_subsystem_version[ 2 ];
+
+	/* Unknown
+	 * Consists of 4 bytes
+	 */
+	uint8_t unknown1[ 4 ];
+
+	/* The image size
+	 * Consists of 4 bytes
+	 */
+	uint8_t image_size[ 4 ];
+
+	/* The headers size
+	 * Consists of 4 bytes
+	 */
+	uint8_t headers_size[ 4 ];
+
+	/* The checksum
+	 * Consists of 2 bytes
+	 */
+	uint8_t checksum[ 2 ];
+
+	/* The subsystem
+	 * Consists of 2 bytes
+	 */
+	uint8_t subsystem[ 2 ];
+
+	/* The DLL characteristic flags
+	 * Consists of 2 bytes
+	 */
+	uint8_t dll_characteristic_flags[ 2 ];
+
+	/* The stack reservation size
+	 * Consists of 4 bytes
+	 */
+	uint8_t stack_reservation_size[ 4 ];
+
+	/* The stack commit size
+	 * Consists of 4 bytes
+	 */
+	uint8_t stack_commit_size[ 4 ];
+
+	/* The heap commit size
+	 * Consists of 4 bytes
+	 */
+	uint8_t heap_commit_size[ 4 ];
+
+	/* Unknown
+	 * Consists of 4 bytes
+	 */
+	uint8_t unknown2[ 4 ];
+
+	/* The number of data-dictionary entries
+	 * Consists of 4 bytes
+	 */
+	uint8_t number_of_data_dictionary_entries[ 4 ];
+};
+
+typedef struct exe_coff_optional_header_pe32_plus exe_coff_optional_header_pe32_plus_t;
+
+struct exe_coff_optional_header_pe32_plus
+{
+	/* The image base offset
+	 * Consists of 8 bytes
+	 */
+	uint8_t image_base_offset[ 8 ];
+
+	/* The section alignment size
+	 * Consists of 4 bytes
+	 */
+	uint8_t section_alignment_size[ 4 ];
+
+	/* The file alignment size
+	 * Consists of 4 bytes
+	 */
+	uint8_t file_alignment_size[ 4 ];
+
+	/* The major operating system version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_operating_system_version[ 2 ];
+
+	/* The minor operating system version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_operating_system_version[ 2 ];
+
+	/* The major image version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_image_version[ 2 ];
+
+	/* The minor image version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_image_version[ 2 ];
+
+	/* The major subsystem version
+	 * Consists of 2 bytes
+	 */
+	uint8_t major_subsystem_version[ 2 ];
+
+	/* The minor subsystem version
+	 * Consists of 2 bytes
+	 */
+	uint8_t minor_subsystem_version[ 2 ];
+
+	/* Unknown
+	 * Consists of 4 bytes
+	 */
+	uint8_t unknown1[ 4 ];
+
+	/* The image size
+	 * Consists of 4 bytes
+	 */
+	uint8_t image_size[ 4 ];
+
+	/* The headers size
+	 * Consists of 4 bytes
+	 */
+	uint8_t headers_size[ 4 ];
+
+	/* The checksum
+	 * Consists of 2 bytes
+	 */
+	uint8_t checksum[ 2 ];
+
+	/* The subsystem
+	 * Consists of 2 bytes
+	 */
+	uint8_t subsystem[ 2 ];
+
+	/* The DLL characteristic flags
+	 * Consists of 2 bytes
+	 */
+	uint8_t dll_characteristic_flags[ 2 ];
+
+	/* The stack reservation size
+	 * Consists of 8 bytes
+	 */
+	uint8_t stack_reservation_size[ 8 ];
+
+	/* The stack commit size
+	 * Consists of 8 bytes
+	 */
+	uint8_t stack_commit_size[ 8 ];
+
+	/* The heap commit size
+	 * Consists of 8 bytes
+	 */
+	uint8_t heap_commit_size[ 8 ];
+
+	/* Unknown
+	 * Consists of 4 bytes
+	 */
+	uint8_t unknown2[ 4 ];
+
+	/* The number of data-dictionary entries
+	 * Consists of 4 bytes
+	 */
+	uint8_t number_of_data_dictionary_entries[ 4 ];
 };
 
 #if defined( __cplusplus )

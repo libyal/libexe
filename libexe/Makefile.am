@@ -6,6 +6,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libnotify \
 	@LIBUNA_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
+	@LIBFDATETIME_CPPFLAGS@ \
 	@MEMWATCH_CPPFLAGS@
 
 lib_LTLIBRARIES = libexe.la
@@ -21,6 +22,7 @@ libexe_la_SOURCES = \
 	libexe_file.c libexe_file.h \
 	libexe_io_handle.c libexe_io_handle.h \
 	libexe_libbfio.h \
+	libexe_libdatetime.h \
 	libexe_libuna.h \
 	libexe_notify.c libexe_notify.h \
 	libexe_support.c libexe_support.h \
@@ -33,7 +35,8 @@ libexe_la_LIBADD = \
 	../liberror/liberror.la \
 	../libnotify/libnotify.la \
 	@LIBUNA_LIBADD@ \
-	@LIBBFIO_LIBADD@
+	@LIBBFIO_LIBADD@ \
+	@LIBFDATETIME_LIBADD@
 
 libexe_la_LDFLAGS = -no-undefined -version-info 1:0:0
 

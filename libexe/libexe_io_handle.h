@@ -34,16 +34,22 @@
 extern "C" {
 #endif
 
-extern const char *exe_mz_file_signature;
+extern const char *exe_mz_signature;
 
 typedef struct libexe_io_handle libexe_io_handle_t;
 
 struct libexe_io_handle
 {
+	/* The creation time
+	 */
+	uint32_t creation_time;
+
+/* TODO */
 	/* The major version
 	 */
 	uint32_t major_version;
 
+/* TODO */
 	/* The minor version
 	 */
 	uint32_t minor_version;
@@ -68,6 +74,29 @@ int libexe_io_handle_free(
 int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_mz_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t *pe_header_offset,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_pe_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t pe_header_offset,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_coff_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_coff_optional_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint16_t optional_header_size,
      liberror_error_t **error );
 
 #if defined( __cplusplus )
