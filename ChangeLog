@@ -1,0 +1,53 @@
+TODO:
+* implement file format support
+* update manuals
+* update msvscpp files
+* debug function for file flags
+* debug function for event category
+* debug function for event flags
+* add API record functions
+* add error tollerability
+  - sizes and copy
+
+Tools:
+* evtexport
+  - print header
+  - print event identifier ?
+  - print event type description
+  - print source name
+  - print computer name
+  - print strings
+  - print data ?
+  - improved version that also can get strings
+* evtinfo
+
+20111018
+* small changes
+
+20111015
+* small changes in README files
+
+20111014
+* small changes to export and info handle
+
+20111013
+* worked on initial version
+* fix for building static executables on Cygwin
+* updated libfvalue, libfdatetime
+
+20111009
+* worked on initial version
+
+20111005
+* worked on initial version
+* updated configure and m4 scripts
+* updated README files
+* updated pc file
+* updated spec file
+
+20111004
+* worked on initial version
+
+20111003
+* Created initial version based on libnk2
+

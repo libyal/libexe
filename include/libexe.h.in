@@ -1,0 +1,451 @@
+/*
+ * Library to support the Nickfile (EXE) format
+ *
+ * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBEXE_H )
+#define _LIBEXE_H
+
+#include <libexe/codepage.h>
+#include <libexe/definitions.h>
+#include <libexe/error.h>
+#include <libexe/extern.h>
+#include <libexe/features.h>
+#include <libexe/mapi.h>
+#include <libexe/types.h>
+
+#include <stdio.h>
+
+#if defined( LIBEXE_HAVE_BFIO )
+#include <libbfio.h>
+#endif
+
+#if defined( __cplusplus )
+extern "C" {
+#endif
+
+/* -------------------------------------------------------------------------
+ * Support functions
+ * ------------------------------------------------------------------------- */
+
+/* Returns the library version
+ */
+LIBEXE_EXTERN \
+const char *libexe_get_version(
+             void );
+
+/* Returns the access flags for reading
+ */
+LIBEXE_EXTERN \
+int libexe_get_access_flags_read(
+     void );
+
+/* Retrieves the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_get_codepage(
+     int *codepage,
+     libexe_error_t **error );
+
+/* Sets the narrow system string codepage
+ * A value of 0 represents no codepage, UTF-8 encoding is used instead
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_set_codepage(
+     int codepage,
+     libexe_error_t **error );
+
+/* Determines if a file is a Nickfile (check for the EXE file signature)
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_check_file_signature(
+     const char *filename,
+     libexe_error_t **error );
+
+#if defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE )
+/* Determines if a file is a Nickfile (check for the EXE file signature)
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_check_file_signature_wide(
+     const wchar_t *filename,
+     libexe_error_t **error );
+#endif
+
+#if defined( LIBEXE_HAVE_BFIO )
+/* Determines if a file is a Nickfile (check for the EXE file signature) using a Basic File IO (bfio) handle
+ * Returns 1 if true, 0 if not or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_check_file_signature_file_io_handle(
+     libbfio_handle_t *file_io_handle,
+     libexe_error_t **error );
+#endif
+
+/* -------------------------------------------------------------------------
+ * Notify functions
+ * ------------------------------------------------------------------------- */
+
+/* Sets the verbose notification
+ */
+LIBEXE_EXTERN \
+void libexe_notify_set_verbose(
+      int verbose );
+
+/* Sets the notification stream
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_notify_set_stream(
+     FILE *stream,
+     libexe_error_t **error );
+
+/* Opens the notification stream using a filename
+ * The stream is opened in append mode
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_notify_stream_open(
+     const char *filename,
+     libexe_error_t **error );
+
+/* Closes the notification stream if opened using a filename
+ * Returns 0 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_notify_stream_close(
+     libexe_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Error functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees the error including elements
+ */
+LIBEXE_EXTERN \
+void libexe_error_free(
+      libexe_error_t **error );
+
+/* Prints a descriptive string of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_error_fprint(
+     libexe_error_t *error,
+     FILE *stream );
+
+/* Prints a descriptive string of the error to the string
+ * The end-of-string character is not included in the return value
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_error_sprint(
+     libexe_error_t *error,
+     char *string,
+     size_t size );
+
+/* Prints a backtrace of the error to the stream
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_error_backtrace_fprint(
+     libexe_error_t *error,
+     FILE *stream );
+
+/* Prints a backtrace of the error to the string
+ * The end-of-string character is not included in the return value
+ * Returns the number of printed characters if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_error_backtrace_sprint(
+     libexe_error_t *error,
+     char *string,
+     size_t size );
+
+/* -------------------------------------------------------------------------
+ * File functions
+ * ------------------------------------------------------------------------- */
+
+/* Initializes a file
+ * Make sure the value file is pointing to is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_initialize(
+     libexe_file_t **file,
+     libexe_error_t **error );
+
+/* Frees a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_free(
+     libexe_file_t **file,
+     libexe_error_t **error );
+
+/* Signals the libexe file to abort its current activity
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_signal_abort(
+     libexe_file_t *file,
+     libexe_error_t **error );
+
+/* Opens a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_open(
+     libexe_file_t *file,
+     const char *filename,
+     int access_flags,
+     libexe_error_t **error );
+
+#if defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE )
+/* Opens a file
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_open_wide(
+     libexe_file_t *file,
+     const wchar_t *filename,
+     int access_flags,
+     libexe_error_t **error );
+#endif
+
+#if defined( LIBEXE_HAVE_BFIO )
+/* Opens a file using a Basic File IO (bfio) handle
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_open_file_io_handle(
+     libexe_file_t *file,
+     libbfio_handle_t *file_io_handle,
+     int access_flags,
+     libexe_error_t **error );
+#endif
+
+/* Closes a file
+ * Returns 0 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_close(
+     libexe_file_t *file,
+     libexe_error_t **error );
+
+/* Retrieves the file ASCII codepage
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_get_ascii_codepage(
+     libexe_file_t *file,
+     int *ascii_codepage,
+     libexe_error_t **error );
+
+/* Sets the file ASCII codepage
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_set_ascii_codepage(
+     libexe_file_t *file,
+     int ascii_codepage,
+     libexe_error_t **error );
+
+/* Retrieves the file version
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_get_version(
+     libexe_file_t *file,
+     uint32_t *major_version,
+     uint32_t *minor_version,
+     libexe_error_t **error );
+
+/* Retrieves the number of items
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_get_number_of_items(
+     libexe_file_t *file,
+     int *number_of_items,
+     libexe_error_t **error );
+
+/* Retrieves a specific item
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_get_item(
+     libexe_file_t *file,
+     int item_index,
+     libexe_item_t **item,
+     libexe_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Item functions
+ * ------------------------------------------------------------------------- */
+
+/* Frees an item
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_free(
+     libexe_item_t **item,
+     libexe_error_t **error );
+
+/* Retrieves the identifier (record number)
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_identifier(
+     libexe_item_t *item,
+     uint32_t *identifier,
+     libexe_error_t **error );
+
+/* Retrieves the creation time
+ * The timestamp is a 32-bit POSIX date and time value
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_creation_time(
+     libexe_item_t *item,
+     uint32_t *creation_time,
+     libexe_error_t **error );
+
+/* Retrieves the written time
+ * The timestamp is a 32-bit POSIX date and time value
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_written_time(
+     libexe_item_t *item,
+     uint32_t *written_time,
+     libexe_error_t **error );
+
+/* Retrieves the event identifier
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_event_identifier(
+     libexe_item_t *item,
+     uint32_t *event_identifier,
+     libexe_error_t **error );
+
+/* Retrieves the event type
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_event_type(
+     libexe_item_t *item,
+     uint16_t *event_type,
+     libexe_error_t **error );
+
+/* Retrieves the size of the UTF-8 encoded source name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf8_source_name_size(
+     libexe_item_t *item,
+     size_t *utf8_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-8 encoded source name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf8_source_name(
+     libexe_item_t *item,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the size of the UTF-16 encoded source name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf16_source_name_size(
+     libexe_item_t *item,
+     size_t *utf16_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-16 encoded source name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf16_source_name(
+     libexe_item_t *item,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the size of the UTF-8 encoded computer name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf8_computer_name_size(
+     libexe_item_t *item,
+     size_t *utf8_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-8 encoded computer name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf8_computer_name(
+     libexe_item_t *item,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the size of the UTF-16 encoded computer name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf16_computer_name_size(
+     libexe_item_t *item,
+     size_t *utf16_string_size,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-16 encoded computer name value
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_item_get_utf16_computer_name(
+     libexe_item_t *item,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libexe_error_t **error );
+
+#if defined( __cplusplus )
+}
+#endif
+
+#endif
+

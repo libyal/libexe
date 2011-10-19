@@ -1,0 +1,10 @@
+Solaris
+To build libexe on Solaris make sure that /usr/ccs/bin and /usr/swf/bin are defined in the PATH environment variable
+
+
+Also see:
+* README.dll
+* README.macosx
+* README.mingw
+* README.static
+
