@@ -779,15 +779,17 @@ int libexe_io_handle_read_coff_optional_header(
      uint16_t optional_header_size,
      liberror_error_t **error )
 {
-	uint8_t *coff_optional_header      = NULL;
-	uint8_t *coff_optional_header_data = NULL;
-	static char *function              = "libexe_io_handle_read_coff_optional_header";
-	ssize_t read_count                 = 0;
-	uint16_t signature                 = 0;
+	uint8_t *coff_optional_header             = NULL;
+	uint8_t *coff_optional_header_data        = NULL;
+	static char *function                     = "libexe_io_handle_read_coff_optional_header";
+	ssize_t read_count                        = 0;
+	uint32_t number_of_data_directory_entries = 0;
+	uint16_t signature                        = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	uint64_t value_64bit               = 0;
-	uint32_t value_32bit               = 0;
+	uint64_t value_64bit                      = 0;
+	uint32_t value_32bit                      = 0;
+	uint16_t value_16bit                      = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -935,25 +937,558 @@ int libexe_io_handle_read_coff_optional_header(
 	}
 	coff_optional_header_data += sizeof( exe_coff_optional_header_t );
 
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
 	{
-		if( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->number_of_data_directory_entries,
+		 number_of_data_directory_entries );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_t *) coff_optional_header_data )->text_section_size,
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_base_offset,
 			 value_32bit );
 			libnotify_printf(
-			 "%s: text section size\t\t\t: %" PRIu32 "\n",
+			 "%s: image base offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
-			/* TODO */
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->section_alignment_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: section alignment size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->file_alignment_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_operating_system_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major operating system version\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_operating_system_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor operating system version\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_image_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major image version\t\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_image_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_subsystem_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_subsystem_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown1,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: unknown1\t\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->headers_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: headers size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->checksum,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->subsystem,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->dll_characteristic_flags,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_reservation_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: stack reservation size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_commit_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: stack commit size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_reservation_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: heap reservation size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_commit_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: heap commit size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown2,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: unknown2\t\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			libnotify_printf(
+			 "%s: number of data directory entries\t: %" PRIu32 "\n",
+			 function,
+			 number_of_data_directory_entries );
 		}
-		else if( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
+#endif
+		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_t );
+	}
+	else if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
+	{
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->number_of_data_directory_entries,
+		 number_of_data_directory_entries );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
 		{
-			/* TODO */
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_base_offset,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: image base offset\t\t\t: 0x%08" PRIx64 "\n",
+			 function,
+			 value_64bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->section_alignment_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: section alignment size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->file_alignment_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_operating_system_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major operating system version\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_operating_system_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor operating system version\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_image_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major image version\t\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_image_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_subsystem_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_subsystem_version,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown1,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: unknown1\t\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->headers_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: headers size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->checksum,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->subsystem,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->dll_characteristic_flags,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
+			 function,
+			 value_16bit );
+
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_reservation_size,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: stack reservation size\t\t: %" PRIu64 "\n",
+			 function,
+			 value_64bit );
+
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_commit_size,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: stack commit size\t\t\t: %" PRIu64 "\n",
+			 function,
+			 value_64bit );
+
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_reservation_size,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: heap reservation size\t\t: %" PRIu64 "\n",
+			 function,
+			 value_64bit );
+
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_commit_size,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: heap commit size\t\t\t: %" PRIu64 "\n",
+			 function,
+			 value_64bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown2,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: unknown2\t\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			libnotify_printf(
+			 "%s: number of data directory entries\t: %" PRIu32 "\n",
+			 function,
+			 number_of_data_directory_entries );
 		}
+#endif
+		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_plus_t );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "\n" );
+	}
+#endif
+	if( number_of_data_directory_entries != 16 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported number of data directory entries: %" PRIu32 ".",
+		 function,
+		 number_of_data_directory_entries );
+
+		goto on_error;
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: export table size\t\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: import table size\t\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: resource table size\t\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: exception table size\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: certificate table size\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: base relocation table size\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: debug data size\t\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: architecture-specific data RVA\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: architecture-specific data size\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->global_pointer_register,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: global pointer register\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown3,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: thread local storage table size\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: load configuration table size\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
 		libnotify_printf(
 		 "\n" );
 	}

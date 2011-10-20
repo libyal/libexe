@@ -37,11 +37,11 @@
  * for local use of libexe
  */
 #else
-#define LIBEXE_VERSION						20111019
+#define LIBEXE_VERSION						20111010
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING					"20111019"
+#define LIBEXE_VERSION_STRING					"20111010"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access
@@ -108,6 +108,15 @@ enum LIBEXE_CHARACTERISTIC_FLAGS
 };
 
 #endif
+
+/* The COFF optional header signatures
+ */
+enum LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURES
+{
+	LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32		= 0x010b,
+
+	LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32_PLUS		= 0x020b
+};
 
 #endif
 

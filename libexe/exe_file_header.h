@@ -282,9 +282,9 @@ struct exe_coff_optional_header_pe32
 	uint8_t headers_size[ 4 ];
 
 	/* The checksum
-	 * Consists of 2 bytes
+	 * Consists of 4 bytes
 	 */
-	uint8_t checksum[ 2 ];
+	uint8_t checksum[ 4 ];
 
 	/* The subsystem
 	 * Consists of 2 bytes
@@ -306,6 +306,11 @@ struct exe_coff_optional_header_pe32
 	 */
 	uint8_t stack_commit_size[ 4 ];
 
+	/* The heap reservation size
+	 * Consists of 4 bytes
+	 */
+	uint8_t heap_reservation_size[ 4 ];
+
 	/* The heap commit size
 	 * Consists of 4 bytes
 	 */
@@ -316,10 +321,10 @@ struct exe_coff_optional_header_pe32
 	 */
 	uint8_t unknown2[ 4 ];
 
-	/* The number of data-dictionary entries
+	/* The number of data-directory entries
 	 * Consists of 4 bytes
 	 */
-	uint8_t number_of_data_dictionary_entries[ 4 ];
+	uint8_t number_of_data_directory_entries[ 4 ];
 };
 
 typedef struct exe_coff_optional_header_pe32_plus exe_coff_optional_header_pe32_plus_t;
@@ -387,9 +392,9 @@ struct exe_coff_optional_header_pe32_plus
 	uint8_t headers_size[ 4 ];
 
 	/* The checksum
-	 * Consists of 2 bytes
+	 * Consists of 4 bytes
 	 */
-	uint8_t checksum[ 2 ];
+	uint8_t checksum[ 4 ];
 
 	/* The subsystem
 	 * Consists of 2 bytes
@@ -411,6 +416,11 @@ struct exe_coff_optional_header_pe32_plus
 	 */
 	uint8_t stack_commit_size[ 8 ];
 
+	/* The heap reservation size
+	 * Consists of 8 bytes
+	 */
+	uint8_t heap_reservation_size[ 8 ];
+
 	/* The heap commit size
 	 * Consists of 8 bytes
 	 */
@@ -421,10 +431,135 @@ struct exe_coff_optional_header_pe32_plus
 	 */
 	uint8_t unknown2[ 4 ];
 
-	/* The number of data-dictionary entries
+	/* The number of data-directory entries
 	 * Consists of 4 bytes
 	 */
-	uint8_t number_of_data_dictionary_entries[ 4 ];
+	uint8_t number_of_data_directory_entries[ 4 ];
+};
+
+typedef struct exe_coff_optional_header_data_directories exe_coff_optional_header_data_directories_t;
+
+struct exe_coff_optional_header_data_directories
+{
+	/* The export table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t export_table_rva[ 4 ];
+
+	/* The export table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t export_table_size[ 4 ];
+
+	/* The import table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t import_table_rva[ 4 ];
+
+	/* The import table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t import_table_size[ 4 ];
+
+	/* The resource table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t resource_table_rva[ 4 ];
+
+	/* The resource table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t resource_table_size[ 4 ];
+
+	/* The exception table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t exception_table_rva[ 4 ];
+
+	/* The exception table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t exception_table_size[ 4 ];
+
+	/* The certificate table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t certificate_table_rva[ 4 ];
+
+	/* The certificate table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t certificate_table_size[ 4 ];
+
+	/* The base relocation table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t base_relocation_table_rva[ 4 ];
+
+	/* The base relocation table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t base_relocation_table_size[ 4 ];
+
+	/* The debug data
+	 * Consists of 4 bytes
+	 */
+	uint8_t debug_data_rva[ 4 ];
+
+	/* The debug data
+	 * Consists of 4 bytes
+	 */
+	uint8_t debug_data_size[ 4 ];
+
+	/* The architecture-specific data
+	 * Consists of 4 bytes
+	 */
+	uint8_t architecture_specific_data_rva[ 4 ];
+
+	/* The architecture-specific data
+	 * Consists of 4 bytes
+	 */
+	uint8_t architecture_specific_data_size[ 4 ];
+
+	/* The global pointer register
+	 * Consists of 4 bytes
+	 */
+	uint8_t global_pointer_register[ 4 ];
+
+	/* Unknown
+	 * Consists of 4 bytes
+	 */
+	uint8_t unknown3[ 4 ];
+
+	/* The thread local storage table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t thread_local_storage_table_rva[ 4 ];
+
+	/* The thread local storage table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t thread_local_storage_table_size[ 4 ];
+
+	/* The load configuration table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t load_configuration_table_rva[ 4 ];
+
+	/* The load configuration table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t load_configuration_table_size[ 4 ];
+
+	/* The bound import table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t bound_import_table_rva[ 4 ];
+
+	/* The bound import table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t bound_import_table_size[ 4 ];
 };
 
 #if defined( __cplusplus )
