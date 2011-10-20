@@ -1,5 +1,5 @@
 /*
- * Shows information obtained from a Windows Event Viewer Log (EXE) file
+ * Shows information obtained from a MZ, PE/COFF executable (EXE) file
  *
  * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
  *
@@ -53,8 +53,8 @@ void usage_fprint(
 	{
 		return;
 	}
-	fprintf( stream, "Use exeinfo to determine information about a Windows Event\n"
-	                 "Viewer Log (EXE) file.\n\n" );
+	fprintf( stream, "Use exeinfo to determine information about a MZ, PE/COFF\n"
+	                 "executable (EXE) file.\n\n" );
 
 	fprintf( stream, "Usage: exeinfo [ -hvV ] source\n\n" );
 

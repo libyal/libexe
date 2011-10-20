@@ -36,6 +36,7 @@
 #include "libexe_unused.h"
 
 #include "exe_file_header.h"
+#include "exe_section_table.h"
 
 const char *exe_mz_signature = "MZ";
 const char *exe_pe_signature = "PE\x0\x0";
@@ -142,6 +143,7 @@ int libexe_io_handle_free(
 int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
+     uint16_t *number_of_sections,
      liberror_error_t **error )
 {
 	static char *function     = "libexe_io_handle_read_file_header";
@@ -168,6 +170,7 @@ int libexe_io_handle_read_file_header(
 	     io_handle,
 	     file_io_handle,
 	     pe_header_offset,
+	     number_of_sections,
 	     error ) != 1 )
 	{
 		liberror_error_set(
@@ -427,6 +430,7 @@ int libexe_io_handle_read_pe_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t pe_header_offset,
+     uint16_t *number_of_sections,
      liberror_error_t **error )
 {
 	exe_pe_header_t pe_header;
@@ -530,6 +534,7 @@ int libexe_io_handle_read_pe_header(
 	if( libexe_io_handle_read_coff_header(
 	     io_handle,
 	     file_io_handle,
+	     number_of_sections,
 	     error ) != 1 )
 	{
 		liberror_error_set(
@@ -550,6 +555,7 @@ int libexe_io_handle_read_pe_header(
 int libexe_io_handle_read_coff_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
+     uint16_t *number_of_sections,
      liberror_error_t **error )
 {
 	exe_coff_header_t coff_header;
@@ -574,6 +580,17 @@ int libexe_io_handle_read_coff_header(
 		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( number_of_sections == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid number of sections.",
 		 function );
 
 		return( -1 );
@@ -606,6 +623,10 @@ int libexe_io_handle_read_coff_header(
 		 sizeof( exe_coff_header_t ) );
 	}
 #endif
+	byte_stream_copy_to_uint16_little_endian(
+	 coff_header.number_of_sections,
+	 *number_of_sections );
+
 	byte_stream_copy_to_uint32_little_endian(
 	 coff_header.creation_time,
 	 io_handle->creation_time );
@@ -625,13 +646,10 @@ int libexe_io_handle_read_coff_header(
 		 function,
 		 value_16bit );
 
-		byte_stream_copy_to_uint16_little_endian(
-		 coff_header.number_of_sections,
-		 value_16bit );
 		libnotify_printf(
 		 "%s: number of sections\t\t\t: %" PRIu16 "\n",
 		 function,
-		 value_16bit );
+		 *number_of_sections );
 
 		if( libfdatetime_posix_time_initialize(
 		     &posix_time,
@@ -1489,6 +1507,62 @@ int libexe_io_handle_read_coff_optional_header(
 		 function,
 		 value_32bit );
 
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: import address table size\t\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: delay import descriptor size\t: %" PRIu32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
+		 value_32bit );
+		libnotify_printf(
+		 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
+		 function,
+		 value_32bit );
+
+		byte_stream_copy_to_uint64_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown4,
+		 value_64bit );
+		libnotify_printf(
+		 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
+		 function,
+		 value_64bit );
+
 		libnotify_printf(
 		 "\n" );
 	}
@@ -1503,6 +1577,191 @@ on_error:
 	{
 		memory_free(
 		 coff_optional_header );
+	}
+	return( -1 );
+}
+
+/* Reads the section table
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_io_handle_read_section_table(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint16_t number_of_sections,
+     liberror_error_t **error )
+{
+	uint8_t *section_table      = NULL;
+	uint8_t *section_table_data = NULL;
+	static char *function       = "libexe_io_handle_read_section_table";
+	size_t section_table_size   = 0;
+	ssize_t read_count          = 0;
+	uint16_t section_index      = 0;
+
+#if defined( HAVE_DEBUG_OUTPUT )
+	uint32_t value_32bit        = 0;
+	uint16_t value_16bit        = 0;
+#endif
+
+	if( io_handle == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	section_table_size = sizeof( exe_section_table_entry_t )
+	                   * number_of_sections;
+
+	section_table = (uint8_t *) memory_allocate(
+	                             sizeof( uint8_t ) * section_table_size );
+
+	if( section_table == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_MEMORY,
+		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 "%s: unable to create section table.",
+		 function );
+
+		goto on_error;
+	}
+	read_count = libbfio_handle_read(
+	              file_io_handle,
+	              section_table,
+	              section_table_size,
+	              error );
+
+	if( read_count != (ssize_t) section_table_size )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read section table.",
+		 function );
+
+		goto on_error;
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: section table data:\n",
+		 function );
+		libnotify_print_data(
+		 section_table,
+		 section_table_size );
+	}
+#endif
+	section_table_data = section_table;
+
+	while( section_table_size >= sizeof( exe_section_table_entry_t ) )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " name\t\t\t\t: %s\n",
+			 function,
+			 section_index,
+			 ( (exe_section_table_entry_t *) section_table_data )->name );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->virtual_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " virtual size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->virtual_address,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " virtual address\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " relocations offset\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " relocations offset\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->line_numbers_offset,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " line numbers offset\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " number of relocations\t\t: %" PRIu16 "\n",
+			 function,
+			 section_index,
+			 value_16bit );
+
+			byte_stream_copy_to_uint16_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->line_numbers_offset,
+			 value_16bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " number of line numbers\t\t: %" PRIu16 "\n",
+			 function,
+			 section_index,
+			 value_16bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_section_table_entry_t *) section_table_data )->section_characteristic_flags,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " section characteristic flags\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 value_32bit );
+
+			libnotify_printf(
+			 "\n" );
+		}
+#endif
+		section_table_data += sizeof( exe_section_table_entry_t );
+		section_table_size -= sizeof( exe_section_table_entry_t );
+
+		section_index++;
+	}
+	memory_free(
+	 section_table );
+
+	return( 1 );
+
+on_error:
+	if( section_table != NULL )
+	{
+		memory_free(
+		 section_table );
 	}
 	return( -1 );
 }

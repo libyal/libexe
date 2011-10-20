@@ -25,10 +25,12 @@ libexe_la_SOURCES = \
 	libexe_libdatetime.h \
 	libexe_libuna.h \
 	libexe_notify.c libexe_notify.h \
+	libexe_section_descriptor.c libexe_section_descriptor.h \
 	libexe_support.c libexe_support.h \
 	libexe_types.h \
 	libexe_unused.h \
-	exe_file_header.h
+	exe_file_header.h \
+	exe_section_table.h
 
 libexe_la_LIBADD = \
 	../libcstring/libcstring.la \

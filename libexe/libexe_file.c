@@ -1,5 +1,5 @@
 /*
- * libexe file
+ * File functions
  *
  * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
  *
@@ -765,8 +765,9 @@ int libexe_file_open_read(
      libexe_internal_file_t *internal_file,
      liberror_error_t **error )
 {
-	static char *function = "libexe_file_open_read";
-	int result            = 1;
+	static char *function       = "libexe_file_open_read";
+	uint16_t number_of_sections = 0;
+	int result                  = 1;
 
 	if( internal_file == NULL )
 	{
@@ -804,6 +805,7 @@ int libexe_file_open_read(
 	if( libexe_io_handle_read_file_header(
 	     internal_file->io_handle,
 	     internal_file->file_io_handle,
+	     &number_of_sections,
 	     error ) != 1 )
 	{
 		liberror_error_set(
@@ -811,6 +813,28 @@ int libexe_file_open_read(
 		 LIBERROR_ERROR_DOMAIN_IO,
 		 LIBERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read file header.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "Reading section table:\n" );
+	}
+#endif
+	if( libexe_io_handle_read_section_table(
+	     internal_file->io_handle,
+	     internal_file->file_io_handle,
+	     number_of_sections,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read section table.",
 		 function );
 
 		return( -1 );

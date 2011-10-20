@@ -74,6 +74,7 @@ int libexe_io_handle_free(
 int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
+     uint16_t *number_of_sections,
      liberror_error_t **error );
 
 int libexe_io_handle_read_mz_header(
@@ -86,17 +87,25 @@ int libexe_io_handle_read_pe_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t pe_header_offset,
+     uint16_t *number_of_sections,
      liberror_error_t **error );
 
 int libexe_io_handle_read_coff_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
+     uint16_t *number_of_sections,
      liberror_error_t **error );
 
 int libexe_io_handle_read_coff_optional_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t optional_header_size,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_section_table(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint16_t number_of_sections,
      liberror_error_t **error );
 
 #if defined( __cplusplus )

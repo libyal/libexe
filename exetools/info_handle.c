@@ -333,7 +333,6 @@ int info_handle_file_fprint(
 	static char *function  = "info_handle_file_fprint";
 	uint32_t major_version = 0;
 	uint32_t minor_version = 0;
-	int number_of_items    = 0;
 
 	if( info_handle == NULL )
 	{
@@ -361,34 +360,15 @@ int info_handle_file_fprint(
 
 		return( -1 );
 	}
-	if( libexe_file_get_number_of_items(
-	     info_handle->input_file,
-	     &number_of_items,
-	     error ) != 1 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve number of items.",
-		 function );
-
-		return( -1 );
-	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "Windows Event Viewer Log (EXE) information:\n" );
+	 "MZ, PE/COFF executable (EXE) information:\n" );
 
 	fprintf(
 	 info_handle->notify_stream,
 	 "\tVersion\t\t\t: %" PRIu32 ".%" PRIu32 "\n",
 	 major_version,
 	 minor_version );
-
-	fprintf(
-	 info_handle->notify_stream,
-	 "\tNumber of event records\t: %d\n",
-	 number_of_items );
 
 	fprintf(
 	 info_handle->notify_stream,

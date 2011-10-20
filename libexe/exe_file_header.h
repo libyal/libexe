@@ -560,6 +560,41 @@ struct exe_coff_optional_header_data_directories
 	 * Consists of 4 bytes
 	 */
 	uint8_t bound_import_table_size[ 4 ];
+
+	/* The import address table RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t import_address_table_rva[ 4 ];
+
+	/* The import address table size
+	 * Consists of 4 bytes
+	 */
+	uint8_t import_address_table_size[ 4 ];
+
+	/* The delay import descriptor RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t delay_import_descriptor_rva[ 4 ];
+
+	/* The delay import descriptor size
+	 * Consists of 4 bytes
+	 */
+	uint8_t delay_import_descriptor_size[ 4 ];
+
+	/* The COM+ runtime header RVA
+	 * Consists of 4 bytes
+	 */
+	uint8_t com_plus_runtime_header_rva[ 4 ];
+
+	/* The COM+ runtime header size
+	 * Consists of 4 bytes
+	 */
+	uint8_t com_plus_runtime_header_size[ 4 ];
+
+	/* Unknown
+	 * Consists of 8 bytes
+	 */
+	uint8_t unknown4[ 8 ];
 };
 
 #if defined( __cplusplus )
