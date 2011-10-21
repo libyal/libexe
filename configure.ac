@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20111010],
+ [20111021],
  [jbmetz@users.sourceforge.net])
 
 AC_CONFIG_SRCDIR(
@@ -58,6 +58,9 @@ AX_LIBUNA_CHECK_ENABLE
 dnl Check for enabling libbfio for basic file IO support
 AX_LIBBFIO_CHECK_ENABLE
 
+dnl Check for enabling libfdata for file and memory data block support
+AX_LIBFDATA_CHECK_ENABLE
+
 dnl Check for enabling libfdatetime for file date and time support
 AX_LIBFDATETIME_CHECK_ENABLE
 
@@ -72,7 +75,7 @@ AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
 
 dnl Check if requires and build requires should be set in spec file
 AS_IF(
- [test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libbfio" = xyes],
+ [test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libbfio" = xyes || test "x$ac_cv_libfdata" = xyes || test "x$ac_cv_libfdatetime" = xyes],
  [AC_SUBST(
   [libexe_spec_requires],
   [Requires:])
@@ -121,6 +124,7 @@ AC_CONFIG_FILES([liberror/Makefile])
 AC_CONFIG_FILES([libnotify/Makefile])
 AC_CONFIG_FILES([libuna/Makefile])
 AC_CONFIG_FILES([libbfio/Makefile])
+AC_CONFIG_FILES([libfdata/Makefile])
 AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libexe/Makefile])
 AC_CONFIG_FILES([libsystem/Makefile])
@@ -154,6 +158,7 @@ AC_MSG_NOTICE([
 Building:
    libuna support:                           $ac_cv_libuna
    libbfio support:                          $ac_cv_libbfio
+   libfdata support:                         $ac_cv_libfdata
    libfdatetime support:                     $ac_cv_libfdatetime
 
 Features:

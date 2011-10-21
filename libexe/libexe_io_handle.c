@@ -33,6 +33,7 @@
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libfdatetime.h"
+#include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
 
 #include "exe_file_header.h"
@@ -1588,18 +1589,23 @@ int libexe_io_handle_read_section_table(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
+     libexe_array_t *sections_array,
      liberror_error_t **error )
 {
-	uint8_t *section_table      = NULL;
-	uint8_t *section_table_data = NULL;
-	static char *function       = "libexe_io_handle_read_section_table";
-	size_t section_table_size   = 0;
-	ssize_t read_count          = 0;
-	uint16_t section_index      = 0;
+	libexe_section_descriptor_t *section_descriptor = NULL;
+	uint8_t *section_table                          = NULL;
+	uint8_t *section_table_data                     = NULL;
+	static char *function                           = "libexe_io_handle_read_section_table";
+	size_t section_table_size                       = 0;
+	ssize_t read_count                              = 0;
+	uint32_t section_data_offset                    = 0;
+	uint32_t section_data_size                      = 0;
+	uint16_t section_index                          = 0;
+	int section_entry_index                         = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	uint32_t value_32bit        = 0;
-	uint16_t value_16bit        = 0;
+	uint32_t value_32bit                            = 0;
+	uint16_t value_16bit                            = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -1662,6 +1668,29 @@ int libexe_io_handle_read_section_table(
 
 	while( section_table_size >= sizeof( exe_section_table_entry_t ) )
 	{
+		if( libexe_section_descriptor_initialize(
+		     &section_descriptor,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create section descriptor.",
+			 function );
+
+			goto on_error;
+		}
+		/* TODO copy section name */
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_section_table_entry_t *) section_table_data )->data_size,
+		 section_data_size );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_section_table_entry_t *) section_table_data )->data_offset,
+		 section_data_offset );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libnotify_verbose != 0 )
 		{
@@ -1689,14 +1718,17 @@ int libexe_io_handle_read_section_table(
 			 section_index,
 			 value_32bit );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
-			 value_32bit );
 			libnotify_printf(
-			 "%s: entry: %02" PRIu16 " relocations offset\t\t: 0x%08" PRIx32 "\n",
+			 "%s: entry: %02" PRIu16 " data size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 section_index,
-			 value_32bit );
+			 section_data_size );
+
+			libnotify_printf(
+			 "%s: entry: %02" PRIu16 " data offset\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 section_index,
+			 section_data_offset );
 
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
@@ -1747,6 +1779,25 @@ int libexe_io_handle_read_section_table(
 			 "\n" );
 		}
 #endif
+		/* TODO libexe_section_descriptor_set_data_range */
+
+		if( libexe_array_append_entry(
+		     sections_array,
+		     &section_entry_index,
+		     (intptr_t *) section_descriptor,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append section descriptor to sections array.",
+			 function );
+
+			goto on_error;
+		}
+		section_descriptor = NULL;
+
 		section_table_data += sizeof( exe_section_table_entry_t );
 		section_table_size -= sizeof( exe_section_table_entry_t );
 
@@ -1758,6 +1809,12 @@ int libexe_io_handle_read_section_table(
 	return( 1 );
 
 on_error:
+	if( section_descriptor != NULL )
+	{
+		libexe_section_descriptor_free(
+		 section_descriptor,
+		 NULL );
+	}
 	if( section_table != NULL )
 	{
 		memory_free(

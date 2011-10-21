@@ -204,14 +204,11 @@ on_error:
 	return( -1 );
 }
 
-/* Reads a section descriptor
- * Returns 1 if successful or -1 on error
- */
-int libexe_section_descriptor_read(
+/* TODO implement */
+int libexe_section_descriptor_set_data_range(
      libexe_section_descriptor_t *section_descriptor,
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     liberror_error_t **error )
-{
-}
+     off64_t data_offset,
+     size64_t data_size,
+     liberror_error_t **error );
+
 

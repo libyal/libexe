@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEVT_SECTION_DESCRIPTOR_H )
-#define _LIBEVT_SECTION_DESCRIPTOR_H
+#if !defined( _LIBEXE_SECTION_DESCRIPTOR_H )
+#define _LIBEXE_SECTION_DESCRIPTOR_H
 
 #include <common.h>
 #include <types.h>
@@ -29,6 +29,7 @@
 
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libfdata.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -41,25 +42,29 @@ struct libexe_section_descriptor
 	/* The name
 	 */
 	uint8_t name[ 8 ];
+
+	/* The data block
+	 */
+	libfdata_block_t *data_block;
 };
 
 int libexe_section_descriptor_initialize(
-     libexe_section_descriptor_t **record,
+     libexe_section_descriptor_t **section_descriptor,
      liberror_error_t **error );
 
 int libexe_section_descriptor_free(
-     libexe_section_descriptor_t *record,
+     libexe_section_descriptor_t *section_descriptor,
      liberror_error_t **error );
 
 int libexe_section_descriptor_clone(
-     libexe_section_descriptor_t **destination_record,
-     libexe_section_descriptor_t *source_record,
+     libexe_section_descriptor_t **destination_section_descriptor,
+     libexe_section_descriptor_t *source_section_descriptor,
      liberror_error_t **error );
 
-int libexe_section_descriptor_read(
-     libexe_section_descriptor_t *record,
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
+int libexe_section_descriptor_set_data_range(
+     libexe_section_descriptor_t *section_descriptor,
+     off64_t data_offset,
+     size64_t data_size,
      liberror_error_t **error );
 
 #if defined( __cplusplus )

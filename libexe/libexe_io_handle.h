@@ -106,6 +106,7 @@ int libexe_io_handle_read_section_table(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
+     libexe_array_t *sections_array,
      liberror_error_t **error );
 
 #if defined( __cplusplus )

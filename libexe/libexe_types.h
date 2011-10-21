@@ -34,12 +34,12 @@
 /* The following type definitions hide internal data structures
  */
 #if defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI )
-typedef struct libexe_file {}	libexe_file_t;
-typedef struct libexe_item {}	libexe_item_t;
+typedef struct libexe_file {}		libexe_file_t;
+typedef struct libexe_section {}	libexe_section_t;
 
 #else
 typedef intptr_t libexe_file_t;
-typedef intptr_t libexe_item_t;
+typedef intptr_t libexe_section_t;
 
 #endif
 

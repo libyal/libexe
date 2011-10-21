@@ -41,9 +41,9 @@ typedef struct libexe_internal_file libexe_internal_file_t;
 
 struct libexe_internal_file
 {
-	/* The items array
+	/* The sections array
 	 */
-	libexe_array_t *items_array;
+	libexe_array_t *sections_array;
 
 	/* The IO handle
 	 */
@@ -125,16 +125,16 @@ int libexe_file_get_version(
      liberror_error_t **error );
 
 LIBEXE_EXTERN \
-int libexe_file_get_number_of_items(
+int libexe_file_get_number_of_sections(
      libexe_file_t *file,
-     int *number_of_items,
+     int *number_of_sections,
      liberror_error_t **error );
 
 LIBEXE_EXTERN \
-int libexe_file_get_item(
+int libexe_file_get_section(
      libexe_file_t *file,
-     int item_index,
-     libexe_item_t **item,
+     int section_index,
+     libexe_section_t **section,
      liberror_error_t **error );
 
 #if defined( __cplusplus )

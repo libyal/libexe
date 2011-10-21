@@ -2,6 +2,9 @@ TODO:
 * exeexport
   - dump segment data?
 
+20111021
+* Added libfdata for reading sections
+
 20111020
 * Worked on file format
 

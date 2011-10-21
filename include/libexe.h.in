@@ -281,166 +281,56 @@ int libexe_file_get_version(
      uint32_t *minor_version,
      libexe_error_t **error );
 
-/* Retrieves the number of items
+/* Retrieves the number of sections
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_file_get_number_of_items(
+int libexe_file_get_number_of_sections(
      libexe_file_t *file,
-     int *number_of_items,
+     int *number_of_sections,
      libexe_error_t **error );
 
-/* Retrieves a specific item
+/* Retrieves a specific section
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_file_get_item(
+int libexe_file_get_section(
      libexe_file_t *file,
-     int item_index,
-     libexe_item_t **item,
+     int section_index,
+     libexe_section_t **section,
      libexe_error_t **error );
 
 /* -------------------------------------------------------------------------
- * Item functions
+ * Section functions
  * ------------------------------------------------------------------------- */
 
-/* Frees an item
+/* Frees a section
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_item_free(
-     libexe_item_t **item,
+int libexe_section_free(
+     libexe_section_t **section,
      libexe_error_t **error );
 
-/* Retrieves the identifier (record number)
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_identifier(
-     libexe_item_t *item,
-     uint32_t *identifier,
-     libexe_error_t **error );
-
-/* Retrieves the creation time
- * The timestamp is a 32-bit POSIX date and time value
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_creation_time(
-     libexe_item_t *item,
-     uint32_t *creation_time,
-     libexe_error_t **error );
-
-/* Retrieves the written time
- * The timestamp is a 32-bit POSIX date and time value
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_written_time(
-     libexe_item_t *item,
-     uint32_t *written_time,
-     libexe_error_t **error );
-
-/* Retrieves the event identifier
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_event_identifier(
-     libexe_item_t *item,
-     uint32_t *event_identifier,
-     libexe_error_t **error );
-
-/* Retrieves the event type
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_event_type(
-     libexe_item_t *item,
-     uint16_t *event_type,
-     libexe_error_t **error );
-
-/* Retrieves the size of the UTF-8 encoded source name
+/* Retrieves the size of the name
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_item_get_utf8_source_name_size(
-     libexe_item_t *item,
+int libexe_section_get_name_size(
+     libexe_section_t *section,
      size_t *utf8_string_size,
      libexe_error_t **error );
 
-/* Retrieves the UTF-8 encoded source name value
+/* Retrieves the name
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_item_get_utf8_source_name(
-     libexe_item_t *item,
-     uint8_t *utf8_string,
-     size_t utf8_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the size of the UTF-16 encoded source name
- * The returned size includes the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf16_source_name_size(
-     libexe_item_t *item,
-     size_t *utf16_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the UTF-16 encoded source name value
- * The size should include the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf16_source_name(
-     libexe_item_t *item,
-     uint16_t *utf16_string,
-     size_t utf16_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the size of the UTF-8 encoded computer name
- * The returned size includes the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf8_computer_name_size(
-     libexe_item_t *item,
-     size_t *utf8_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the UTF-8 encoded computer name value
- * The size should include the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf8_computer_name(
-     libexe_item_t *item,
-     uint8_t *utf8_string,
-     size_t utf8_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the size of the UTF-16 encoded computer name
- * The returned size includes the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf16_computer_name_size(
-     libexe_item_t *item,
-     size_t *utf16_string_size,
-     libexe_error_t **error );
-
-/* Retrieves the UTF-16 encoded computer name value
- * The size should include the end of string character
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_item_get_utf16_computer_name(
-     libexe_item_t *item,
-     uint16_t *utf16_string,
-     size_t utf16_string_size,
+int libexe_section_get_name(
+     libexe_section_t *section,
+     uint8_t *name,
+     size_t name_size,
      libexe_error_t **error );
 
 #if defined( __cplusplus )
