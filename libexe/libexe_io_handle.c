@@ -675,7 +675,7 @@ int libexe_io_handle_read_coff_header(
 			liberror_error_set(
 			 error,
 			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to copy POSIX time from byte stream.",
 			 function );
 
@@ -703,7 +703,7 @@ int libexe_io_handle_read_coff_header(
 			liberror_error_set(
 			 error,
 			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to copy POSIX time to string.",
 			 function );
 
@@ -1779,8 +1779,21 @@ int libexe_io_handle_read_section_table(
 			 "\n" );
 		}
 #endif
-		/* TODO libexe_section_descriptor_set_data_range */
+		if( libexe_section_descriptor_set_data_range(
+		     section_descriptor,
+		     (off64_t) section_data_offset,
+		     (size64_t) section_data_size,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set data range in section descriptor.",
+			 function );
 
+			goto on_error;
+		}
 		if( libexe_array_append_entry(
 		     sections_array,
 		     &section_entry_index,

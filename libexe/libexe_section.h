@@ -97,6 +97,34 @@ int libexe_section_get_name(
      size_t name_size,
      liberror_error_t **error );
 
+LIBEXE_EXTERN \
+ssize_t libexe_section_read_buffer(
+         libexe_section_t *section,
+         void *buffer,
+         size_t buffer_size,
+         liberror_error_t **error );
+
+LIBEXE_EXTERN \
+ssize_t libexe_section_read_random(
+         libexe_section_t *section,
+         void *buffer,
+         size_t buffer_size,
+         off64_t offset,
+         liberror_error_t **error );
+
+LIBEXE_EXTERN \
+off64_t libexe_section_seek_offset(
+         libexe_section_t *section,
+         off64_t offset,
+         int whence,
+         liberror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_section_get_size(
+     libexe_section_t *section,
+     size64_t *size,
+     liberror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

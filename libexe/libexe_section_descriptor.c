@@ -68,18 +68,39 @@ int libexe_section_descriptor_initialize(
 			 "%s: unable to create section descriptor.",
 			 function );
 
-			goto on_error;
+			memory_free(
+			 *section_descriptor );
+
+			*section_descriptor = NULL;
 		}
-		if( memory_set(
-		     *section_descriptor,
+		if( libfdata_block_initialize(
+		     &( ( *section_descriptor )->data_block ),
+		     NULL,
+		     NULL,
+		     NULL,
+		     NULL,
 		     0,
-		     sizeof( libexe_section_descriptor_t ) ) == NULL )
+		     error ) != 1 )
 		{
 			liberror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_SET_FAILED,
-			 "%s: unable to clear section descriptor.",
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create data block.",
+			 function );
+
+			goto on_error;
+		}
+		if( libfdata_block_resize_segments(
+		     ( *section_descriptor )->data_block,
+		     1,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_RESIZE_FAILED,
+			 "%s: unable to resize number of segments of data block.",
 			 function );
 
 			goto on_error;
@@ -118,6 +139,19 @@ int libexe_section_descriptor_free(
 		 function );
 
 		return( 1 );
+	}
+	if( libfdata_block_free(
+	     &( section_descriptor->data_block ),
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free data block.",
+		 function );
+
+		result = -1;
 	}
 	memory_free(
 	 section_descriptor );
@@ -204,11 +238,45 @@ on_error:
 	return( -1 );
 }
 
-/* TODO implement */
+/* Sets the data range
+ * Returns 1 if successful or -1 on error
+ */
 int libexe_section_descriptor_set_data_range(
      libexe_section_descriptor_t *section_descriptor,
      off64_t data_offset,
      size64_t data_size,
-     liberror_error_t **error );
+     liberror_error_t **error )
+{
+	static char *function = "libexe_section_descriptor_set_data_range";
 
+	if( section_descriptor == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section descriptor.",
+		 function );
+
+		return( 1 );
+	}
+	if( libfdata_block_set_segment_by_index(
+	     section_descriptor->data_block,
+	     1,
+	     data_offset,
+	     data_size,
+	     0,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set segment in data block.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
 
