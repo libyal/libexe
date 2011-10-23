@@ -330,9 +330,12 @@ int info_handle_file_fprint(
      info_handle_t *info_handle,
      liberror_error_t **error )
 {
-	static char *function  = "info_handle_file_fprint";
-	uint32_t major_version = 0;
-	uint32_t minor_version = 0;
+	uint8_t name[ 9 ];
+
+	libexe_section_t *section = NULL;
+	static char *function     = "info_handle_file_fprint";
+	int number_of_sections    = 0;
+	int section_index         = 0;
 
 	if( info_handle == NULL )
 	{
@@ -345,20 +348,19 @@ int info_handle_file_fprint(
 
 		return( -1 );
 	}
-	if( libexe_file_get_version(
+	if( libexe_file_get_number_of_sections(
 	     info_handle->input_file,
-	     &major_version,
-	     &minor_version,
+	     &number_of_sections,
 	     error ) != 1 )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve file version.",
+		 "%s: unable to retrieve number of sections.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	fprintf(
 	 info_handle->notify_stream,
@@ -366,14 +368,85 @@ int info_handle_file_fprint(
 
 	fprintf(
 	 info_handle->notify_stream,
-	 "\tVersion\t\t\t: %" PRIu32 ".%" PRIu32 "\n",
-	 major_version,
-	 minor_version );
+	 "\tNumber of sections\t: %d\n",
+	 number_of_sections );
 
 	fprintf(
 	 info_handle->notify_stream,
 	 "\n" );
 
+	fprintf(
+	 info_handle->notify_stream,
+	 "Sections:\n" );
+
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
+	{
+		if( libexe_file_get_section(
+		     info_handle->input_file,
+		     section_index,
+		     &section,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve section: %d.",
+			 function,
+			 section_index );
+
+			goto on_error;
+		}
+		if( libexe_section_get_name(
+		     section,
+		     name,
+		     9,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve section: %d name.",
+			 function,
+			 section_index );
+
+			goto on_error;
+		}
+		fprintf(
+		 info_handle->notify_stream,
+		 "\tName\t\t\t: %s\n",
+		 name );
+
+		if( libexe_section_free(
+		     &section,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free section.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	fprintf(
+	 info_handle->notify_stream,
+	 "\n" );
+
 	return( 1 );
+
+on_error:
+	if( section != NULL )
+	{
+		libexe_section_free(
+		 &section,
+		 NULL );
+	}
+	return( -1 );
 }
 

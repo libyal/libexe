@@ -1681,7 +1681,32 @@ int libexe_io_handle_read_section_table(
 
 			goto on_error;
 		}
-		/* TODO copy section name */
+		if( memory_copy(
+		     section_descriptor->name,
+		     ( (exe_section_table_entry_t *) section_table_data )->name,
+		     8 ) == NULL )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_MEMORY,
+			 LIBERROR_MEMORY_ERROR_COPY_FAILED,
+			 "%s: unable to copy name.",
+			 function );
+
+			goto on_error;
+		}
+		section_descriptor->name[ 8 ] = 0;
+
+		section_descriptor->name_size = libcstring_narrow_string_length(
+		                                 (char *) section_descriptor->name );
+
+		if( section_descriptor->name_size > 0 )
+		{
+			section_descriptor->name_size += 1;
+		}
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_section_table_entry_t *) section_table_data )->virtual_address,
+		 section_descriptor->virtual_address );
 
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_section_table_entry_t *) section_table_data )->data_size,
@@ -1698,7 +1723,7 @@ int libexe_io_handle_read_section_table(
 			 "%s: entry: %02" PRIu16 " name\t\t\t\t: %s\n",
 			 function,
 			 section_index,
-			 ( (exe_section_table_entry_t *) section_table_data )->name );
+			 section_descriptor->name );
 
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->virtual_size,
@@ -1709,14 +1734,11 @@ int libexe_io_handle_read_section_table(
 			 section_index,
 			 value_32bit );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_section_table_entry_t *) section_table_data )->virtual_address,
-			 value_32bit );
 			libnotify_printf(
 			 "%s: entry: %02" PRIu16 " virtual address\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
-			 value_32bit );
+			 section_descriptor->virtual_address );
 
 			libnotify_printf(
 			 "%s: entry: %02" PRIu16 " data size\t\t\t: %" PRIu32 "\n",

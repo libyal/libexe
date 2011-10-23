@@ -68,17 +68,33 @@ int libexe_section_descriptor_initialize(
 			 "%s: unable to create section descriptor.",
 			 function );
 
+			goto on_error;
+		}
+		if( memory_set(
+		     *section_descriptor,
+		     0,
+		     sizeof( libexe_section_descriptor_t ) ) == NULL )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_MEMORY,
+			 LIBERROR_MEMORY_ERROR_SET_FAILED,
+			 "%s: unable to clear section descriptor.",
+			 function );
+
 			memory_free(
 			 *section_descriptor );
 
 			*section_descriptor = NULL;
+
+			return( -1 );
 		}
 		if( libfdata_block_initialize(
 		     &( ( *section_descriptor )->data_block ),
 		     NULL,
 		     NULL,
 		     NULL,
-		     NULL,
+		     &libfdata_block_read_segment_data,
 		     0,
 		     error ) != 1 )
 		{
@@ -111,6 +127,12 @@ int libexe_section_descriptor_initialize(
 on_error:
 	if( *section_descriptor != NULL )
 	{
+		if( ( *section_descriptor )->data_block != NULL )
+		{
+			libfdata_block_free(
+			 &( ( *section_descriptor )->data_block ),
+			 NULL );
+		}
 		memory_free(
 		 *section_descriptor );
 
@@ -262,7 +284,7 @@ int libexe_section_descriptor_set_data_range(
 	}
 	if( libfdata_block_set_segment_by_index(
 	     section_descriptor->data_block,
-	     1,
+	     0,
 	     data_offset,
 	     data_size,
 	     0,

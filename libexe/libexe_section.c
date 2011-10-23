@@ -264,7 +264,7 @@ int libexe_section_free(
 		memory_free(
 		 internal_section );
 	}
-	return( 1 );
+	return( result );
 }
 
 /* Retrieves the size of the name
@@ -303,7 +303,19 @@ int libexe_section_get_name_size(
 
 		return( -1 );
 	}
-/* TODO */
+	if( name_size == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid name size.",
+		 function );
+
+		return( -1 );
+	}
+	*name_size = internal_section->section_descriptor->name_size;
+
 	return( 1 );
 }
 
@@ -344,7 +356,42 @@ int libexe_section_get_name(
 
 		return( -1 );
 	}
-/* TODO */
+	if( name_size > (size_t) SSIZE_MAX )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid name size value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	if( name_size < internal_section->section_descriptor->name_size )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 "%s: invalid name value too small.",
+		 function );
+
+		return( -1 );
+	}
+	if( memory_copy(
+	     name,
+	     internal_section->section_descriptor->name,
+	     internal_section->section_descriptor->name_size ) == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_MEMORY,
+		 LIBERROR_MEMORY_ERROR_COPY_FAILED,
+		 "%s: unable to copy name.",
+		 function );
+
+		return( -1 );
+	}
 	return( 1 );
 }
 
@@ -357,13 +404,9 @@ ssize_t libexe_section_read_buffer(
          size_t buffer_size,
          liberror_error_t **error )
 {
-	libexe_sector_data_t *sector_data         = NULL;
 	libexe_internal_section_t *internal_section = NULL;
-	static char *function                     = "libexe_section_read_buffer";
-	size_t buffer_offset                      = 0;
-	size_t read_size                          = 0;
-	size_t sector_data_offset                 = 0;
-	ssize_t total_read_count                  = 0;
+	static char *function                       = "libexe_section_read_buffer";
+	ssize_t read_count                          = 0;
 
 	if( section == NULL )
 	{
@@ -378,156 +421,37 @@ ssize_t libexe_section_read_buffer(
 	}
 	internal_section = (libexe_internal_section_t *) section;
 
-	if( internal_section->io_handle == NULL )
+	if( internal_section->section_descriptor == NULL )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid section - missing IO handle.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( internal_section->sectors_vector == NULL )
+	read_count = libfdata_block_read_buffer(
+	              internal_section->section_descriptor->data_block,
+	              internal_section->file_io_handle,
+	              internal_section->data_cache,
+	              buffer,
+	              buffer_size,
+	              error );
+
+	if( read_count == -1 )
 	{
 		liberror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing sectors vector.",
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read buffer from section data block.",
 		 function );
 
 		return( -1 );
 	}
-	if( internal_section->sectors_cache == NULL )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing sectors cache.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_section->io_handle->current_offset < 0 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid internal section - invalid IO handle - current offset value out of bounds.",
-		 function );
-
-		return( -1 );
-	}
-	if( buffer == NULL )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid buffer.",
-		 function );
-
-		return( -1 );
-	}
-	if( buffer_size > (size_t) SSIZE_MAX )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid buffer size value exceeds maximum.",
-		 function );
-
-		return( -1 );
-	}
-	if( (size64_t) internal_section->io_handle->current_offset >= internal_section->io_handle->section_size )
-	{
-		return( 0 );
-	}
-	if( (size64_t) ( internal_section->io_handle->current_offset + buffer_size ) >= internal_section->io_handle->section_size )
-	{
-		buffer_size = (size_t) ( internal_section->io_handle->section_size - internal_section->io_handle->current_offset );
-	}
-	sector_data_offset = (size_t) ( internal_section->io_handle->current_offset % internal_section->io_handle->bytes_per_sector );
-
-	while( buffer_size > 0 )
-	{
-		if( libfdata_vector_get_element_value_at_offset(
-		     internal_section->sectors_vector,
-		     internal_section->file_io_handle,
-		     internal_section->sectors_cache,
-		     internal_section->io_handle->current_offset,
-		     (intptr_t **) &sector_data,
-		     0,
-		     error ) != 1 )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve sector data at offset: %" PRIi64 ".",
-			 function,
-			 internal_section->io_handle->current_offset );
-
-			return( -1 );
-		}
-		if( sector_data == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: missing sector data at offset: %" PRIi64 ".",
-			 function,
-			 internal_section->io_handle->current_offset );
-
-			return( -1 );
-		}
-		read_size = sector_data->data_size - sector_data_offset;
-
-		if( read_size > buffer_size )
-		{
-			read_size = buffer_size;
-		}
-		if( read_size == 0 )
-		{
-			break;
-		}
-		if( memory_copy(
-		     &( ( (uint8_t *) buffer )[ buffer_offset ] ),
-		     &( ( sector_data->data )[ sector_data_offset ] ),
-		     read_size ) == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_COPY_FAILED,
-			 "%s: unable to copy sector data to buffer.",
-			 function );
-
-			return( -1 );
-		}
-		buffer_offset     += read_size;
-		buffer_size       -= read_size;
-		total_read_count  += (ssize_t) read_size;
-		sector_data_offset = 0;
-
-		internal_section->io_handle->current_offset += (off64_t) read_size;
-
-		if( (size64_t) internal_section->io_handle->current_offset >= internal_section->io_handle->section_size )
-		{
-			break;
-		}
-		if( internal_section->io_handle->abort != 0 )
-		{
-			break;
-		}
-	}
-	return( total_read_count );
+	return( read_count );
 }
 
 /* Reads (media) data at a specific offset
@@ -578,70 +502,6 @@ ssize_t libexe_section_read_random(
 	return( read_count );
 }
 
-#ifdef TODO
-
-/* Writes (media) data at the current offset
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-ssize_t libexe_section_write_buffer(
-         libexe_section_t *section,
-         void *buffer,
-         size_t buffer_size,
-         liberror_error_t **error )
-{
-	return( -1 );
-}
-
-/* Writes (media) data at a specific offset,
- * Returns the number of input bytes written, 0 when no longer bytes can be written or -1 on error
- */
-ssize_t libexe_section_write_random(
-         libexe_section_t *section,
-         const void *buffer,
-         size_t buffer_size,
-         off64_t offset,
-         liberror_error_t **error )
-{
-	static char *function = "libexe_section_write_random";
-	ssize_t write_count   = 0;
-
-	if( libexe_section_seek_offset(
-	     section,
-	     offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek offset.",
-		 function );
-
-		return( -1 );
-	}
-	write_count = libexe_section_write_buffer(
-	               section,
-	               buffer,
-	               buffer_size,
-	               error );
-
-	if( write_count < 0 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_WRITE_FAILED,
-		 "%s: unable to write buffer.",
-		 function );
-
-		return( -1 );
-	}
-	return( write_count );
-}
-
-#endif
-
 /* Seeks a certain offset of the data
  * Returns the offset if seek is successful or -1 on error
  */
@@ -652,7 +512,7 @@ off64_t libexe_section_seek_offset(
          liberror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
-	static char *function                     = "libexe_section_seek_offset";
+	static char *function                       = "libexe_section_seek_offset";
 
 	if( section == NULL )
 	{
@@ -667,60 +527,34 @@ off64_t libexe_section_seek_offset(
 	}
 	internal_section = (libexe_internal_section_t *) section;
 
-	if( internal_section->io_handle == NULL )
+	if( internal_section->section_descriptor == NULL )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid section - missing IO handle.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( whence != SEEK_CUR )
-	 && ( whence != SEEK_END )
-	 && ( whence != SEEK_SET ) )
+	offset = libfdata_block_seek_offset(
+	          internal_section->section_descriptor->data_block,
+	          offset,
+	          whence,
+	          error );
+
+	if( offset == -1 )
 	{
 		liberror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported whence.",
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek in section data block.",
 		 function );
 
 		return( -1 );
 	}
-	if( whence == SEEK_CUR )
-	{	
-		offset += internal_section->io_handle->current_offset;
-	}
-	else if( whence == SEEK_END )
-	{	
-		offset += (off64_t) internal_section->io_handle->section_size;
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
-	{
-		libnotify_printf(
-		 "%s: seeking media data offset: %" PRIi64 ".\n",
-		 function,
-		 offset );
-	}
-#endif
-	if( offset < 0 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid offset value out of bounds.",
-		 function );
-
-		return( -1 );
-	}
-	internal_section->io_handle->current_offset = offset;
-
 	return( offset );
 }
 
@@ -733,7 +567,7 @@ int libexe_section_get_size(
      liberror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
-	static char *function                     = "libexe_section_get_size";
+	static char *function                       = "libexe_section_get_size";
 
 	if( section == NULL )
 	{
@@ -748,29 +582,82 @@ int libexe_section_get_size(
 	}
 	internal_section = (libexe_internal_section_t *) section;
 
-	if( internal_section->io_handle == NULL )
+	if( internal_section->section_descriptor == NULL )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid section - missing IO handle.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
 	}
-	if( size == NULL )
+	if( libfdata_block_get_size(
+	     internal_section->section_descriptor->data_block,
+	     size,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve section data block size.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the virtual address
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_virtual_address(
+     libexe_section_t *section,
+     uint32_t *virtual_address,
+     liberror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_virtual_address";
+
+	if( section == NULL )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid size.",
+		 "%s: invalid section.",
 		 function );
 
 		return( -1 );
 	}
-	*size = internal_section->io_handle->section_size;
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->section_descriptor == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( virtual_address == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid virtual address.",
+		 function );
+
+		return( -1 );
+	}
+	*virtual_address = internal_section->section_descriptor->virtual_address;
 
 	return( 1 );
 }

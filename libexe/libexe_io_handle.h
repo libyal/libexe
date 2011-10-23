@@ -44,16 +44,6 @@ struct libexe_io_handle
 	 */
 	uint32_t creation_time;
 
-/* TODO */
-	/* The major version
-	 */
-	uint32_t major_version;
-
-/* TODO */
-	/* The minor version
-	 */
-	uint32_t minor_version;
-
 	/* The codepage of the extended ASCII strings
 	 */
 	int ascii_codepage;

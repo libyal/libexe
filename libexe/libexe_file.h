@@ -118,13 +118,6 @@ int libexe_file_set_ascii_codepage(
      liberror_error_t **error );
 
 LIBEXE_EXTERN \
-int libexe_file_get_version(
-     libexe_file_t *file,
-     uint32_t *major_version,
-     uint32_t *minor_version,
-     liberror_error_t **error );
-
-LIBEXE_EXTERN \
 int libexe_file_get_number_of_sections(
      libexe_file_t *file,
      int *number_of_sections,

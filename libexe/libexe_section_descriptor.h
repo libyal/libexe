@@ -41,7 +41,15 @@ struct libexe_section_descriptor
 {
 	/* The name
 	 */
-	uint8_t name[ 8 ];
+	uint8_t name[ 9 ];
+
+	/* The name size
+	 */
+	size_t name_size;
+
+	/* The virtual address
+	 */
+	uint32_t virtual_adress;
 
 	/* The data block
 	 */

@@ -271,16 +271,6 @@ int libexe_file_set_ascii_codepage(
      int ascii_codepage,
      libexe_error_t **error );
 
-/* Retrieves the file version
- * Returns 1 if successful or -1 on error
- */
-LIBEXE_EXTERN \
-int libexe_file_get_version(
-     libexe_file_t *file,
-     uint32_t *major_version,
-     uint32_t *minor_version,
-     libexe_error_t **error );
-
 /* Retrieves the number of sections
  * Returns 1 if successful or -1 on error
  */
@@ -371,6 +361,15 @@ LIBEXE_EXTERN \
 int libexe_section_get_size(
      libexe_section_t *section,
      size64_t *size,
+     libexe_error_t **error );
+
+/* Retrieves the virtual address
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_virtual_address(
+     libexe_section_t *section,
+     uint32_t *virtual_address,
      libexe_error_t **error );
 
 #if defined( __cplusplus )

@@ -125,6 +125,12 @@ int libexe_section_get_size(
      size64_t *size,
      liberror_error_t **error );
 
+LIBEXE_EXTERN \
+int libexe_section_get_virtual_address(
+     libexe_section_t *section,
+     uint32_t *virtual_address,
+     liberror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif
