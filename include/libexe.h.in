@@ -27,7 +27,6 @@
 #include <libexe/error.h>
 #include <libexe/extern.h>
 #include <libexe/features.h>
-#include <libexe/mapi.h>
 #include <libexe/types.h>
 
 #include <stdio.h>

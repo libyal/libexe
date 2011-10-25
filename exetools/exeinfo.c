@@ -37,9 +37,9 @@
 
 #include <libsystem.h>
 
-#include "info_handle.h"
 #include "exeoutput.h"
 #include "exetools_libexe.h"
+#include "info_handle.h"
 
 info_handle_t *exeinfo_info_handle = NULL;
 int exeinfo_abort                  = 0;

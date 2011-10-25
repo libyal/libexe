@@ -1,5 +1,5 @@
 /*
- * The section table efinition of a MZ, PE/COFF executable (EXE)
+ * The section table definition of a MZ, PE/COFF executable (EXE)
  *
  * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
  *

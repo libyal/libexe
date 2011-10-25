@@ -27,9 +27,9 @@
 #include <libcstring.h>
 #include <liberror.h>
 
-#include "info_handle.h"
 #include "exeinput.h"
 #include "exetools_libexe.h"
+#include "info_handle.h"
 
 #define INFO_HANDLE_NOTIFY_STREAM	stdout
 

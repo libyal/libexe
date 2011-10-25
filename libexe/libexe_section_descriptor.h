@@ -49,7 +49,7 @@ struct libexe_section_descriptor
 
 	/* The virtual address
 	 */
-	uint32_t virtual_adress;
+	uint32_t virtual_address;
 
 	/* The data block
 	 */
@@ -62,11 +62,6 @@ int libexe_section_descriptor_initialize(
 
 int libexe_section_descriptor_free(
      libexe_section_descriptor_t *section_descriptor,
-     liberror_error_t **error );
-
-int libexe_section_descriptor_clone(
-     libexe_section_descriptor_t **destination_section_descriptor,
-     libexe_section_descriptor_t *source_section_descriptor,
      liberror_error_t **error );
 
 int libexe_section_descriptor_set_data_range(

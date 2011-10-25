@@ -13,6 +13,8 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libexe.la
 
 libexe_la_SOURCES = \
+	exe_file_header.h \
+	exe_section_table.h \
 	libexe.c \
 	libexe_array_type.c libexe_array_type.h \
 	libexe_codepage.h \
@@ -31,9 +33,7 @@ libexe_la_SOURCES = \
 	libexe_section_descriptor.c libexe_section_descriptor.h \
 	libexe_support.c libexe_support.h \
 	libexe_types.h \
-	libexe_unused.h \
-	exe_file_header.h \
-	exe_section_table.h
+	libexe_unused.h
 
 libexe_la_LIBADD = \
 	../libcstring/libcstring.la \

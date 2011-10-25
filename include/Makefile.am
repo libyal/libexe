@@ -7,7 +7,6 @@ pkginclude_HEADERS = \
         libexe/error.h \
         libexe/extern.h \
         libexe/features.h \
-        libexe/mapi.h \
         libexe/types.h
 
 EXTRA_DIST = \

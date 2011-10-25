@@ -31,44 +31,6 @@
 
 #if defined( HAVE_DEBUG_OUTPUT )
 
-/* Prints the event type
- */
-void libexe_debug_print_event_type(
-      uint16_t event_type )
-{
-	switch( event_type )
-	{
-		case LIBEXE_EVENT_TYPE_ERROR:
-			libnotify_printf(
-			 "Error event" );
-			break;
-
-		case LIBEXE_EVENT_TYPE_WARNING:
-			libnotify_printf(
-			 "Warning event" );
-			break;
-
-		case LIBEXE_EVENT_TYPE_INFORMATION:
-			libnotify_printf(
-			 "Information event" );
-			break;
-
-		case LIBEXE_EVENT_TYPE_AUDIT_SUCCESS:
-			libnotify_printf(
-			 "Success Audit event" );
-			break;
-
-		case LIBEXE_EVENT_TYPE_AUDIT_FAILURE:
-			libnotify_printf(
-			 "Failure Audit event" );
-			break;
-
-		default:
-			libnotify_printf(
-			 "(Unknown)" );
-	}
-}
-
 /* Prints the read offsets
  * Returns 1 if successful or -1 on error
  */

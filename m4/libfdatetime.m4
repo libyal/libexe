@@ -1,6 +1,6 @@
 dnl Functions for libfdatetime
 dnl
-dnl Version: 20111008
+dnl Version: 20111024
 
 dnl Function to detect if libfdatetime is available
 dnl ac_libfdatetime_dummy is used to prevent AC_CHECK_LIB adding unnecessary -l<library> arguments
@@ -15,6 +15,8 @@ AC_DEFUN([AX_LIBFDATETIME_CHECK_LIB],
    [AC_MSG_WARN([no such directory: $ac_cv_with_libfdatetime])
    ])
   ])
+
+ ac_cv_libfdatetime=no
 
  AS_IF(
   [test "x$ac_cv_with_libfdatetime" != xno],

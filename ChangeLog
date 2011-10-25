@@ -2,6 +2,12 @@ TODO:
 * exeexport
   - dump segment data?
 
+20111024
+* remove mapi.h include header
+
+20111023
+* worked on reading sections
+
 20111021
 * Added libfdata for reading sections
 
