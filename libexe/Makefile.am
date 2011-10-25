@@ -31,6 +31,7 @@ libexe_la_SOURCES = \
 	libexe_notify.c libexe_notify.h \
 	libexe_section.c libexe_section.h \
 	libexe_section_descriptor.c libexe_section_descriptor.h \
+	libexe_section_io_handle.c libexe_section_io_handle.h \
 	libexe_support.c libexe_support.h \
 	libexe_types.h \
 	libexe_unused.h

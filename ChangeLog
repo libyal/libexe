@@ -1,6 +1,12 @@
 TODO:
+* libexe
+  - get section by name function
 * exeexport
   - dump segment data?
+
+20111025
+* updated m4 files
+* added section IO handle
 
 20111024
 * remove mapi.h include header

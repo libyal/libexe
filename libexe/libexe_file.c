@@ -1067,3 +1067,142 @@ int libexe_file_get_section(
 	return( 1 );
 }
 
+/* Retrieves a specific section by an ASCII formatted name
+ * Returns 1 if successful, 0 if no such section or -1 on error
+ */
+int libexe_file_get_section_by_name(
+     libexe_file_t *file,
+     const uint8_t *name,
+     size_t name_length,
+     libexe_section_t **section,
+     liberror_error_t **error )
+{
+	libexe_internal_file_t *internal_file           = NULL;
+	libexe_section_descriptor_t *section_descriptor = NULL;
+	static char *function                           = "libexe_file_get_section_by_name";
+	int number_of_sections                          = 0;
+	int section_index                               = 0;
+
+	if( file == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid file.",
+		 function );
+
+		return( -1 );
+	}
+	internal_file = (libexe_internal_file_t *) file;
+
+	if( name == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid name.",
+		 function );
+
+		return( -1 );
+	}
+	if( name_length > (size_t) SSIZE_MAX )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid name length value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	if( section == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	if( libexe_array_get_number_of_entries(
+	     internal_file->sections_array,
+	     &number_of_sections,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve number of sections.",
+		 function );
+
+		return( -1 );
+	}
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
+	{
+		if( libexe_array_get_entry_by_index(
+		     internal_file->sections_array,
+		     section_index,
+		     (intptr_t **) &section_descriptor,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve event section descriptor: %d.",
+			 function,
+			 section_index );
+
+			return( -1 );
+		}
+		if( section_descriptor == NULL )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: missing section descriptor: %d.",
+			 function,
+			 section_index );
+
+			return( -1 );
+		}
+		if( ( name_length + 1 ) == section_descriptor->name_size )
+		{
+			if( libcstring_narrow_string_compare(
+			     section_descriptor->name,
+			     name,
+			     name_length ) == 0 )
+			{
+				if( libexe_section_initialize(
+				     section,
+				     internal_file->io_handle,
+				     internal_file->file_io_handle,
+				     section_descriptor,
+				     LIBEXE_SECTION_FLAGS_DEFAULT,
+				     error ) != 1 )
+				{
+					liberror_error_set(
+					 error,
+					 LIBERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+					 "%s: unable to create section.",
+					 function );
+
+					return( -1 );
+				}
+				return( 1 );
+			}
+		}
+	}
+	return( 0 );
+}
+

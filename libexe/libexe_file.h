@@ -130,6 +130,14 @@ int libexe_file_get_section(
      libexe_section_t **section,
      liberror_error_t **error );
 
+LIBEXE_EXTERN \
+int libexe_file_get_section_by_name(
+     libexe_file_t *file,
+     const uint8_t *name,
+     size_t name_length,
+     libexe_section_t **section,
+     liberror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

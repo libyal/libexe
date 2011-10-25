@@ -289,6 +289,17 @@ int libexe_file_get_section(
      libexe_section_t **section,
      libexe_error_t **error );
 
+/* Retrieves a specific section by an ASCII formatted name
+ * Returns 1 if successful, 0 if no such section or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_file_get_section_by_name(
+     libexe_file_t *file,
+     const uint8_t *name,
+     size_t name_length,
+     libexe_section_t **section,
+     libexe_error_t **error );
+
 /* -------------------------------------------------------------------------
  * Section functions
  * ------------------------------------------------------------------------- */
@@ -301,17 +312,17 @@ int libexe_section_free(
      libexe_section_t **section,
      libexe_error_t **error );
 
-/* Retrieves the size of the name
+/* Retrieves the size of the ASCII formatted name
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
 int libexe_section_get_name_size(
      libexe_section_t *section,
-     size_t *utf8_string_size,
+     size_t *name,
      libexe_error_t **error );
 
-/* Retrieves the name
+/* Retrieves the ASCII formatted name
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -370,6 +381,17 @@ int libexe_section_get_virtual_address(
      libexe_section_t *section,
      uint32_t *virtual_address,
      libexe_error_t **error );
+
+#if defined( LIBEXE_HAVE_BFIO )
+/* Retrieves the section data file io handle
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_data_file_io_handle(
+     libexe_section_t *section,
+     libbfio_handle_t **file_io_handle,
+     libexe_error_t **error );
+#endif
 
 #if defined( __cplusplus )
 }

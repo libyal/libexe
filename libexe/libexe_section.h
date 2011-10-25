@@ -131,6 +131,12 @@ int libexe_section_get_virtual_address(
      uint32_t *virtual_address,
      liberror_error_t **error );
 
+LIBEXE_EXTERN \
+int libexe_section_get_data_file_io_handle(
+     libexe_section_t *section,
+     libbfio_handle_t **file_io_handle,
+     liberror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

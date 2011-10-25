@@ -30,6 +30,7 @@
 #include "libexe_libbfio.h"
 #include "libexe_libfdata.h"
 #include "libexe_section.h"
+#include "libexe_section_io_handle.h"
 
 /* Initializes the section and its values
  * Returns 1 if successful or -1 on error
@@ -267,7 +268,7 @@ int libexe_section_free(
 	return( result );
 }
 
-/* Retrieves the size of the name
+/* Retrieves the size of the ASCII formatted name
  * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -319,7 +320,7 @@ int libexe_section_get_name_size(
 	return( 1 );
 }
 
-/* Retrieves the name
+/* Retrieves the ASCII formatted name
  * The size should include the end of string character
  * Returns 1 if successful or -1 on error
  */
@@ -660,5 +661,67 @@ int libexe_section_get_virtual_address(
 	*virtual_address = internal_section->section_descriptor->virtual_address;
 
 	return( 1 );
+}
+
+/* Retrieves the section data file IO handle
+ * Returns 1 if successful -1 on error
+ */
+int libexe_section_get_data_file_io_handle(
+     libexe_section_t *section,
+     libbfio_handle_t **file_io_handle,
+     liberror_error_t **error )
+{
+	libexe_section_io_handle_t *io_handle = NULL;
+	static char *function                 = "libexe_section_get_data_file_io_handle";
+
+	if( libexe_section_io_handle_initialize(
+	     &io_handle,
+	     section,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create section file IO handle.",
+		 function );
+
+		goto on_error;
+	}
+	if( libbfio_handle_initialize(
+	     file_io_handle,
+	     (intptr_t *) io_handle,
+	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_free,
+	     (int (*)(intptr_t **, intptr_t *, liberror_error_t **)) libexe_section_io_handle_clone,
+	     (int (*)(intptr_t *, int flags, liberror_error_t **)) libexe_section_io_handle_open,
+	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_close,
+	     (ssize_t (*)(intptr_t *, uint8_t *, size_t, liberror_error_t **)) libexe_section_io_handle_read,
+	     (ssize_t (*)(intptr_t *, const uint8_t *, size_t, liberror_error_t **)) libexe_section_io_handle_write,
+	     (off64_t (*)(intptr_t *, off64_t, int, liberror_error_t **)) libexe_section_io_handle_seek_offset,
+	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_exists,
+	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_is_open,
+	     (int (*)(intptr_t *, size64_t *, liberror_error_t **)) libexe_section_io_handle_get_size,
+	     LIBBFIO_FLAG_IO_HANDLE_MANAGED | LIBBFIO_FLAG_IO_HANDLE_CLONE_BY_FUNCTION,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create file IO handle.",
+		 function );
+
+		goto on_error;
+	}
+	return( 1 );
+
+on_error:
+	if( io_handle != NULL )
+	{
+		libexe_section_io_handle_free(
+		 io_handle,
+		 NULL );
+	}
+	return( -1 );
 }
 
