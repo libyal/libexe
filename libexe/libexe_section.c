@@ -326,7 +326,7 @@ int libexe_section_get_name_size(
  */
 int libexe_section_get_name(
      libexe_section_t *section,
-     uint8_t *name,
+     char *name,
      size_t name_size,
      liberror_error_t **error )
 {

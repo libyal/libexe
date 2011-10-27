@@ -295,7 +295,7 @@ int libexe_file_get_section(
 LIBEXE_EXTERN \
 int libexe_file_get_section_by_name(
      libexe_file_t *file,
-     const uint8_t *name,
+     const char *name,
      size_t name_length,
      libexe_section_t **section,
      libexe_error_t **error );
@@ -329,7 +329,7 @@ int libexe_section_get_name_size(
 LIBEXE_EXTERN \
 int libexe_section_get_name(
      libexe_section_t *section,
-     uint8_t *name,
+     char *name,
      size_t name_size,
      libexe_error_t **error );
 

@@ -617,7 +617,7 @@ int libexe_file_open_file_io_handle(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_IO,
 		 LIBERROR_IO_ERROR_OPEN_FAILED,
-		 "%s: unable to open file.",
+		 "%s: unable to determine if file IO handle is open.",
 		 function );
 
 		return( -1 );
@@ -1072,7 +1072,7 @@ int libexe_file_get_section(
  */
 int libexe_file_get_section_by_name(
      libexe_file_t *file,
-     const uint8_t *name,
+     const char *name,
      size_t name_length,
      libexe_section_t **section,
      liberror_error_t **error )

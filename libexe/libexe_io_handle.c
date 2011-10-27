@@ -1698,7 +1698,7 @@ int libexe_io_handle_read_section_table(
 		section_descriptor->name[ 8 ] = 0;
 
 		section_descriptor->name_size = libcstring_narrow_string_length(
-		                                 (char *) section_descriptor->name );
+		                                 section_descriptor->name );
 
 		if( section_descriptor->name_size > 0 )
 		{

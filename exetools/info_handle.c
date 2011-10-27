@@ -323,14 +323,14 @@ int info_handle_close_input(
 	return( 0 );
 }
 
-/* Prints the file information to a stream
+/* Prints the file information
  * Returns 1 if successful or -1 on error
  */
 int info_handle_file_fprint(
      info_handle_t *info_handle,
      liberror_error_t **error )
 {
-	uint8_t name[ 9 ];
+	char name[ 9 ];
 
 	libexe_section_t *section = NULL;
 	static char *function     = "info_handle_file_fprint";
