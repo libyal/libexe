@@ -105,6 +105,8 @@ int libexe_set_codepage(
 	 && ( codepage != LIBEXE_CODEPAGE_KOI8_R )
 	 && ( codepage != LIBEXE_CODEPAGE_KOI8_U )
 	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_874 )
+	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_932 )
+	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_936 )
 	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_1250 )
 	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_1251 )
 	 && ( codepage != LIBEXE_CODEPAGE_WINDOWS_1252 )
