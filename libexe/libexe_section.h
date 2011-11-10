@@ -38,14 +38,6 @@
 extern "C" {
 #endif
 
-#define LIBEXE_SECTION_FLAGS_DEFAULT			LIBEXE_SECTION_FLAG_NON_MANAGED_FILE_IO_HANDLE
-
-enum LIBEXE_SECTION_FLAGS
-{
-	LIBEXE_SECTION_FLAG_NON_MANAGED_FILE_IO_HANDLE	= 0x00,
-	LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE	= 0x01,
-};
-
 typedef struct libexe_internal_section libexe_internal_section_t;
 
 struct libexe_internal_section

@@ -4,6 +4,12 @@ TODO:
 * exeexport
   - dump segment data?
 
+20111110
+* code clean up
+
+20111106
+* code clean up
+
 20111101
 * updated libcstring, libsystem, libuna, libbfio, libfdatetime
 * added windows codepage 932 and 936 support

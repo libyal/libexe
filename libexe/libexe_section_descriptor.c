@@ -160,7 +160,7 @@ int libexe_section_descriptor_free(
 		 "%s: invalid section descriptor.",
 		 function );
 
-		return( 1 );
+		return( -1 );
 	}
 	if( libfdata_block_free(
 	     &( section_descriptor->data_block ),
@@ -201,7 +201,7 @@ int libexe_section_descriptor_set_data_range(
 		 "%s: invalid section descriptor.",
 		 function );
 
-		return( 1 );
+		return( -1 );
 	}
 	if( libfdata_block_set_segment_by_index(
 	     section_descriptor->data_block,

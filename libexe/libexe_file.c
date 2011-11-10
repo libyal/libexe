@@ -1033,6 +1033,17 @@ int libexe_file_get_section(
 
 		return( -1 );
 	}
+	if( *section != NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid section value already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( libexe_array_get_entry_by_index(
 	     internal_file->sections_array,
 	     section_index,
@@ -1127,6 +1138,17 @@ int libexe_file_get_section_by_name(
 		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	if( *section != NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid section value already set.",
 		 function );
 
 		return( -1 );
