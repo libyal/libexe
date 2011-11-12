@@ -57,6 +57,17 @@ int libexe_section_initialize(
 
 		return( -1 );
 	}
+	if( *section != NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid section value already set.",
+		 function );
+
+		return( -1 );
+	}
 	if( section_descriptor == NULL )
 	{
 		liberror_error_set(
@@ -80,94 +91,92 @@ int libexe_section_initialize(
 
 		return( -1 );
 	}
-	if( *section == NULL )
+	internal_section = memory_allocate_structure(
+	                    libexe_internal_section_t );
+
+	if( internal_section == NULL )
 	{
-		internal_section = memory_allocate_structure(
-		                    libexe_internal_section_t );
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create internal section.",
+		 function );
 
-		if( internal_section == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create internal section.",
-			 function );
+		goto on_error;
+	}
+	if( memory_set(
+	     internal_section,
+	     0,
+	     sizeof( libexe_internal_section_t ) ) == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_MEMORY,
+		 LIBERROR_MEMORY_ERROR_SET_FAILED,
+		 "%s: unable to clear internal section.",
+		 function );
 
-			goto on_error;
-		}
-		if( memory_set(
-		     internal_section,
-		     0,
-		     sizeof( libexe_internal_section_t ) ) == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_SET_FAILED,
-			 "%s: unable to clear internal section.",
-			 function );
+		memory_free(
+		 internal_section );
 
-			memory_free(
-			 internal_section );
-
-			return( -1 );
-		}
-		if( ( flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) == 0 )
-		{
-			internal_section->file_io_handle = file_io_handle;
-		}
-		else
-		{
-			if( libbfio_handle_clone(
-			     &( internal_section->file_io_handle ),
-			     file_io_handle,
-			     error ) != 1 )
-			{
-				liberror_error_set(
-				 error,
-				 LIBERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
-				 "%s: unable to copy file IO handle.",
-				 function );
-
-				goto on_error;
-			}
-			if( libbfio_handle_set_open_on_demand(
-			     internal_section->file_io_handle,
-			     1,
-			     error ) != 1 )
-			{
-				liberror_error_set(
-				 error,
-				 LIBERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
-				 "%s: unable to set open on demand in file IO handle.",
-				 function );
-
-				goto on_error;
-			}
-		}
-		if( libfdata_cache_initialize(
-		     &( internal_section->data_cache ),
-		     LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA,
+		return( -1 );
+	}
+	if( ( flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) == 0 )
+	{
+		internal_section->file_io_handle = file_io_handle;
+	}
+	else
+	{
+		if( libbfio_handle_clone(
+		     &( internal_section->file_io_handle ),
+		     file_io_handle,
 		     error ) != 1 )
 		{
 			liberror_error_set(
 			 error,
 			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create data cache.",
+			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 "%s: unable to copy file IO handle.",
 			 function );
 
 			goto on_error;
 		}
-		internal_section->io_handle          = io_handle;
-		internal_section->section_descriptor = section_descriptor;
-		internal_section->flags              = flags;
+		if( libbfio_handle_set_open_on_demand(
+		     internal_section->file_io_handle,
+		     1,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 "%s: unable to set open on demand in file IO handle.",
+			 function );
 
-		*section = (libexe_section_t *) internal_section;
+			goto on_error;
+		}
 	}
+	if( libfdata_cache_initialize(
+	     &( internal_section->data_cache ),
+	     LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create data cache.",
+		 function );
+
+		goto on_error;
+	}
+	internal_section->io_handle          = io_handle;
+	internal_section->section_descriptor = section_descriptor;
+	internal_section->flags              = flags;
+
+	*section = (libexe_section_t *) internal_section;
+
 	return( 1 );
 
 on_error:
@@ -219,34 +228,31 @@ int libexe_section_free(
 		 */
 		if( ( internal_section->flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) != 0 )
 		{
-			if( internal_section->file_io_handle != NULL )
+			if( libbfio_handle_close(
+			     internal_section->file_io_handle,
+			     error ) != 0 )
 			{
-				if( libbfio_handle_close(
-				     internal_section->file_io_handle,
-				     error ) != 0 )
-				{
-					liberror_error_set(
-					 error,
-					 LIBERROR_ERROR_DOMAIN_IO,
-					 LIBERROR_IO_ERROR_CLOSE_FAILED,
-					 "%s: unable to close file IO handle.",
-					 function );
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_IO,
+				 LIBERROR_IO_ERROR_CLOSE_FAILED,
+				 "%s: unable to close file IO handle.",
+				 function );
 
-					result = -1;
-				}
-				if( libbfio_handle_free(
-				     &( internal_section->file_io_handle ),
-				     error ) != 1 )
-				{
-					liberror_error_set(
-					 error,
-					 LIBERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-					 "%s: unable to free file IO handle.",
-					 function );
+				result = -1;
+			}
+			if( libbfio_handle_free(
+			     &( internal_section->file_io_handle ),
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free file IO handle.",
+				 function );
 
-					result = -1;
-				}
+				result = -1;
 			}
 		}
 		if( libfdata_cache_free(

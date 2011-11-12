@@ -59,68 +59,77 @@ int libexe_file_initialize(
 
 		return( -1 );
 	}
-	if( *file == NULL )
+	if( *file != NULL )
 	{
-		internal_file = memory_allocate_structure(
-		                 libexe_internal_file_t );
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid file value already set.",
+		 function );
 
-		if( internal_file == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
-			 "%s: unable to create file.",
-			 function );
-
-			goto on_error;
-		}
-		if( memory_set(
-		     internal_file,
-		     0,
-		     sizeof( libexe_internal_file_t ) ) == NULL )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_SET_FAILED,
-			 "%s: unable to clear file.",
-			 function );
-
-			memory_free(
-			 internal_file );
-
-			return( -1 );
-		}
-		if( libexe_array_initialize(
-		     &( internal_file->sections_array ),
-		     0,
-		     error ) != 1 )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create sections array.",
-			 function );
-
-			goto on_error;
-		}
-		if( libexe_io_handle_initialize(
-		     &( internal_file->io_handle ),
-		     error ) != 1 )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create IO handle.",
-			 function );
-
-			goto on_error;
-		}
-		*file = (libexe_file_t *) internal_file;
+		return( -1 );
 	}
+	internal_file = memory_allocate_structure(
+	                 libexe_internal_file_t );
+
+	if( internal_file == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_MEMORY,
+		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 "%s: unable to create file.",
+		 function );
+
+		goto on_error;
+	}
+	if( memory_set(
+	     internal_file,
+	     0,
+	     sizeof( libexe_internal_file_t ) ) == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_MEMORY,
+		 LIBERROR_MEMORY_ERROR_SET_FAILED,
+		 "%s: unable to clear file.",
+		 function );
+
+		memory_free(
+		 internal_file );
+
+		return( -1 );
+	}
+	if( libexe_array_initialize(
+	     &( internal_file->sections_array ),
+	     0,
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create sections array.",
+		 function );
+
+		goto on_error;
+	}
+	if( libexe_io_handle_initialize(
+	     &( internal_file->io_handle ),
+	     error ) != 1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create IO handle.",
+		 function );
+
+		goto on_error;
+	}
+	*file = (libexe_file_t *) internal_file;
+
 	return( 1 );
 
 on_error:
@@ -185,7 +194,7 @@ int libexe_file_free(
 
 		if( libexe_array_free(
 		     &( internal_file->sections_array ),
-		     (int (*)(intptr_t *, liberror_error_t **)) &libexe_section_descriptor_free,
+		     (int (*)(intptr_t **, liberror_error_t **)) &libexe_section_descriptor_free,
 		     error ) != 1 )
 		{
 			liberror_error_set(
@@ -743,7 +752,7 @@ int libexe_file_close(
 	if( libexe_array_resize(
 	     internal_file->sections_array,
 	     0,
-	     (int (*)(intptr_t *, liberror_error_t **)) &libexe_section_descriptor_free,
+	     (int (*)(intptr_t **, liberror_error_t **)) &libexe_section_descriptor_free,
 	     error ) != 1 )
 	{
 		liberror_error_set(

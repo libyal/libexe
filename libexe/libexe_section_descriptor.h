@@ -61,7 +61,7 @@ int libexe_section_descriptor_initialize(
      liberror_error_t **error );
 
 int libexe_section_descriptor_free(
-     libexe_section_descriptor_t *section_descriptor,
+     libexe_section_descriptor_t **section_descriptor,
      liberror_error_t **error );
 
 int libexe_section_descriptor_set_data_range(
