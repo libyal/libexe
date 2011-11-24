@@ -30,7 +30,7 @@
 #include "libexe_extern.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
-#include "libexe_libfdata.h"
+#include "libexe_libfcache.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_types.h"
 
@@ -56,7 +56,7 @@ struct libexe_internal_section
 
 	/* The data cache
 	 */
-	libfdata_cache_t *data_cache;
+	libfcache_cache_t *data_cache;
 
 	/* The flags
 	 */

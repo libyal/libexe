@@ -4,6 +4,13 @@ TODO:
 * exeexport
   - dump segment data?
 
+Format support:
+* PE header signature containing "LE"
+
+20111124
+* added libfcache
+* updated libfdata
+
 20111112
 * code clean up
 

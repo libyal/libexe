@@ -28,6 +28,7 @@
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 #include "libexe_section.h"
 #include "libexe_section_io_handle.h"
@@ -157,7 +158,7 @@ int libexe_section_initialize(
 			goto on_error;
 		}
 	}
-	if( libfdata_cache_initialize(
+	if( libfcache_cache_initialize(
 	     &( internal_section->data_cache ),
 	     LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA,
 	     error ) != 1 )
@@ -255,7 +256,7 @@ int libexe_section_free(
 				result = -1;
 			}
 		}
-		if( libfdata_cache_free(
+		if( libfcache_cache_free(
 		     &( internal_section->data_cache ),
 		     error ) != 1 )
 		{
