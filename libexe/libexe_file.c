@@ -1,7 +1,7 @@
 /*
  * File functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -612,7 +612,7 @@ int libexe_file_open_file_io_handle(
 	}
 	if( ( access_flags & LIBEXE_ACCESS_FLAG_READ ) != 0 )
 	{
-		bfio_access_flags = LIBBFIO_FLAG_READ;
+		bfio_access_flags = LIBBFIO_ACCESS_FLAG_READ;
 	}
 	internal_file->file_io_handle = file_io_handle;
 
@@ -825,28 +825,31 @@ int libexe_file_open_read(
 
 		return( -1 );
 	}
+	if( number_of_sections > 0 )
+	{
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
-	{
-		libnotify_printf(
-		 "Reading section table:\n" );
-	}
+		if( libnotify_verbose != 0 )
+		{
+			libnotify_printf(
+			 "Reading section table:\n" );
+		}
 #endif
-	if( libexe_io_handle_read_section_table(
-	     internal_file->io_handle,
-	     internal_file->file_io_handle,
-	     number_of_sections,
-	     internal_file->sections_array,
-	     error ) != 1 )
-	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read section table.",
-		 function );
+		if( libexe_io_handle_read_section_table(
+		     internal_file->io_handle,
+		     internal_file->file_io_handle,
+		     number_of_sections,
+		     internal_file->sections_array,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_IO,
+			 LIBERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read section table.",
+			 function );
 
-		return( -1 );
+			return( -1 );
+		}
 	}
 	return( 1 );
 }

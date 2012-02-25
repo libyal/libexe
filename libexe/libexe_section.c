@@ -1,7 +1,7 @@
 /*
  * Section functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -698,7 +698,7 @@ int libexe_section_get_data_file_io_handle(
 	if( libbfio_handle_initialize(
 	     file_io_handle,
 	     (intptr_t *) io_handle,
-	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_free,
+	     (int (*)(intptr_t **, liberror_error_t **)) libexe_section_io_handle_free,
 	     (int (*)(intptr_t **, intptr_t *, liberror_error_t **)) libexe_section_io_handle_clone,
 	     (int (*)(intptr_t *, int flags, liberror_error_t **)) libexe_section_io_handle_open,
 	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_close,
@@ -726,7 +726,7 @@ on_error:
 	if( io_handle != NULL )
 	{
 		libexe_section_io_handle_free(
-		 io_handle,
+		 &io_handle,
 		 NULL );
 	}
 	return( -1 );

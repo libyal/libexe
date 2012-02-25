@@ -1,7 +1,7 @@
 /*
- * The section table definition of a MZ, PE/COFF executable (EXE)
+ * The section table definition of an executable (EXE) file
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *

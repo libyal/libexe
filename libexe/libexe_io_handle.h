@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -40,6 +40,10 @@ typedef struct libexe_io_handle libexe_io_handle_t;
 
 struct libexe_io_handle
 {
+	/* The executable type
+	 */
+	uint8_t executable_type;
+
 	/* The creation time
 	 */
 	uint32_t creation_time;
@@ -70,7 +74,28 @@ int libexe_io_handle_read_file_header(
 int libexe_io_handle_read_mz_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
-     uint32_t *pe_header_offset,
+     uint32_t *extended_header_offset,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_extended_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t extended_header_offset,
+     uint16_t *number_of_sections,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_le_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t le_header_offset,
+     uint16_t *number_of_sections,
+     liberror_error_t **error );
+
+int libexe_io_handle_read_ne_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t ne_header_offset,
+     uint16_t *number_of_sections,
      liberror_error_t **error );
 
 int libexe_io_handle_read_pe_header(

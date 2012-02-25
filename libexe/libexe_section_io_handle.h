@@ -1,7 +1,7 @@
 /*
  * Section IO handle functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -56,7 +56,7 @@ int libexe_section_io_handle_initialize(
      liberror_error_t **error );
 
 int libexe_section_io_handle_free(
-     libexe_section_io_handle_t *io_handle,
+     libexe_section_io_handle_t **io_handle,
      liberror_error_t **error );
 
 int libexe_section_io_handle_clone(

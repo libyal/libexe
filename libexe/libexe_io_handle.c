@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -40,6 +40,8 @@
 #include "exe_section_table.h"
 
 const char *exe_mz_signature = "MZ";
+const char *exe_le_signature = "LE";
+const char *exe_ne_signature = "NE";
 const char *exe_pe_signature = "PE\x0\x0";
 
 /* Initialize an IO handle
@@ -102,7 +104,8 @@ int libexe_io_handle_initialize(
 
 		goto on_error;
 	}
-	( *io_handle )->ascii_codepage = LIBEXE_CODEPAGE_WINDOWS_1252;
+	( *io_handle )->executable_type = LIBEXE_EXECUTABLE_TYPE_MZ;
+	( *io_handle )->ascii_codepage  = LIBEXE_CODEPAGE_WINDOWS_1252;
 
 	return( 1 );
 
@@ -156,13 +159,13 @@ int libexe_io_handle_read_file_header(
      uint16_t *number_of_sections,
      liberror_error_t **error )
 {
-	static char *function     = "libexe_io_handle_read_file_header";
-	uint32_t pe_header_offset = 0;
+	static char *function           = "libexe_io_handle_read_file_header";
+	uint32_t extended_header_offset = 0;
 
 	if( libexe_io_handle_read_mz_header(
 	     io_handle,
 	     file_io_handle,
-	     &pe_header_offset,
+	     &extended_header_offset,
 	     error ) != 1 )
 	{
 		liberror_error_set(
@@ -174,23 +177,27 @@ int libexe_io_handle_read_file_header(
 
 		return( -1 );
 	}
-	/* TODO print data between current offset and pe_header_offset */
-
-	if( libexe_io_handle_read_pe_header(
-	     io_handle,
-	     file_io_handle,
-	     pe_header_offset,
-	     number_of_sections,
-	     error ) != 1 )
+/* TODO check if value is sane */
+	if( extended_header_offset != 0 )
 	{
-		liberror_error_set(
-		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read PE/COFF header.",
-		 function );
+/* TODO print data between current offset and extended_header_offset */
 
-		return( -1 );
+		if( libexe_io_handle_read_extended_header(
+		     io_handle,
+		     file_io_handle,
+		     extended_header_offset,
+		     number_of_sections,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_IO,
+			 LIBERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read extended header.",
+			 function );
+
+			return( -1 );
+		}
 	}
 	return( 1 );
 }
@@ -201,17 +208,19 @@ int libexe_io_handle_read_file_header(
 int libexe_io_handle_read_mz_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
-     uint32_t *pe_header_offset,
+     uint32_t *extended_header_offset,
      liberror_error_t **error )
 {
 	exe_mz_header_t mz_header;
 
-	static char *function = "libexe_io_handle_read_mz_header";
-	ssize_t read_count    = 0;
+	static char *function                 = "libexe_io_handle_read_mz_header";
+	ssize_t read_count                    = 0;
+	uint16_t number_of_relocation_entries = 0;
+	uint16_t relocation_table_offset      = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	uint32_t value_32bit  = 0;
-	uint16_t value_16bit  = 0;
+	uint32_t value_32bit                  = 0;
+	uint16_t value_16bit                  = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -225,13 +234,13 @@ int libexe_io_handle_read_mz_header(
 
 		return( -1 );
 	}
-	if( pe_header_offset == NULL )
+	if( extended_header_offset == NULL )
 	{
 		liberror_error_set(
 		 error,
 		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid PE header offset.",
+		 "%s: invalid extended header offset.",
 		 function );
 
 		return( -1 );
@@ -284,7 +293,8 @@ int libexe_io_handle_read_mz_header(
 		 function );
 		libnotify_print_data(
 		 (uint8_t *) &mz_header,
-		 sizeof( exe_mz_header_t ) );
+		 sizeof( exe_mz_header_t ),
+		 0 );
 	}
 #endif
 	if( memory_compare(
@@ -301,9 +311,13 @@ int libexe_io_handle_read_mz_header(
 
 		return( -1 );
 	}
-	byte_stream_copy_to_uint32_little_endian(
-	 mz_header.pe_header_offset,
-	 *pe_header_offset );
+	byte_stream_copy_to_uint16_little_endian(
+	 mz_header.number_of_relocation_entries,
+	 number_of_relocation_entries );
+
+	byte_stream_copy_to_uint16_little_endian(
+	 mz_header.relocation_table_offset,
+	 relocation_table_offset );
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libnotify_verbose != 0 )
@@ -330,13 +344,10 @@ int libexe_io_handle_read_mz_header(
 		 function,
 		 value_16bit );
 
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.number_of_relocation_entries,
-		 value_16bit );
 		libnotify_printf(
 		 "%s: number of relocation entries\t\t: %" PRIu16 "\n",
 		 function,
-		 value_16bit );
+		 number_of_relocation_entries );
 
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.number_of_header_paragraphs,
@@ -394,13 +405,10 @@ int libexe_io_handle_read_mz_header(
 		 function,
 		 value_32bit );
 
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.relocation_table_offset,
-		 value_16bit );
 		libnotify_printf(
 		 "%s: relocation table offset\t\t: 0x%04" PRIx16 "\n",
 		 function,
-		 value_16bit );
+		 relocation_table_offset );
 
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.overlay_number,
@@ -411,25 +419,433 @@ int libexe_io_handle_read_mz_header(
 		 value_16bit );
 
 		libnotify_printf(
-		 "%s: unknown1:\n",
-		 function );
-		libnotify_print_data(
-		 mz_header.unknown1,
-		 32 );
-
-		libnotify_printf(
-		 "%s: PE header offset\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 *pe_header_offset );
-
-		libnotify_printf(
-		 "%s: unknown2:\n",
-		 function );
-		libnotify_print_data(
-		 mz_header.unknown2,
-		 112 );
+		 "\n" );
 	}
 #endif
+	if( relocation_table_offset >= 0x40 )
+	{
+/* TODO read data */
+		byte_stream_copy_to_uint32_little_endian(
+		 mz_header.extended_header_offset,
+		 *extended_header_offset );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			libnotify_printf(
+			 "%s: unknown1:\n",
+			 function );
+			libnotify_print_data(
+			 mz_header.unknown1,
+			 32,
+			 0 );
+
+			libnotify_printf(
+			 "%s: extended header offset\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 *extended_header_offset );
+
+			libnotify_printf(
+			 "%s: unknown2:\n",
+			 function );
+			libnotify_print_data(
+			 mz_header.unknown2,
+			 112,
+			 0 );
+		}
+	}
+#endif
+/* TODO print data between realloc and current offset */
+	if( number_of_relocation_entries > 0 )
+	{
+/* TODO print relation table entries */
+	}
+	return( 1 );
+}
+
+/* Reads the extended header
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_io_handle_read_extended_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t extended_header_offset,
+     uint16_t *number_of_sections,
+     liberror_error_t **error )
+{
+	uint8_t extended_header_data[ 2 ];
+
+	static char *function = "libexe_io_handle_read_extended_header";
+	ssize_t read_count    = 0;
+
+	if( io_handle == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: reading extended header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 function,
+		 extended_header_offset,
+		 extended_header_offset );
+	}
+#endif
+	if( libbfio_handle_seek_offset(
+	     file_io_handle,
+	     (off64_t) extended_header_offset,
+	     SEEK_SET,
+	     error ) == -1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek extended header offset: %" PRIu32 ".",
+		 function,
+		 extended_header_offset );
+
+		return( -1 );
+	}
+	read_count = libbfio_handle_read(
+	              file_io_handle,
+	              extended_header_data,
+	              2,
+	              error );
+
+	if( read_count != 2 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read first 2 bytes of extended header.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: extended header data:\n",
+		 function );
+		libnotify_print_data(
+		 extended_header_data,
+		 2,
+		 0 );
+	}
+#endif
+/* TODO pass extended header, so it is read once */
+	if( ( extended_header_data[ 0 ] == (uint8_t) 'L' )
+	 && ( extended_header_data[ 1 ] == (uint8_t) 'E' ) )
+	{
+		if( libexe_io_handle_read_le_header(
+		     io_handle,
+		     file_io_handle,
+		     extended_header_offset,
+		     number_of_sections,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_IO,
+			 LIBERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read LE header.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else if( ( extended_header_data[ 0 ] == (uint8_t) 'N' )
+	      && ( extended_header_data[ 1 ] == (uint8_t) 'E' ) )
+	{
+		if( libexe_io_handle_read_ne_header(
+		     io_handle,
+		     file_io_handle,
+		     extended_header_offset,
+		     number_of_sections,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_IO,
+			 LIBERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read NE header.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else if( ( extended_header_data[ 0 ] == (uint8_t) 'P' )
+	      && ( extended_header_data[ 1 ] == (uint8_t) 'E' ) )
+	{
+		if( libexe_io_handle_read_pe_header(
+		     io_handle,
+		     file_io_handle,
+		     extended_header_offset,
+		     number_of_sections,
+		     error ) != 1 )
+		{
+			liberror_error_set(
+			 error,
+			 LIBERROR_ERROR_DOMAIN_IO,
+			 LIBERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read PE/COFF header.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported extended header.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Reads the LE header
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_io_handle_read_le_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t le_header_offset,
+     uint16_t *number_of_sections,
+     liberror_error_t **error )
+{
+	exe_le_header_t le_header;
+
+	static char *function = "libexe_io_handle_read_le_header";
+	ssize_t read_count    = 0;
+
+	if( io_handle == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: reading LE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 function,
+		 le_header_offset,
+		 le_header_offset );
+	}
+#endif
+	if( libbfio_handle_seek_offset(
+	     file_io_handle,
+	     (off64_t) le_header_offset,
+	     SEEK_SET,
+	     error ) == -1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek LE header offset: %" PRIu32 ".",
+		 function,
+		 le_header_offset );
+
+		return( -1 );
+	}
+	read_count = libbfio_handle_read(
+	              file_io_handle,
+	              (uint8_t *) &le_header,
+	              sizeof( exe_le_header_t ),
+	              error );
+
+	if( read_count != (ssize_t) sizeof( exe_le_header_t ) )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read LE header.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: LE header:\n",
+		 function );
+		libnotify_print_data(
+		 (uint8_t *) &le_header,
+		 sizeof( exe_le_header_t ),
+		 0 );
+	}
+#endif
+	if( memory_compare(
+	     le_header.signature,
+	     exe_le_signature,
+	     2 ) != 0 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid signature.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: signature\t\t\t\t: %c%c\n",
+		 function,
+		 le_header.signature[ 0 ],
+		 le_header.signature[ 1 ] );
+
+		libnotify_printf(
+		 "\n" );
+	}
+#endif
+
+/* TODO */
+	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_LE;
+
+	return( 1 );
+}
+
+/* Reads the NE header
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_io_handle_read_ne_header(
+     libexe_io_handle_t *io_handle,
+     libbfio_handle_t *file_io_handle,
+     uint32_t ne_header_offset,
+     uint16_t *number_of_sections,
+     liberror_error_t **error )
+{
+	exe_ne_header_t ne_header;
+
+	static char *function = "libexe_io_handle_read_ne_header";
+	ssize_t read_count    = 0;
+
+	if( io_handle == NULL )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: reading NE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 function,
+		 ne_header_offset,
+		 ne_header_offset );
+	}
+#endif
+	if( libbfio_handle_seek_offset(
+	     file_io_handle,
+	     (off64_t) ne_header_offset,
+	     SEEK_SET,
+	     error ) == -1 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek NE header offset: %" PRIu32 ".",
+		 function,
+		 ne_header_offset );
+
+		return( -1 );
+	}
+	read_count = libbfio_handle_read(
+	              file_io_handle,
+	              (uint8_t *) &ne_header,
+	              sizeof( exe_ne_header_t ),
+	              error );
+
+	if( read_count != (ssize_t) sizeof( exe_ne_header_t ) )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_IO,
+		 LIBERROR_IO_ERROR_READ_FAILED,
+		 "%s: unable to read NE header.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: NE header:\n",
+		 function );
+		libnotify_print_data(
+		 (uint8_t *) &ne_header,
+		 sizeof( exe_ne_header_t ),
+		 0 );
+	}
+#endif
+	if( memory_compare(
+	     ne_header.signature,
+	     exe_ne_signature,
+	     2 ) != 0 )
+	{
+		liberror_error_set(
+		 error,
+		 LIBERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 "%s: invalid signature.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libnotify_verbose != 0 )
+	{
+		libnotify_printf(
+		 "%s: signature\t\t\t\t: %c%c\n",
+		 function,
+		 ne_header.signature[ 0 ],
+		 ne_header.signature[ 1 ] );
+
+		libnotify_printf(
+		 "\n" );
+	}
+#endif
+
+/* TODO */
+	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_NE;
+
 	return( 1 );
 }
 
@@ -465,6 +881,7 @@ int libexe_io_handle_read_pe_header(
 		libnotify_printf(
 		 "%s: reading PE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
+		 pe_header_offset,
 		 pe_header_offset );
 	}
 #endif
@@ -509,7 +926,8 @@ int libexe_io_handle_read_pe_header(
 		 function );
 		libnotify_print_data(
 		 (uint8_t *) &pe_header,
-		 sizeof( exe_pe_header_t ) );
+		 sizeof( exe_pe_header_t ),
+		 0 );
 	}
 #endif
 	if( memory_compare(
@@ -556,6 +974,8 @@ int libexe_io_handle_read_pe_header(
 
 		return( -1 );
 	}
+	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_PE_COFF;
+
 	return( 1 );
 }
 
@@ -630,7 +1050,8 @@ int libexe_io_handle_read_coff_header(
 		 function );
 		libnotify_print_data(
 		 (uint8_t *) &coff_header,
-		 sizeof( exe_coff_header_t ) );
+		 sizeof( exe_coff_header_t ),
+		 0 );
 	}
 #endif
 	byte_stream_copy_to_uint16_little_endian(
@@ -872,7 +1293,8 @@ int libexe_io_handle_read_coff_optional_header(
 		 function );
 		libnotify_print_data(
 		 coff_optional_header_data,
-		 (size_t) optional_header_size );
+		 (size_t) optional_header_size,
+		 0 );
 	}
 #endif
 	byte_stream_copy_to_uint16_little_endian(
@@ -1670,7 +2092,8 @@ int libexe_io_handle_read_section_table(
 		 function );
 		libnotify_print_data(
 		 section_table,
-		 section_table_size );
+		 section_table_size,
+		 0 );
 	}
 #endif
 	section_table_data = section_table;

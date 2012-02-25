@@ -21,6 +21,18 @@ SUBDIRS = \
 	macosx \
 	msvscpp
 
+DPKG_FILES = \
+	dpkg/changelog \
+	dpkg/changelog.in \
+       	dpkg/compat \
+       	dpkg/control \
+       	dpkg/copyright \
+       	dpkg/copyright.in \
+       	dpkg/rules \
+       	dpkg/libexe-dev.docs \
+       	dpkg/libexe.docs \
+       	dpkg/libexe-tools.docs
+
 GETTEXT_FILES = \
 	config.rpath \
 	po/Makevars.in
@@ -37,6 +49,7 @@ EXTRA_DIST = \
 	README.macosx \
 	README.mingw \
 	README.static \
+	$(DPKG_FILES) \
 	$(GETTEXT_FILES) \
         $(PKGCONFIG_FILES) \
         $(SPEC_FILES)

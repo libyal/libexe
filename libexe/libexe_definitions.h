@@ -1,7 +1,7 @@
 /*
  * The internal definitions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -37,11 +37,11 @@
  * for local use of libexe
  */
 #else
-#define LIBEXE_VERSION						20111124
+#define LIBEXE_VERSION						20120225
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING					"20111124"
+#define LIBEXE_VERSION_STRING					"20120225"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access
@@ -62,6 +62,16 @@ enum LIBEXE_ACCESS_FLAGS
 #define LIBEXE_OPEN_WRITE					( LIBEXE_ACCESS_FLAG_WRITE )
 /* Reserved: not supported yet */
 #define LIBEXE_OPEN_READ_WRITE					( LIBEXE_ACCESS_FLAG_READ | LIBEXE_ACCESS_FLAG_WRITE )
+
+/* The executable types
+ */
+enum LIBEXE_EXECUTABLE_TYPES
+{
+	LIBEXE_EXECUTABLE_TYPE_MZ,
+	LIBEXE_EXECUTABLE_TYPE_LE,
+	LIBEXE_EXECUTABLE_TYPE_NE,
+	LIBEXE_EXECUTABLE_TYPE_PE_COFF,
+};
 
 /* The target architecture type definitions
  */

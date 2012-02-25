@@ -1,11 +1,15 @@
 TODO:
+* sanitize stream names with control characters
 * libexe
   - get section by name function
 * exeexport
   - dump segment data?
 
 Format support:
-* PE header signature containing "LE"
+* NE executable
+* LE executable
+
+Update man pages
 
 20111124
 * added libfcache

@@ -1,7 +1,7 @@
 /*
- * Shows information obtained from a MZ, PE/COFF executable (EXE) file
+ * Shows information obtained from an executable (EXE) file
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -53,8 +53,8 @@ void usage_fprint(
 	{
 		return;
 	}
-	fprintf( stream, "Use exeinfo to determine information about a MZ, PE/COFF\n"
-	                 "executable (EXE) file.\n\n" );
+	fprintf( stream, "Use exeinfo to determine information about an executable\n"
+	                 "(EXE) file.\n\n" );
 
 	fprintf( stream, "Usage: exeinfo [ -hvV ] source\n\n" );
 

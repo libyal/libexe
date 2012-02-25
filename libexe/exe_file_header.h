@@ -1,7 +1,7 @@
 /*
- * The file header definition of a MZ, PE/COFF executable (EXE)
+ * The file header definition of an executable (EXE) file
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -104,15 +104,45 @@ struct exe_mz_header
 	 */
 	uint8_t unknown1[ 32 ];
 
-	/* The PE header offset
+	/* The extended header offset
 	 * Consists of 4 bytes
 	 */
-	uint8_t pe_header_offset[ 4 ];
+	uint8_t extended_header_offset[ 4 ];
 
 	/* Unknown
 	 * Consists of 112 bytes
 	 */
 	uint8_t unknown2[ 112 ];
+};
+
+typedef struct exe_le_header exe_le_header_t;
+
+struct exe_le_header
+{
+	/* Signature
+	 * Consists of 2 bytes
+	 * "LE"
+	 */
+	uint8_t signature[ 2 ];
+
+/* TODO */
+};
+
+typedef struct exe_ne_header exe_ne_header_t;
+
+struct exe_ne_header
+{
+	/* Signature
+	 * Consists of 2 bytes
+	 * "NE"
+	 */
+	uint8_t signature[ 2 ];
+
+/* TODO */
+	/* Todo
+	 * Consists of 62 bytes
+	 */
+	uint8_t todo[ 62 ];
 };
 
 typedef struct exe_pe_header exe_pe_header_t;

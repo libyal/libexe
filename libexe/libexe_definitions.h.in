@@ -1,7 +1,7 @@
 /*
  * The internal definitions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -62,6 +62,16 @@ enum LIBEXE_ACCESS_FLAGS
 #define LIBEXE_OPEN_WRITE					( LIBEXE_ACCESS_FLAG_WRITE )
 /* Reserved: not supported yet */
 #define LIBEXE_OPEN_READ_WRITE					( LIBEXE_ACCESS_FLAG_READ | LIBEXE_ACCESS_FLAG_WRITE )
+
+/* The executable types
+ */
+enum LIBEXE_EXECUTABLE_TYPES
+{
+	LIBEXE_EXECUTABLE_TYPE_MZ,
+	LIBEXE_EXECUTABLE_TYPE_LE,
+	LIBEXE_EXECUTABLE_TYPE_NE,
+	LIBEXE_EXECUTABLE_TYPE_PE_COFF,
+};
 
 /* The target architecture type definitions
  */

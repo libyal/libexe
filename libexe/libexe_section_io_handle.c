@@ -1,7 +1,7 @@
 /*
  * Section IO handle functions
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -121,7 +121,7 @@ on_error:
  * Returns 1 if succesful or -1 on error
  */
 int libexe_section_io_handle_free(
-     libexe_section_io_handle_t *io_handle,
+     libexe_section_io_handle_t **io_handle,
      liberror_error_t **error )
 {
 	static char *function = "libexe_section_io_handle_free";
@@ -137,11 +137,15 @@ int libexe_section_io_handle_free(
 
 		return( -1 );
 	}
-	/* The section reference is freed elsewhere
-	 */
-	memory_free(
-	 io_handle );
+	if( *io_handle != NULL )
+	{
+		/* The section reference is freed elsewhere
+		 */
+		memory_free(
+		 *io_handle );
 
+		*io_handle = NULL;
+	}
 	return( 1 );
 }
 
@@ -245,7 +249,7 @@ int libexe_section_io_handle_open(
 
 		return( -1 );
 	}
-	if( ( flags & LIBBFIO_FLAG_READ ) == 0 )
+	if( ( flags & LIBBFIO_ACCESS_FLAG_READ ) == 0 )
 	{
 		liberror_error_set(
 		 error,
@@ -258,7 +262,7 @@ int libexe_section_io_handle_open(
 	}
 	/* Currently only support for reading data
 	 */
-	if( ( flags & ~( LIBBFIO_FLAG_READ ) ) != 0 )
+	if( ( flags & ~( LIBBFIO_ACCESS_FLAG_READ ) ) != 0 )
 	{
 		liberror_error_set(
 		 error,
@@ -367,7 +371,7 @@ ssize_t libexe_section_io_handle_read(
 
 		return( -1 );
 	}
-	if( ( io_handle->access_flags & LIBBFIO_FLAG_READ ) == 0 )
+	if( ( io_handle->access_flags & LIBBFIO_ACCESS_FLAG_READ ) == 0 )
 	{
 		liberror_error_set(
 		 error,
@@ -442,7 +446,7 @@ ssize_t libexe_section_io_handle_write(
 
 		return( -1 );
 	}
-	if( ( io_handle->access_flags & LIBBFIO_FLAG_WRITE ) == 0 )
+	if( ( io_handle->access_flags & LIBBFIO_ACCESS_FLAG_WRITE ) == 0 )
 	{
 		liberror_error_set(
 		 error,

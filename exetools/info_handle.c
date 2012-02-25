@@ -1,7 +1,7 @@
 /* 
  * Info handle
  *
- * Copyright (c) 2011, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -374,7 +374,9 @@ int info_handle_file_fprint(
 	}
 	fprintf(
 	 info_handle->notify_stream,
-	 "MZ, PE/COFF executable (EXE) information:\n" );
+	 "Executable (EXE) information:\n" );
+
+/* TODO print exe type */
 
 	fprintf(
 	 info_handle->notify_stream,
@@ -385,69 +387,71 @@ int info_handle_file_fprint(
 	 info_handle->notify_stream,
 	 "\n" );
 
-	fprintf(
-	 info_handle->notify_stream,
-	 "Sections:\n" );
-
-	for( section_index = 0;
-	     section_index < number_of_sections;
-	     section_index++ )
+	if( number_of_sections > 0 )
 	{
-		if( libexe_file_get_section(
-		     info_handle->input_file,
-		     section_index,
-		     &section,
-		     error ) != 1 )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve section: %d.",
-			 function,
-			 section_index );
+		fprintf(
+		 info_handle->notify_stream,
+		 "Sections:\n" );
 
-			goto on_error;
-		}
-		if( libexe_section_get_name(
-		     section,
-		     name,
-		     9,
-		     error ) != 1 )
+		for( section_index = 0;
+		     section_index < number_of_sections;
+		     section_index++ )
 		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve section: %d name.",
-			 function,
-			 section_index );
+			if( libexe_file_get_section(
+			     info_handle->input_file,
+			     section_index,
+			     &section,
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve section: %d.",
+				 function,
+				 section_index );
 
-			goto on_error;
+				goto on_error;
+			}
+			if( libexe_section_get_name(
+			     section,
+			     name,
+			     9,
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve section: %d name.",
+				 function,
+				 section_index );
+
+				goto on_error;
+			}
+			fprintf(
+			 info_handle->notify_stream,
+			 "\tName\t\t\t: %s\n",
+			 name );
+
+			if( libexe_section_free(
+			     &section,
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free section.",
+				 function );
+
+				goto on_error;
+			}
 		}
 		fprintf(
 		 info_handle->notify_stream,
-		 "\tName\t\t\t: %s\n",
-		 name );
-
-		if( libexe_section_free(
-		     &section,
-		     error ) != 1 )
-		{
-			liberror_error_set(
-			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free section.",
-			 function );
-
-			goto on_error;
-		}
+		 "\n" );
 	}
-	fprintf(
-	 info_handle->notify_stream,
-	 "\n" );
-
 	return( 1 );
 
 on_error:

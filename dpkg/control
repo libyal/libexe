@@ -1,0 +1,29 @@
+Source: libexe
+Section: unknown
+Priority: extra
+Maintainer: Joachim Metz <jbmetz@users.sourceforge.net>
+Build-Depends: debhelper (>= 7), autotools-dev
+Standards-Version: 3.8.3
+Homepage: https://sourceforge.net/projects/libexe/
+
+Package: libexe
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Library to support the executable (EXE) format
+ libexe is a library to support the executable (EXE) format.
+
+Package: libexe-dev
+Section: libdevel
+Architecture: any
+Depends: libexe (= ${Source-Version})
+Description: Header files and libraries for developing applications for libexe
+ Header files and libraries for developing applications for libexe.
+
+Package: libexe-tools
+Section: utils
+Architecture: any
+Depends: libexe (= ${Source-Version}), ${shlibs:Depends}
+Description: Several tools for reading executable (EXE) files
+ Several tools for reading executable (EXE) files.
+
