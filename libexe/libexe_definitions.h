@@ -37,11 +37,11 @@
  * for local use of libexe
  */
 #else
-#define LIBEXE_VERSION						20120225
+#define LIBEXE_VERSION						20120321
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING					"20120225"
+#define LIBEXE_VERSION_STRING					"20120321"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access

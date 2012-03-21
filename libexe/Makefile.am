@@ -28,7 +28,7 @@ libexe_la_SOURCES = \
 	libexe_libbfio.h \
 	libexe_libfcache.h \
 	libexe_libfdata.h \
-	libexe_libdatetime.h \
+	libexe_libfdatetime.h \
 	libexe_libuna.h \
 	libexe_notify.c libexe_notify.h \
 	libexe_section.c libexe_section.h \

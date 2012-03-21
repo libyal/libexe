@@ -441,7 +441,7 @@ int libexe_io_handle_read_mz_header(
 			 0 );
 
 			libnotify_printf(
-			 "%s: extended header offset\t\t: 0x%08" PRIx32 "\n",
+			 "%s: extended header offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 *extended_header_offset );
 
