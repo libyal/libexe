@@ -1760,245 +1760,361 @@ int libexe_io_handle_read_coff_optional_header(
 
 		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( number_of_data_directory_entries > 0 )
 	{
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
 
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: export table size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: import table size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: resource table size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: exception table size\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: certificate table size\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: base relocation table size\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: debug data size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: architecture-specific data RVA\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: architecture-specific data size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->global_pointer_register,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: global pointer register\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown3,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: thread local storage table size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: load configuration table size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: import address table size\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: delay import descriptor size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
-		 value_32bit );
-		libnotify_printf(
-		 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint64_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown4,
-		 value_64bit );
-		libnotify_printf(
-		 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
-		 function,
-		 value_64bit );
-
-		libnotify_printf(
-		 "\n" );
-	}
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: export table size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
 #endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: import table size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: resource table size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: exception table size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: certificate table size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: base relocation table size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: debug data size\t\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: architecture-specific data RVA\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: architecture-specific data size\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->global_pointer_register,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: global pointer register\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown3,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: thread local storage table size\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: load configuration table size\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: import address table size\t\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: delay import descriptor size\t: %" PRIu32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+
+			byte_stream_copy_to_uint32_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
+			 value_32bit );
+			libnotify_printf(
+			 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 value_32bit );
+		}
+#endif
+		number_of_data_directory_entries--;
+	}
+	if( number_of_data_directory_entries > 0 )
+	{
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libnotify_verbose != 0 )
+		{
+			byte_stream_copy_to_uint64_little_endian(
+			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown4,
+			 value_64bit );
+			libnotify_printf(
+			 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
+			 function,
+			 value_64bit );
+
+			libnotify_printf(
+			 "\n" );
+		}
+		number_of_data_directory_entries--;
+#endif
+	}
 	memory_free(
 	 coff_optional_header );
 

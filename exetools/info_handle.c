@@ -344,6 +344,8 @@ int info_handle_file_fprint(
 
 	libexe_section_t *section = NULL;
 	static char *function     = "info_handle_file_fprint";
+	uint64_t size             = 0;
+	uint32_t virtual_address  = 0;
 	int number_of_sections    = 0;
 	int section_index         = 0;
 
@@ -389,14 +391,15 @@ int info_handle_file_fprint(
 
 	if( number_of_sections > 0 )
 	{
-		fprintf(
-		 info_handle->notify_stream,
-		 "Sections:\n" );
-
 		for( section_index = 0;
 		     section_index < number_of_sections;
 		     section_index++ )
 		{
+			fprintf(
+			 info_handle->notify_stream,
+			 "Section: %d\n",
+			 section_index );
+
 			if( libexe_file_get_section(
 			     info_handle->input_file,
 			     section_index,
@@ -433,6 +436,46 @@ int info_handle_file_fprint(
 			 info_handle->notify_stream,
 			 "\tName\t\t\t: %s\n",
 			 name );
+
+			if( libexe_section_get_size(
+			     section,
+			     &size,
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve section: %d size.",
+				 function,
+				 section_index );
+
+				goto on_error;
+			}
+			fprintf(
+			 info_handle->notify_stream,
+			 "\tSize\t\t\t: %" PRIu64 "\n",
+			 size );
+
+			if( libexe_section_get_virtual_address(
+			     section,
+			     &virtual_address,
+			     error ) != 1 )
+			{
+				liberror_error_set(
+				 error,
+				 LIBERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve section: %d virtual address.",
+				 function,
+				 section_index );
+
+				goto on_error;
+			}
+			fprintf(
+			 info_handle->notify_stream,
+			 "\tVirtual address\t\t: 0x%08" PRIx32 "\n",
+			 virtual_address );
 
 			if( libexe_section_free(
 			     &section,

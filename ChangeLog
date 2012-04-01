@@ -11,6 +11,9 @@ Format support:
 
 Update man pages
 
+20120401
+* small changes
+
 20120321
 * fix for libfdatetime include header
 
