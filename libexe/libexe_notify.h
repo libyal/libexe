@@ -25,11 +25,10 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include <stdio.h>
 
 #include "libexe_extern.h"
+#include "libexe_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -44,16 +43,16 @@ void libexe_notify_set_verbose(
 LIBEXE_EXTERN \
 int libexe_notify_set_stream(
      FILE *stream,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_notify_stream_open(
      const char *filename,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_notify_stream_close(
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #endif
 

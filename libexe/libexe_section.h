@@ -25,11 +25,10 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_extern.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 #include "libexe_libfcache.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_types.h"
@@ -69,32 +68,32 @@ int libexe_section_initialize(
      libbfio_handle_t *file_io_handle,
      libexe_section_descriptor_t *section_descriptor,
      uint8_t flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_free(
      libexe_section_t **section,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_name_size(
      libexe_section_t *section,
      size_t *name_size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_name(
      libexe_section_t *section,
      char *name,
      size_t name_size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 ssize_t libexe_section_read_buffer(
          libexe_section_t *section,
          void *buffer,
          size_t buffer_size,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 ssize_t libexe_section_read_random(
@@ -102,32 +101,32 @@ ssize_t libexe_section_read_random(
          void *buffer,
          size_t buffer_size,
          off64_t offset,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 off64_t libexe_section_seek_offset(
          libexe_section_t *section,
          off64_t offset,
          int whence,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_size(
      libexe_section_t *section,
      size64_t *size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_virtual_address(
      libexe_section_t *section,
      uint32_t *virtual_address,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_data_file_io_handle(
      libexe_section_t *section,
      libbfio_handle_t **file_io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

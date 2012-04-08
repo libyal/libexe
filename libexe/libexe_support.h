@@ -25,10 +25,9 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_extern.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -47,31 +46,31 @@ int libexe_get_access_flags_read(
 LIBEXE_EXTERN \
 int libexe_get_codepage(
      int *codepage,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_set_codepage(
      int codepage,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
 LIBEXE_EXTERN \
 int libexe_check_file_signature(
      const char *filename,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 LIBEXE_EXTERN \
 int libexe_check_file_signature_wide(
      const wchar_t *filename,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 #endif
 
 LIBEXE_EXTERN \
 int libexe_check_file_signature_file_io_handle(
      libbfio_handle_t *file_io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

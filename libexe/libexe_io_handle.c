@@ -24,14 +24,13 @@
 #include <memory.h>
 #include <types.h>
 
-#include <liberror.h>
-#include <libnotify.h>
-
 #include "libexe_array_type.h"
 #include "libexe_codepage.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
+#include "libexe_libcnotify.h"
 #include "libexe_libfdatetime.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
@@ -50,16 +49,16 @@ const char *exe_pe_signature = "PE\x0\x0";
  */
 int libexe_io_handle_initialize(
      libexe_io_handle_t **io_handle,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function = "libexe_io_handle_initialize";
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -67,10 +66,10 @@ int libexe_io_handle_initialize(
 	}
 	if( *io_handle != NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
 		 "%s: invalid IO handle value already set.",
 		 function );
 
@@ -81,10 +80,10 @@ int libexe_io_handle_initialize(
 
 	if( *io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
 		 "%s: unable to create IO handle.",
 		 function );
 
@@ -95,10 +94,10 @@ int libexe_io_handle_initialize(
 	     0,
 	     sizeof( libexe_io_handle_t ) ) == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_SET_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
 		 "%s: unable to clear file.",
 		 function );
 
@@ -125,16 +124,16 @@ on_error:
  */
 int libexe_io_handle_free(
      libexe_io_handle_t **io_handle,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function = "libexe_io_handle_free";
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -157,7 +156,7 @@ int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function           = "libexe_io_handle_read_file_header";
 	uint32_t extended_header_offset = 0;
@@ -168,10 +167,10 @@ int libexe_io_handle_read_file_header(
 	     &extended_header_offset,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read MZ header.",
 		 function );
 
@@ -189,10 +188,10 @@ int libexe_io_handle_read_file_header(
 		     number_of_sections,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_IO,
-			 LIBERROR_IO_ERROR_READ_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read extended header.",
 			 function );
 
@@ -209,7 +208,7 @@ int libexe_io_handle_read_mz_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t *extended_header_offset,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	exe_mz_header_t mz_header;
 
@@ -225,10 +224,10 @@ int libexe_io_handle_read_mz_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -236,19 +235,19 @@ int libexe_io_handle_read_mz_header(
 	}
 	if( extended_header_offset == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid extended header offset.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: reading MZ header at offset: 0 (0x00000000)\n",
 		 function );
 	}
@@ -259,16 +258,16 @@ int libexe_io_handle_read_mz_header(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek MZ header offset: 0.",
 		 function );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              (uint8_t *) &mz_header,
 	              sizeof( exe_mz_header_t ),
@@ -276,22 +275,22 @@ int libexe_io_handle_read_mz_header(
 
 	if( read_count != (ssize_t) sizeof( exe_mz_header_t ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read MZ header.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: MZ header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 (uint8_t *) &mz_header,
 		 sizeof( exe_mz_header_t ),
 		 0 );
@@ -302,10 +301,10 @@ int libexe_io_handle_read_mz_header(
 	     exe_mz_signature,
 	     2 ) != 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: invalid signature.",
 		 function );
 
@@ -320,9 +319,9 @@ int libexe_io_handle_read_mz_header(
 	 relocation_table_offset );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: signature\t\t\t\t: %c%c\n",
 		 function,
 		 mz_header.signature[ 0 ],
@@ -331,7 +330,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.last_page_size,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: last page size\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
@@ -339,12 +338,12 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.number_of_pages,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: number of pages\t\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: number of relocation entries\t\t: %" PRIu16 "\n",
 		 function,
 		 number_of_relocation_entries );
@@ -352,7 +351,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.number_of_header_paragraphs,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: number of header paragraphs\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
@@ -360,7 +359,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.minimum_allocated_paragraphs,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: minimum allocated paragraphs\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
@@ -368,7 +367,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.maximum_allocated_paragraphs,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: maximum allocated paragraphs\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
@@ -376,7 +375,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.initial_stack_segment,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: initial stack segment\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
@@ -384,7 +383,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.initial_stack_pointer,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: initial stack pointer\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
@@ -392,7 +391,7 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.checksum,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: checksum\t\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
@@ -400,12 +399,12 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 mz_header.entry_point,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: entry point\t\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: relocation table offset\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 relocation_table_offset );
@@ -413,12 +412,12 @@ int libexe_io_handle_read_mz_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 mz_header.overlay_number,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: overlay number\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
@@ -430,25 +429,25 @@ int libexe_io_handle_read_mz_header(
 		 *extended_header_offset );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown1:\n",
 			 function );
-			libnotify_print_data(
+			libcnotify_print_data(
 			 mz_header.unknown1,
 			 32,
 			 0 );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: extended header offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 *extended_header_offset );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown2:\n",
 			 function );
-			libnotify_print_data(
+			libcnotify_print_data(
 			 mz_header.unknown2,
 			 112,
 			 0 );
@@ -471,7 +470,7 @@ int libexe_io_handle_read_extended_header(
      libbfio_handle_t *file_io_handle,
      uint32_t extended_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	uint8_t extended_header_data[ 2 ];
 
@@ -480,19 +479,19 @@ int libexe_io_handle_read_extended_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: reading extended header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
 		 extended_header_offset,
@@ -505,17 +504,17 @@ int libexe_io_handle_read_extended_header(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek extended header offset: %" PRIu32 ".",
 		 function,
 		 extended_header_offset );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              extended_header_data,
 	              2,
@@ -523,22 +522,22 @@ int libexe_io_handle_read_extended_header(
 
 	if( read_count != 2 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read first 2 bytes of extended header.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: extended header data:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 extended_header_data,
 		 2,
 		 0 );
@@ -555,10 +554,10 @@ int libexe_io_handle_read_extended_header(
 		     number_of_sections,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_IO,
-			 LIBERROR_IO_ERROR_READ_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read LE header.",
 			 function );
 
@@ -575,10 +574,10 @@ int libexe_io_handle_read_extended_header(
 		     number_of_sections,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_IO,
-			 LIBERROR_IO_ERROR_READ_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read NE header.",
 			 function );
 
@@ -595,10 +594,10 @@ int libexe_io_handle_read_extended_header(
 		     number_of_sections,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_IO,
-			 LIBERROR_IO_ERROR_READ_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read PE/COFF header.",
 			 function );
 
@@ -607,10 +606,10 @@ int libexe_io_handle_read_extended_header(
 	}
 	else
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported extended header.",
 		 function );
 
@@ -627,7 +626,7 @@ int libexe_io_handle_read_le_header(
      libbfio_handle_t *file_io_handle,
      uint32_t le_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	exe_le_header_t le_header;
 
@@ -636,19 +635,19 @@ int libexe_io_handle_read_le_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: reading LE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
 		 le_header_offset,
@@ -661,17 +660,17 @@ int libexe_io_handle_read_le_header(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek LE header offset: %" PRIu32 ".",
 		 function,
 		 le_header_offset );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              (uint8_t *) &le_header,
 	              sizeof( exe_le_header_t ),
@@ -679,22 +678,22 @@ int libexe_io_handle_read_le_header(
 
 	if( read_count != (ssize_t) sizeof( exe_le_header_t ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read LE header.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: LE header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 (uint8_t *) &le_header,
 		 sizeof( exe_le_header_t ),
 		 0 );
@@ -705,25 +704,25 @@ int libexe_io_handle_read_le_header(
 	     exe_le_signature,
 	     2 ) != 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: invalid signature.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: signature\t\t\t\t: %c%c\n",
 		 function,
 		 le_header.signature[ 0 ],
 		 le_header.signature[ 1 ] );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
@@ -742,7 +741,7 @@ int libexe_io_handle_read_ne_header(
      libbfio_handle_t *file_io_handle,
      uint32_t ne_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	exe_ne_header_t ne_header;
 
@@ -751,19 +750,19 @@ int libexe_io_handle_read_ne_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: reading NE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
 		 ne_header_offset,
@@ -776,17 +775,17 @@ int libexe_io_handle_read_ne_header(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek NE header offset: %" PRIu32 ".",
 		 function,
 		 ne_header_offset );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              (uint8_t *) &ne_header,
 	              sizeof( exe_ne_header_t ),
@@ -794,22 +793,22 @@ int libexe_io_handle_read_ne_header(
 
 	if( read_count != (ssize_t) sizeof( exe_ne_header_t ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read NE header.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: NE header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 (uint8_t *) &ne_header,
 		 sizeof( exe_ne_header_t ),
 		 0 );
@@ -820,25 +819,25 @@ int libexe_io_handle_read_ne_header(
 	     exe_ne_signature,
 	     2 ) != 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: invalid signature.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: signature\t\t\t\t: %c%c\n",
 		 function,
 		 ne_header.signature[ 0 ],
 		 ne_header.signature[ 1 ] );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
@@ -857,7 +856,7 @@ int libexe_io_handle_read_pe_header(
      libbfio_handle_t *file_io_handle,
      uint32_t pe_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	exe_pe_header_t pe_header;
 
@@ -866,19 +865,19 @@ int libexe_io_handle_read_pe_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: reading PE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
 		 pe_header_offset,
@@ -891,17 +890,17 @@ int libexe_io_handle_read_pe_header(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek PE header offset: %" PRIu32 ".",
 		 function,
 		 pe_header_offset );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              (uint8_t *) &pe_header,
 	              sizeof( exe_pe_header_t ),
@@ -909,22 +908,22 @@ int libexe_io_handle_read_pe_header(
 
 	if( read_count != (ssize_t) sizeof( exe_pe_header_t ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read PE header.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: PE header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 (uint8_t *) &pe_header,
 		 sizeof( exe_pe_header_t ),
 		 0 );
@@ -935,19 +934,19 @@ int libexe_io_handle_read_pe_header(
 	     exe_pe_signature,
 	     4 ) != 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: invalid signature.",
 		 function );
 
 		return( -1 );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: signature\t\t\t\t: %c%c\\x%" PRIx8 "\\x%" PRIx8 "\n",
 		 function,
 		 pe_header.signature[ 0 ],
@@ -955,7 +954,7 @@ int libexe_io_handle_read_pe_header(
 		 pe_header.signature[ 2 ],
 		 pe_header.signature[ 3 ] );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
@@ -965,10 +964,10 @@ int libexe_io_handle_read_pe_header(
 	     number_of_sections,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read COFF header.",
 		 function );
 
@@ -986,7 +985,7 @@ int libexe_io_handle_read_coff_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t *number_of_sections,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	exe_coff_header_t coff_header;
 
@@ -1005,10 +1004,10 @@ int libexe_io_handle_read_coff_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -1016,16 +1015,16 @@ int libexe_io_handle_read_coff_header(
 	}
 	if( number_of_sections == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid number of sections.",
 		 function );
 
 		return( -1 );
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              (uint8_t *) &coff_header,
 	              sizeof( exe_coff_header_t ),
@@ -1033,22 +1032,22 @@ int libexe_io_handle_read_coff_header(
 
 	if( read_count != (ssize_t) sizeof( exe_coff_header_t ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read COFF header.",
 		 function );
 
 		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: COFF header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 (uint8_t *) &coff_header,
 		 sizeof( exe_coff_header_t ),
 		 0 );
@@ -1067,17 +1066,17 @@ int libexe_io_handle_read_coff_header(
 	 optional_header_size );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
 		byte_stream_copy_to_uint16_little_endian(
 		 coff_header.target_architecture_type,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: target architecture type\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: number of sections\t\t\t: %" PRIu16 "\n",
 		 function,
 		 *number_of_sections );
@@ -1086,10 +1085,10 @@ int libexe_io_handle_read_coff_header(
 		     &posix_time,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 			 "%s: unable to create POSIX time.",
 			 function );
 
@@ -1100,12 +1099,13 @@ int libexe_io_handle_read_coff_header(
 		     coff_header.creation_time,
 		     4,
 		     LIBFDATETIME_ENDIAN_LITTLE,
+		     LIBFDATETIME_POSIX_TIME_VALUE_TYPE_SECONDS_32BIT_SIGNED,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to copy POSIX time from byte stream.",
 			 function );
 
@@ -1130,16 +1130,16 @@ int libexe_io_handle_read_coff_header(
 #endif
 		if( result != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to copy POSIX time to string.",
 			 function );
 
 			goto on_error;
 		}
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: creation time\t\t\t: %" PRIs_LIBCSTRING_SYSTEM " UTC\n",
 		 function,
 		 posix_time_string );
@@ -1148,10 +1148,10 @@ int libexe_io_handle_read_coff_header(
 		     &posix_time,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free POSIX time.",
 			 function );
 
@@ -1160,7 +1160,7 @@ int libexe_io_handle_read_coff_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 coff_header.symbol_table_offset,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: symbol table offset\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
@@ -1168,12 +1168,12 @@ int libexe_io_handle_read_coff_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 coff_header.number_of_symbols,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: number of symbols\t\t\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: optional header size\t\t\t: %" PRIu16 "\n",
 		 function,
 		 optional_header_size );
@@ -1181,12 +1181,12 @@ int libexe_io_handle_read_coff_header(
 		byte_stream_copy_to_uint16_little_endian(
 		 coff_header.characteristic_flags,
 		 value_16bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: characteristic flags\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
@@ -1196,10 +1196,10 @@ int libexe_io_handle_read_coff_header(
 	     optional_header_size,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read COFF optional header.",
 		 function );
 
@@ -1226,7 +1226,7 @@ int libexe_io_handle_read_coff_optional_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t optional_header_size,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	uint8_t *coff_optional_header             = NULL;
 	uint8_t *coff_optional_header_data        = NULL;
@@ -1243,10 +1243,10 @@ int libexe_io_handle_read_coff_optional_header(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -1257,16 +1257,16 @@ int libexe_io_handle_read_coff_optional_header(
 
 	if( coff_optional_header == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
 		 "%s: unable to create COFF optional header.",
 		 function );
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              coff_optional_header,
 	              (size_t) optional_header_size,
@@ -1274,10 +1274,10 @@ int libexe_io_handle_read_coff_optional_header(
 
 	if( read_count != (ssize_t) optional_header_size )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read COFF optional header.",
 		 function );
 
@@ -1286,12 +1286,12 @@ int libexe_io_handle_read_coff_optional_header(
 	coff_optional_header_data = coff_optional_header;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: COFF optional header:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 coff_optional_header_data,
 		 (size_t) optional_header_size,
 		 0 );
@@ -1302,19 +1302,19 @@ int libexe_io_handle_read_coff_optional_header(
 	 signature );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: signature\t\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 signature );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: major linker version\t\t: %" PRIu8 "\n",
 		 function,
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->major_linker_version );
 
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: minor linker version\t\t: %" PRIu8 "\n",
 		 function,
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->minor_linker_version );
@@ -1322,7 +1322,7 @@ int libexe_io_handle_read_coff_optional_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->text_section_size,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: text section size\t\t\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
@@ -1330,7 +1330,7 @@ int libexe_io_handle_read_coff_optional_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->initialized_data_section_size,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: initialized data section size\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
@@ -1338,7 +1338,7 @@ int libexe_io_handle_read_coff_optional_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->uninitialized_data_section_size,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: uninitialized data section size\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
@@ -1346,7 +1346,7 @@ int libexe_io_handle_read_coff_optional_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->entry_point_offset,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: entry point offset\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
@@ -1354,7 +1354,7 @@ int libexe_io_handle_read_coff_optional_header(
 		byte_stream_copy_to_uint32_little_endian(
 		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->code_base_offset,
 		 value_32bit );
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: code base offset\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
@@ -1364,22 +1364,22 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_t *) coff_optional_header_data )->data_base_offset,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: data base offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 		}
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
 	if( ( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
 	 && ( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32_PLUS ) )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported signature.",
 		 function );
 
@@ -1394,12 +1394,12 @@ int libexe_io_handle_read_coff_optional_header(
 		 number_of_data_directory_entries );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_base_offset,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: image base offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1407,7 +1407,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->section_alignment_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: section alignment size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1415,7 +1415,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->file_alignment_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1423,7 +1423,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_operating_system_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major operating system version\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1431,7 +1431,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_operating_system_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor operating system version\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1439,7 +1439,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_image_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major image version\t\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1447,7 +1447,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_image_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1455,7 +1455,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_subsystem_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1463,7 +1463,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_subsystem_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1471,7 +1471,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown1,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown1\t\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1479,7 +1479,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1487,7 +1487,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->headers_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: headers size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1495,7 +1495,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->checksum,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1503,7 +1503,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->subsystem,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
@@ -1511,7 +1511,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->dll_characteristic_flags,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
@@ -1519,7 +1519,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_reservation_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: stack reservation size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1527,7 +1527,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_commit_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: stack commit size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1535,7 +1535,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_reservation_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: heap reservation size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1543,7 +1543,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_commit_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: heap commit size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1551,12 +1551,12 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown2,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown2\t\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: number of data directory entries\t: %" PRIu32 "\n",
 			 function,
 			 number_of_data_directory_entries );
@@ -1571,12 +1571,12 @@ int libexe_io_handle_read_coff_optional_header(
 		 number_of_data_directory_entries );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_base_offset,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: image base offset\t\t\t: 0x%08" PRIx64 "\n",
 			 function,
 			 value_64bit );
@@ -1584,7 +1584,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->section_alignment_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: section alignment size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1592,7 +1592,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->file_alignment_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1600,7 +1600,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_operating_system_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major operating system version\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1608,7 +1608,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_operating_system_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor operating system version\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1616,7 +1616,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_image_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major image version\t\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1624,7 +1624,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_image_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1632,7 +1632,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_subsystem_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1640,7 +1640,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_subsystem_version,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
@@ -1648,7 +1648,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown1,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown1\t\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1656,7 +1656,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1664,7 +1664,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->headers_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: headers size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1672,7 +1672,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->checksum,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1680,7 +1680,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->subsystem,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
@@ -1688,7 +1688,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->dll_characteristic_flags,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
@@ -1696,7 +1696,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_reservation_size,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: stack reservation size\t\t: %" PRIu64 "\n",
 			 function,
 			 value_64bit );
@@ -1704,7 +1704,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_commit_size,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: stack commit size\t\t\t: %" PRIu64 "\n",
 			 function,
 			 value_64bit );
@@ -1712,7 +1712,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_reservation_size,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: heap reservation size\t\t: %" PRIu64 "\n",
 			 function,
 			 value_64bit );
@@ -1720,7 +1720,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_commit_size,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: heap commit size\t\t\t: %" PRIu64 "\n",
 			 function,
 			 value_64bit );
@@ -1728,12 +1728,12 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown2,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown2\t\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: number of data directory entries\t: %" PRIu32 "\n",
 			 function,
 			 number_of_data_directory_entries );
@@ -1742,18 +1742,18 @@ int libexe_io_handle_read_coff_optional_header(
 		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_plus_t );
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "\n" );
 	}
 #endif
 	if( number_of_data_directory_entries != 16 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported number of data directory entries: %" PRIu32 ".",
 		 function,
 		 number_of_data_directory_entries );
@@ -1763,12 +1763,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1776,7 +1776,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: export table size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1787,12 +1787,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1800,7 +1800,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: import table size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1811,12 +1811,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1824,7 +1824,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: resource table size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1835,12 +1835,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1848,7 +1848,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: exception table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1859,12 +1859,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1872,7 +1872,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: certificate table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1883,12 +1883,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1896,7 +1896,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: base relocation table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1907,12 +1907,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1920,7 +1920,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: debug data size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1931,12 +1931,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: architecture-specific data RVA\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1944,7 +1944,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: architecture-specific data size\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -1955,12 +1955,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->global_pointer_register,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: global pointer register\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1968,7 +1968,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown3,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1979,12 +1979,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -1992,7 +1992,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: thread local storage table size\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -2003,12 +2003,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -2016,7 +2016,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: load configuration table size\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -2027,12 +2027,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -2040,7 +2040,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: import address table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -2051,12 +2051,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -2064,7 +2064,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: delay import descriptor size\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
@@ -2075,12 +2075,12 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -2088,7 +2088,7 @@ int libexe_io_handle_read_coff_optional_header(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
@@ -2099,17 +2099,17 @@ int libexe_io_handle_read_coff_optional_header(
 	if( number_of_data_directory_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown4,
 			 value_64bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
 			 function,
 			 value_64bit );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "\n" );
 		}
 		number_of_data_directory_entries--;
@@ -2137,7 +2137,7 @@ int libexe_io_handle_read_section_table(
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
      libexe_array_t *sections_array,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_section_descriptor_t *section_descriptor = NULL;
 	uint8_t *section_table                          = NULL;
@@ -2157,10 +2157,10 @@ int libexe_io_handle_read_section_table(
 
 	if( io_handle == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
 		 function );
 
@@ -2174,16 +2174,16 @@ int libexe_io_handle_read_section_table(
 
 	if( section_table == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
 		 "%s: unable to create section table.",
 		 function );
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read(
+	read_count = libbfio_handle_read_buffer(
 	              file_io_handle,
 	              section_table,
 	              section_table_size,
@@ -2191,22 +2191,22 @@ int libexe_io_handle_read_section_table(
 
 	if( read_count != (ssize_t) section_table_size )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read section table.",
 		 function );
 
 		goto on_error;
 	}
 #if defined( HAVE_DEBUG_OUTPUT )
-	if( libnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
 	{
-		libnotify_printf(
+		libcnotify_printf(
 		 "%s: section table data:\n",
 		 function );
-		libnotify_print_data(
+		libcnotify_print_data(
 		 section_table,
 		 section_table_size,
 		 0 );
@@ -2220,10 +2220,10 @@ int libexe_io_handle_read_section_table(
 		     &section_descriptor,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 			 "%s: unable to create section descriptor.",
 			 function );
 
@@ -2234,10 +2234,10 @@ int libexe_io_handle_read_section_table(
 		     ( (exe_section_table_entry_t *) section_table_data )->name,
 		     8 ) == NULL )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_MEMORY,
-			 LIBERROR_MEMORY_ERROR_COPY_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_MEMORY,
+			 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
 			 "%s: unable to copy name.",
 			 function );
 
@@ -2265,9 +2265,9 @@ int libexe_io_handle_read_section_table(
 		 section_data_offset );
 
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libnotify_verbose != 0 )
+		if( libcnotify_verbose != 0 )
 		{
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " name\t\t\t\t: %s\n",
 			 function,
 			 section_index,
@@ -2276,25 +2276,25 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->virtual_size,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " virtual size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 section_index,
 			 value_32bit );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " virtual address\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
 			 section_descriptor->virtual_address );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " data size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 section_index,
 			 section_data_size );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " data offset\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
@@ -2303,7 +2303,7 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " relocations offset\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
@@ -2312,7 +2312,7 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->line_numbers_offset,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " line numbers offset\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
@@ -2321,7 +2321,7 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->relocations_offset,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " number of relocations\t\t: %" PRIu16 "\n",
 			 function,
 			 section_index,
@@ -2330,7 +2330,7 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint16_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->line_numbers_offset,
 			 value_16bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " number of line numbers\t\t: %" PRIu16 "\n",
 			 function,
 			 section_index,
@@ -2339,13 +2339,13 @@ int libexe_io_handle_read_section_table(
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_section_table_entry_t *) section_table_data )->section_characteristic_flags,
 			 value_32bit );
-			libnotify_printf(
+			libcnotify_printf(
 			 "%s: entry: %02" PRIu16 " section characteristic flags\t: 0x%08" PRIx32 "\n",
 			 function,
 			 section_index,
 			 value_32bit );
 
-			libnotify_printf(
+			libcnotify_printf(
 			 "\n" );
 		}
 #endif
@@ -2355,10 +2355,10 @@ int libexe_io_handle_read_section_table(
 		     (size64_t) section_data_size,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 			 "%s: unable to set data range in section descriptor.",
 			 function );
 
@@ -2370,10 +2370,10 @@ int libexe_io_handle_read_section_table(
 		     (intptr_t *) section_descriptor,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
 			 "%s: unable to append section descriptor to sections array.",
 			 function );
 

@@ -23,11 +23,10 @@
 #include <memory.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 #include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 #include "libexe_section.h"
@@ -42,17 +41,17 @@ int libexe_section_initialize(
      libbfio_handle_t *file_io_handle,
      libexe_section_descriptor_t *section_descriptor,
      uint8_t flags,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_initialize";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -60,10 +59,10 @@ int libexe_section_initialize(
 	}
 	if( *section != NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
 		 "%s: invalid section value already set.",
 		 function );
 
@@ -71,10 +70,10 @@ int libexe_section_initialize(
 	}
 	if( section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section descriptor.",
 		 function );
 
@@ -82,10 +81,10 @@ int libexe_section_initialize(
 	}
 	if( ( flags & ~( LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) ) != 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported flags: 0x%02" PRIx8 ".",
 		 function,
 		 flags );
@@ -97,10 +96,10 @@ int libexe_section_initialize(
 
 	if( internal_section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to create internal section.",
 		 function );
 
@@ -111,10 +110,10 @@ int libexe_section_initialize(
 	     0,
 	     sizeof( libexe_internal_section_t ) ) == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_SET_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
 		 "%s: unable to clear internal section.",
 		 function );
 
@@ -134,10 +133,10 @@ int libexe_section_initialize(
 		     file_io_handle,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to copy file IO handle.",
 			 function );
 
@@ -148,10 +147,10 @@ int libexe_section_initialize(
 		     1,
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_COPY_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
 			 "%s: unable to set open on demand in file IO handle.",
 			 function );
 
@@ -163,10 +162,10 @@ int libexe_section_initialize(
 	     LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to create data cache.",
 		 function );
 
@@ -203,7 +202,7 @@ on_error:
  */
 int libexe_section_free(
      libexe_section_t **section,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_free";
@@ -211,10 +210,10 @@ int libexe_section_free(
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -233,10 +232,10 @@ int libexe_section_free(
 			     internal_section->file_io_handle,
 			     error ) != 0 )
 			{
-				liberror_error_set(
+				libcerror_error_set(
 				 error,
-				 LIBERROR_ERROR_DOMAIN_IO,
-				 LIBERROR_IO_ERROR_CLOSE_FAILED,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_CLOSE_FAILED,
 				 "%s: unable to close file IO handle.",
 				 function );
 
@@ -246,10 +245,10 @@ int libexe_section_free(
 			     &( internal_section->file_io_handle ),
 			     error ) != 1 )
 			{
-				liberror_error_set(
+				libcerror_error_set(
 				 error,
-				 LIBERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 				 "%s: unable to free file IO handle.",
 				 function );
 
@@ -260,10 +259,10 @@ int libexe_section_free(
 		     &( internal_section->data_cache ),
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free data cache.",
 			 function );
 
@@ -282,17 +281,17 @@ int libexe_section_free(
 int libexe_section_get_name_size(
      libexe_section_t *section,
      size_t *name_size,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_get_name_size";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -302,10 +301,10 @@ int libexe_section_get_name_size(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid internal section - missing section descriptor.",
 		 function );
 
@@ -313,10 +312,10 @@ int libexe_section_get_name_size(
 	}
 	if( name_size == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid name size.",
 		 function );
 
@@ -335,17 +334,17 @@ int libexe_section_get_name(
      libexe_section_t *section,
      char *name,
      size_t name_size,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_get_name";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -355,10 +354,10 @@ int libexe_section_get_name(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid internal section - missing section descriptor.",
 		 function );
 
@@ -366,10 +365,10 @@ int libexe_section_get_name(
 	}
 	if( name_size > (size_t) SSIZE_MAX )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
 		 "%s: invalid name size value exceeds maximum.",
 		 function );
 
@@ -377,10 +376,10 @@ int libexe_section_get_name(
 	}
 	if( name_size < internal_section->section_descriptor->name_size )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
 		 "%s: invalid name value too small.",
 		 function );
 
@@ -391,10 +390,10 @@ int libexe_section_get_name(
 	     internal_section->section_descriptor->name,
 	     internal_section->section_descriptor->name_size ) == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_COPY_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
 		 "%s: unable to copy name.",
 		 function );
 
@@ -410,7 +409,7 @@ ssize_t libexe_section_read_buffer(
          libexe_section_t *section,
          void *buffer,
          size_t buffer_size,
-         liberror_error_t **error )
+         libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_read_buffer";
@@ -418,10 +417,10 @@ ssize_t libexe_section_read_buffer(
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -431,10 +430,10 @@ ssize_t libexe_section_read_buffer(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid section - missing section descriptor.",
 		 function );
 
@@ -450,10 +449,10 @@ ssize_t libexe_section_read_buffer(
 
 	if( read_count == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read buffer from section data block.",
 		 function );
 
@@ -470,7 +469,7 @@ ssize_t libexe_section_read_random(
          void *buffer,
          size_t buffer_size,
          off64_t offset,
-         liberror_error_t **error )
+         libcerror_error_t **error )
 {
 	static char *function = "libexe_section_read_random";
 	ssize_t read_count    = 0;
@@ -481,10 +480,10 @@ ssize_t libexe_section_read_random(
 	     SEEK_SET,
 	     error ) == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek offset.",
 		 function );
 
@@ -498,10 +497,10 @@ ssize_t libexe_section_read_random(
 
 	if( read_count < 0 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_READ_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_READ_FAILED,
 		 "%s: unable to read buffer.",
 		 function );
 
@@ -517,17 +516,17 @@ off64_t libexe_section_seek_offset(
          libexe_section_t *section,
          off64_t offset,
          int whence,
-         liberror_error_t **error )
+         libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_seek_offset";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -537,10 +536,10 @@ off64_t libexe_section_seek_offset(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid section - missing section descriptor.",
 		 function );
 
@@ -554,10 +553,10 @@ off64_t libexe_section_seek_offset(
 
 	if( offset == -1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_IO,
-		 LIBERROR_IO_ERROR_SEEK_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
 		 "%s: unable to seek in section data block.",
 		 function );
 
@@ -572,17 +571,17 @@ off64_t libexe_section_seek_offset(
 int libexe_section_get_size(
      libexe_section_t *section,
      size64_t *size,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_get_size";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -592,10 +591,10 @@ int libexe_section_get_size(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid section - missing section descriptor.",
 		 function );
 
@@ -606,10 +605,10 @@ int libexe_section_get_size(
 	     size,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_GET_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 		 "%s: unable to retrieve section data block size.",
 		 function );
 
@@ -625,17 +624,17 @@ int libexe_section_get_size(
 int libexe_section_get_virtual_address(
      libexe_section_t *section,
      uint32_t *virtual_address,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_get_virtual_address";
 
 	if( section == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section.",
 		 function );
 
@@ -645,10 +644,10 @@ int libexe_section_get_virtual_address(
 
 	if( internal_section->section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 		 "%s: invalid internal section - missing section descriptor.",
 		 function );
 
@@ -656,10 +655,10 @@ int libexe_section_get_virtual_address(
 	}
 	if( virtual_address == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid virtual address.",
 		 function );
 
@@ -676,7 +675,7 @@ int libexe_section_get_virtual_address(
 int libexe_section_get_data_file_io_handle(
      libexe_section_t *section,
      libbfio_handle_t **file_io_handle,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	libexe_section_io_handle_t *io_handle = NULL;
 	static char *function                 = "libexe_section_get_data_file_io_handle";
@@ -686,10 +685,10 @@ int libexe_section_get_data_file_io_handle(
 	     section,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to create section file IO handle.",
 		 function );
 
@@ -698,23 +697,23 @@ int libexe_section_get_data_file_io_handle(
 	if( libbfio_handle_initialize(
 	     file_io_handle,
 	     (intptr_t *) io_handle,
-	     (int (*)(intptr_t **, liberror_error_t **)) libexe_section_io_handle_free,
-	     (int (*)(intptr_t **, intptr_t *, liberror_error_t **)) libexe_section_io_handle_clone,
-	     (int (*)(intptr_t *, int flags, liberror_error_t **)) libexe_section_io_handle_open,
-	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_close,
-	     (ssize_t (*)(intptr_t *, uint8_t *, size_t, liberror_error_t **)) libexe_section_io_handle_read,
-	     (ssize_t (*)(intptr_t *, const uint8_t *, size_t, liberror_error_t **)) libexe_section_io_handle_write,
-	     (off64_t (*)(intptr_t *, off64_t, int, liberror_error_t **)) libexe_section_io_handle_seek_offset,
-	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_exists,
-	     (int (*)(intptr_t *, liberror_error_t **)) libexe_section_io_handle_is_open,
-	     (int (*)(intptr_t *, size64_t *, liberror_error_t **)) libexe_section_io_handle_get_size,
+	     (int (*)(intptr_t **, libcerror_error_t **)) libexe_section_io_handle_free,
+	     (int (*)(intptr_t **, intptr_t *, libcerror_error_t **)) libexe_section_io_handle_clone,
+	     (int (*)(intptr_t *, int flags, libcerror_error_t **)) libexe_section_io_handle_open,
+	     (int (*)(intptr_t *, libcerror_error_t **)) libexe_section_io_handle_close,
+	     (ssize_t (*)(intptr_t *, uint8_t *, size_t, libcerror_error_t **)) libexe_section_io_handle_read,
+	     (ssize_t (*)(intptr_t *, const uint8_t *, size_t, libcerror_error_t **)) libexe_section_io_handle_write,
+	     (off64_t (*)(intptr_t *, off64_t, int, libcerror_error_t **)) libexe_section_io_handle_seek_offset,
+	     (int (*)(intptr_t *, libcerror_error_t **)) libexe_section_io_handle_exists,
+	     (int (*)(intptr_t *, libcerror_error_t **)) libexe_section_io_handle_is_open,
+	     (int (*)(intptr_t *, size64_t *, libcerror_error_t **)) libexe_section_io_handle_get_size,
 	     LIBBFIO_FLAG_IO_HANDLE_MANAGED | LIBBFIO_FLAG_IO_HANDLE_CLONE_BY_FUNCTION,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to create file IO handle.",
 		 function );
 

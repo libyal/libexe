@@ -14,7 +14,7 @@ export DH_OPTIONS
 install_libexe:
 	# Set up libexe package directories and files
 	mkdir -p debian/libexe/usr/lib
-	install -p -m755 debian/tmp/usr/lib/lib*.so.* debian/libexe/usr/lib
+	install -p -m755 debian/tmp/usr/lib/lib*.so.*.*.* debian/libexe/usr/lib
 
 install_libexe_dev:
 	# Set up libexe-dev package directories and files

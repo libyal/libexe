@@ -24,9 +24,6 @@
 #include <memory.h>
 #include <types.h>
 
-#include <libcstring.h>
-#include <liberror.h>
-
 #if defined( HAVE_UNISTD_H )
 #include <unistd.h>
 #endif
@@ -35,9 +32,12 @@
 #include <stdlib.h>
 #endif
 
-#include <libsystem.h>
-
 #include "exeoutput.h"
+#include "exetools_libcerror.h"
+#include "exetools_libclocale.h"
+#include "exetools_libcnotify.h"
+#include "exetools_libcstring.h"
+#include "exetools_libcsystem.h"
 #include "exetools_libexe.h"
 #include "info_handle.h"
 
@@ -56,10 +56,14 @@ void usage_fprint(
 	fprintf( stream, "Use exeinfo to determine information about an executable\n"
 	                 "(EXE) file.\n\n" );
 
-	fprintf( stream, "Usage: exeinfo [ -hvV ] source\n\n" );
+	fprintf( stream, "Usage: exeinfo [ -c codepage ] [ -hvV ] source\n\n" );
 
 	fprintf( stream, "\tsource: the source file\n\n" );
 
+	fprintf( stream, "\t-c:     codepage of ASCII strings, options: ascii, windows-874,\n"
+	                 "\t        windows-932, windows-936, windows-1250, windows-1251,\n"
+	                 "\t        windows-1252 (default), windows-1253, windows-1254,\n"
+	                 "\t        windows-1255, windows-1256, windows-1257 or windows-1258\n" );
 	fprintf( stream, "\t-h:     shows this help\n" );
 	fprintf( stream, "\t-v:     verbose output to stderr\n" );
 	fprintf( stream, "\t-V:     print version\n" );
@@ -68,12 +72,12 @@ void usage_fprint(
 /* Signal handler for exeinfo
  */
 void exeinfo_signal_handler(
-      libsystem_signal_t signal LIBSYSTEM_ATTRIBUTE_UNUSED )
+      libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
 {
-	liberror_error_t *error = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function   = "exeinfo_signal_handler";
 
-	LIBSYSTEM_UNREFERENCED_PARAMETER( signal )
+	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
 
 	exeinfo_abort = 1;
 
@@ -83,22 +87,22 @@ void exeinfo_signal_handler(
 		     exeinfo_info_handle,
 		     &error ) != 1 )
 		{
-			libsystem_notify_printf(
+			libcnotify_printf(
 			 "%s: unable to signal info handle to abort.\n",
 			 function );
 
-			libsystem_notify_print_error_backtrace(
+			libcnotify_print_error_backtrace(
 			 error );
-			liberror_error_free(
+			libcerror_error_free(
 			 &error );
 		}
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
-	if( libsystem_file_io_close(
+	if( libcsystem_file_io_close(
 	     0 ) != 0 )
 	{
-		libsystem_notify_printf(
+		libcnotify_printf(
 		 "%s: unable to close stdin.\n",
 		 function );
 	}
@@ -112,20 +116,31 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	liberror_error_t *error               = NULL;
-	libcstring_system_character_t *source = NULL;
-	char *program                         = "exeinfo";
-	libcstring_system_integer_t option    = 0;
-	int verbose                           = 0;
+	libcerror_error_t *error                             = NULL;
+	libcstring_system_character_t *option_ascii_codepage = NULL;
+	libcstring_system_character_t *source                = NULL;
+	char *program                                        = "exeinfo";
+	libcstring_system_integer_t option                   = 0;
+	int result                                           = 0;
+	int verbose                                          = 0;
 
-	libsystem_notify_set_stream(
+	libcnotify_stream_set(
 	 stderr,
 	 NULL );
-	libsystem_notify_set_verbose(
+	libcnotify_verbose_set(
 	 1 );
 
-	if( libsystem_initialize(
+	if( libclocale_initialize(
 	     "exetools",
+	     &error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to initialize locale values.\n" );
+
+		goto on_error;
+	}
+	if( libcsystem_initialize(
 	     _IONBF,
 	     &error ) != 1 )
 	{
@@ -133,21 +148,16 @@ int main( int argc, char * const argv[] )
 		 stderr,
 		 "Unable to initialize system values.\n" );
 
-		libsystem_notify_print_error_backtrace(
-		 error );
-		liberror_error_free(
-		 &error );
-
-		return( EXIT_FAILURE );
+		goto on_error;
 	}
 	exeoutput_version_fprint(
 	 stdout,
 	 program );
 
-	while( ( option = libsystem_getopt(
+	while( ( option = libcsystem_getopt(
 	                   argc,
 	                   argv,
-	                   _LIBCSTRING_SYSTEM_STRING( "hvV" ) ) ) != (libcstring_system_integer_t) -1 )
+	                   _LIBCSTRING_SYSTEM_STRING( "c:hvV" ) ) ) != (libcstring_system_integer_t) -1 )
 	{
 		switch( option )
 		{
@@ -162,6 +172,11 @@ int main( int argc, char * const argv[] )
 				 stdout );
 
 				return( EXIT_FAILURE );
+
+			case (libcstring_system_integer_t) 'c':
+				option_ascii_codepage = optarg;
+
+				break;
 
 			case (libcstring_system_integer_t) 'h':
 				usage_fprint(
@@ -194,7 +209,7 @@ int main( int argc, char * const argv[] )
 	}
 	source = argv[ optind ];
 
-	libsystem_notify_set_verbose(
+	libcnotify_verbose_set(
 	 verbose );
 	libexe_notify_set_stream(
 	 stderr,
@@ -211,6 +226,28 @@ int main( int argc, char * const argv[] )
 		 "Unable to initialize info handle.\n" );
 
 		goto on_error;
+	}
+	if( option_ascii_codepage != NULL )
+	{
+		result = info_handle_set_ascii_codepage(
+		          exeinfo_info_handle,
+		          option_ascii_codepage,
+		          &error );
+
+		if( result == -1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to set ASCII codepage in info handle.\n" );
+
+			goto on_error;
+		}
+		else if( result == 0 )
+		{
+			fprintf(
+			 stderr,
+			 "Unsupported ASCII codepage defaulting to: windows-1252.\n" );
+		}
 	}
 	if( info_handle_open_input(
 	     exeinfo_info_handle,
@@ -259,9 +296,9 @@ int main( int argc, char * const argv[] )
 on_error:
 	if( error != NULL )
 	{
-		libsystem_notify_print_error_backtrace(
+		libcnotify_print_error_backtrace(
 		 error );
-		liberror_error_free(
+		libcerror_error_free(
 		 &error );
 	}
 	if( exeinfo_info_handle != NULL )

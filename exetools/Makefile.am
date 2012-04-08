@@ -1,14 +1,18 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	-I$(top_srcdir)/libcstring \
-	-I$(top_srcdir)/liberror \
-	-I$(top_srcdir)/libsystem \
+	@LIBCSTRING_CPPFLAGS@ \
+	@LIBCERROR_CPPFLAGS@ \
+	@LIBCLOCALE_CPPFLAGS@ \
+	@LIBCNOTIFY_CPPFLAGS@ \
 	@LIBUNA_CPPFLAGS@ \
+	@LIBCFILE_CPPFLAGS@ \
+	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
 	@LIBFCACHE_CPPFLAGS@ \
 	@LIBFDATA_CPPFLAGS@ \
 	@LIBFDATETIME_CPPFLAGS@ \
+	@LIBCSYSTEM_CPPFLAGS@ \
 	@MEMWATCH_CPPFLAGS@ \
 	@LIBEXE_DLL_IMPORT@
 
@@ -19,19 +23,24 @@ bin_PROGRAMS = \
 
 exeinfo_SOURCES = \
 	exeinfo.c \
-	exeinput.c exeinput.h \
 	exeoutput.c exeoutput.h \
+	exetools_libcerror.h \
+	exetools_libclocale.h \
+	exetools_libcnotify.h \
+	exetools_libcsystem.h \
 	exetools_libfdatetime.h \
 	exetools_libexe.h \
 	exetools_libuna.h \
 	info_handle.c info_handle.h
 
 exeinfo_LDADD = \
-	../libcstring/libcstring.la \
-	../liberror/liberror.la \
-	../libexe/libexe.la \
-	../libsystem/libsystem.la \
+	@LIBCSTRING_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCNOTIFY_LIBADD@ \
 	@LIBUNA_LIBADD@ \
+	../libexe/libexe.la \
+	@LIBCSYSTEM_LIBADD@
 	@LIBINTL@ \
 	@MEMWATCH_LIBADD@
 

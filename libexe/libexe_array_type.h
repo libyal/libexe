@@ -25,7 +25,7 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
+#include "libexe_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -81,71 +81,71 @@ struct libexe_array
 int libexe_array_initialize(
      libexe_array_t **array,
      int number_of_entries,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_array_free(
      libexe_array_t **array,
      int (*entry_free_function)(
             intptr_t **entry,
-            liberror_error_t **error ),
-     liberror_error_t **error );
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
 
 int libexe_array_empty(
      libexe_array_t *array,
      int (*entry_free_function)(
             intptr_t **entry,
-            liberror_error_t **error ),
-     liberror_error_t **error );
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
 
 int libexe_array_clear(
      libexe_array_t *array,
      int (*entry_free_function)(
             intptr_t **entry,
-            liberror_error_t **error ),
-     liberror_error_t **error );
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
 
 int libexe_array_clone(
      libexe_array_t **destination_array,
      libexe_array_t *source_array,
      int (*entry_free_function)(
             intptr_t **entry,
-            liberror_error_t **error ),
+            libcerror_error_t **error ),
      int (*entry_clone_function)(
             intptr_t **destination,
             intptr_t *source,
-            liberror_error_t **error ),
-     liberror_error_t **error );
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
 
 int libexe_array_resize(
      libexe_array_t *array,
      int number_of_entries,
      int (*entry_free_function)(
             intptr_t **entry,
-            liberror_error_t **error ),
-     liberror_error_t **error );
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
 
 int libexe_array_get_number_of_entries(
      libexe_array_t *array,
      int *number_of_entries,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_array_get_entry_by_index(
      libexe_array_t *array,
      int entry_index,
      intptr_t **entry,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_array_set_entry_by_index(
      libexe_array_t *array,
      int entry_index,
      intptr_t *entry,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_array_append_entry(
      libexe_array_t *array,
      int *entry_index,
      intptr_t *entry,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_array_insert_entry(
      libexe_array_t *array,
@@ -154,9 +154,9 @@ int libexe_array_insert_entry(
      int (*entry_compare_function)(
             intptr_t *first_entry,
             intptr_t *second_entry,
-            liberror_error_t **error ),
+            libcerror_error_t **error ),
      uint8_t insert_flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

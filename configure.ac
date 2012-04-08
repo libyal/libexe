@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20120401],
+ [20120408],
  [jbmetz@users.sourceforge.net])
 
 AC_CONFIG_SRCDIR(
@@ -26,8 +26,13 @@ AC_PROG_CC
 AC_PROG_GCC_TRADITIONAL
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
+
+dnl Check for libtool
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
+
+dnl Check for pkg-config
+AC_PATH_PROG(PKGCONFIG,[pkg-config])
 
 dnl Support of internationalization (i18n)
 AM_GNU_GETTEXT([external])
@@ -47,13 +52,27 @@ AX_TYPES_CHECK_LOCAL
 
 dnl Checks for libraries and library functions
 AX_COMMON_CHECK_LOCAL
-AX_LIBCSTRING_CHECK_LOCAL
-AX_LIBERROR_CHECK_LOCAL
-AX_LIBNOTIFY_CHECK_LOCAL
-AX_LIBSYSTEM_CHECK_LOCAL
+
+dnl Check for enabling libcstring for cross-platform C string functions
+AX_LIBCSTRING_CHECK_ENABLE
+
+dnl Check for enabling libcerror for cross-platform C error functions
+AX_LIBCERROR_CHECK_ENABLE
+
+dnl Check for enabling libclocale for cross-platform C locale functions
+AX_LIBCLOCALE_CHECK_ENABLE
+
+dnl Check for enabling libcnotify for cross-platform C notification functions
+AX_LIBCNOTIFY_CHECK_ENABLE
 
 dnl Check for enabling libuna for Unicode string support
 AX_LIBUNA_CHECK_ENABLE
+
+dnl Check for enabling libcfile for cross-platform C file functions
+AX_LIBCFILE_CHECK_ENABLE
+
+dnl Check for enabling libcpath for cross-platform C path functions
+AX_LIBCPATH_CHECK_ENABLE
 
 dnl Check for enabling libbfio for basic file IO support
 AX_LIBBFIO_CHECK_ENABLE
@@ -67,6 +86,12 @@ AX_LIBFDATA_CHECK_ENABLE
 dnl Check for enabling libfdatetime for file date and time support
 AX_LIBFDATETIME_CHECK_ENABLE
 
+dnl Check for library function support
+AX_LIBEXE_CHECK_LOCAL
+
+dnl Check for enabling libcsystem for cross-platform C generic system functions
+AX_LIBCSYSTEM_CHECK_ENABLE
+
 dnl Check if exetools should be build as static executables
 AX_COMMON_CHECK_ENABLE_STATIC_EXECUTABLES
 
@@ -76,16 +101,20 @@ AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
 dnl Check if libexe should be build with debug output
 AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
 
-dnl Check if requires and build requires should be set in spec file
+dnl Check if DLL support is needed in exetools
 AS_IF(
- [test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libbfio" = xyes || test "x$ac_cv_libfcache" = xyes || test "x$ac_cv_libfdata" = xyes || test "x$ac_cv_libfdatetime" = xyes],
- [AC_SUBST(
-  [libexe_spec_requires],
-  [Requires:])
- AC_SUBST(
-  [libexe_spec_build_requires],
-  [BuildRequires:])
+ [test x"$enable_shared" = xyes && test "x$ac_cv_enable_static_executables" = xno],
+ [AS_CASE(
+  [$host],
+  [*cygwin* | *mingw*],
+  [AC_SUBST(
+   [LIBEXE_DLL_IMPORT],
+   ["-DLIBEXE_DLL_IMPORT"])
+  ])
  ])
+
+dnl Set additional compiler flags
+CFLAGS="$CFLAGS -Wall";
 
 dnl Set memwatch support
 ac_cv_enable_memwatch=no
@@ -103,19 +132,22 @@ AM_CONDITIONAL(
  [HAVE_MEMWATCH],
  [test "x$ac_cv_enable_memwatch" != xno])
 
-dnl Set additional compiler flags
-CFLAGS="$CFLAGS -Wall";
-
-dnl Check if DLL support is needed in exetools
+dnl Check if requires and build requires should be set in spec file
 AS_IF(
- [test x"$enable_shared" = xyes && test "x$ac_cv_enable_static_executables" = xno],
- [AS_CASE(
-  [$host],
-  [*cygwin* | *mingw*],
-  [AC_SUBST(
-   [LIBEXE_DLL_IMPORT],
-   ["-DLIBEXE_DLL_IMPORT"])
-  ])
+ [test "x$ac_cv_libcstring" = xyes || test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libclocale" = xyes || test "x$ac_cv_libcnotify" = xyes || test "x$ac_cv_libuna" = xyes || test "x$ac_cv_libcfile" = xyes || test "x$ac_cv_libcpath" = xyes || test "x$ac_cv_libbfio" = xyes || test "x$ac_cv_libfcache" = xyes || test "x$ac_cv_libfdata" = xyes || test "x$ac_cv_libfdatetime" = xyes],
+ [AC_SUBST(
+  [libexe_spec_requires],
+  [Requires:])
+ AC_SUBST(
+  [libexe_spec_build_requires],
+  [BuildRequires:])
+ ])
+
+AS_IF(
+ [test "x$ac_cv_libcsystem" = xyes],
+ [AC_SUBST(
+  [libexe_tools_spec_build_requires],
+  [BuildRequires:])
  ])
 
 dnl Set the date for dpkg files
@@ -128,15 +160,18 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([include/Makefile])
 AC_CONFIG_FILES([common/Makefile])
 AC_CONFIG_FILES([libcstring/Makefile])
-AC_CONFIG_FILES([liberror/Makefile])
-AC_CONFIG_FILES([libnotify/Makefile])
+AC_CONFIG_FILES([libcerror/Makefile])
+AC_CONFIG_FILES([libclocale/Makefile])
+AC_CONFIG_FILES([libcnotify/Makefile])
 AC_CONFIG_FILES([libuna/Makefile])
+AC_CONFIG_FILES([libcfile/Makefile])
+AC_CONFIG_FILES([libcpath/Makefile])
 AC_CONFIG_FILES([libbfio/Makefile])
 AC_CONFIG_FILES([libfcache/Makefile])
 AC_CONFIG_FILES([libfdata/Makefile])
 AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libexe/Makefile])
-AC_CONFIG_FILES([libsystem/Makefile])
+AC_CONFIG_FILES([libcsystem/Makefile])
 AC_CONFIG_FILES([exetools/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
@@ -167,7 +202,13 @@ AC_OUTPUT
 dnl Print a summary
 AC_MSG_NOTICE([
 Building:
+   libcstring support:                       $ac_cv_libcstring
+   libcerror support:                        $ac_cv_libcerror
+   libclocale support:                       $ac_cv_libclocale
+   libcnotify support:                       $ac_cv_libcnotify
    libuna support:                           $ac_cv_libuna
+   libcfile support:                         $ac_cv_libcfile
+   libcpath support:                         $ac_cv_libcpath
    libbfio support:                          $ac_cv_libbfio
    libfcache support:                        $ac_cv_libfcache
    libfdata support:                         $ac_cv_libfdata

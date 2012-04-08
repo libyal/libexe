@@ -1,5 +1,5 @@
 /*
- * Debug functions
+ * The internal libcerror header
  *
  * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
@@ -19,29 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_DEBUG_H )
-#define _LIBEXE_DEBUG_H
+#if !defined( _EXETOOLS_LIBCERROR_H )
+#define _EXETOOLS_LIBCERROR_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libexe_libbfio.h"
-#include "libexe_libcerror.h"
+/* Define HAVE_LOCAL_LIBCERROR for local use of libcerror
+ */
+#if defined( HAVE_LOCAL_LIBCERROR )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libcerror_definitions.h>
+#include <libcerror_error.h>
+#include <libcerror_system.h>
+#include <libcerror_types.h>
+
+#elif defined( HAVE_LIBCERROR_H )
+
+/* If libtool DLL support is enabled set LIBCERROR_DLL_IMPORT
+ * before including libcerror.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCERROR_DLL_IMPORT
 #endif
 
-#if defined( HAVE_DEBUG_OUTPUT )
+#include <libcerror.h>
 
-int libexe_debug_print_read_offsets(
-     libbfio_handle_t *file_io_handle,
-     libcerror_error_t **error );
-
-#endif
-
-#if defined( __cplusplus )
-}
+#else
+#error Missing libcerror.h
 #endif
 
 #endif

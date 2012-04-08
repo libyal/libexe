@@ -24,12 +24,11 @@
 #include <memory.h>
 #include <types.h>
 
-#include <libcstring.h>
-#include <liberror.h>
-#include <libnotify.h>
-
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
+#include "libexe_libcnotify.h"
+#include "libexe_libcstring.h"
 #include "libexe_section_descriptor.h"
 
 #include "exe_section_table.h"
@@ -39,16 +38,16 @@
  */
 int libexe_section_descriptor_initialize(
      libexe_section_descriptor_t **section_descriptor,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function = "libexe_section_descriptor_initialize";
 
 	if( section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section descriptor.",
 		 function );
 
@@ -56,10 +55,10 @@ int libexe_section_descriptor_initialize(
 	}
 	if( *section_descriptor != NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
 		 "%s: invalid section descriptor value already set.",
 		 function );
 
@@ -70,10 +69,10 @@ int libexe_section_descriptor_initialize(
 
 	if( *section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_INSUFFICIENT,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
 		 "%s: unable to create section descriptor.",
 		 function );
 
@@ -84,10 +83,10 @@ int libexe_section_descriptor_initialize(
 	     0,
 	     sizeof( libexe_section_descriptor_t ) ) == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_MEMORY,
-		 LIBERROR_MEMORY_ERROR_SET_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_MEMORY,
+		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
 		 "%s: unable to clear section descriptor.",
 		 function );
 
@@ -107,10 +106,10 @@ int libexe_section_descriptor_initialize(
 	     0,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to create data block.",
 		 function );
 
@@ -121,10 +120,10 @@ int libexe_section_descriptor_initialize(
 	     1,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_RESIZE_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
 		 "%s: unable to resize number of segments of data block.",
 		 function );
 
@@ -154,17 +153,17 @@ on_error:
  */
 int libexe_section_descriptor_free(
      libexe_section_descriptor_t **section_descriptor,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function = "libexe_section_descriptor_free";
 	int result            = 1;
 
 	if( section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section descriptor.",
 		 function );
 
@@ -176,10 +175,10 @@ int libexe_section_descriptor_free(
 		     &( ( *section_descriptor )->data_block ),
 		     error ) != 1 )
 		{
-			liberror_error_set(
+			libcerror_error_set(
 			 error,
-			 LIBERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free data block.",
 			 function );
 
@@ -200,16 +199,16 @@ int libexe_section_descriptor_set_data_range(
      libexe_section_descriptor_t *section_descriptor,
      off64_t data_offset,
      size64_t data_size,
-     liberror_error_t **error )
+     libcerror_error_t **error )
 {
 	static char *function = "libexe_section_descriptor_set_data_range";
 
 	if( section_descriptor == NULL )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid section descriptor.",
 		 function );
 
@@ -223,10 +222,10 @@ int libexe_section_descriptor_set_data_range(
 	     0,
 	     error ) != 1 )
 	{
-		liberror_error_set(
+		libcerror_error_set(
 		 error,
-		 LIBERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBERROR_RUNTIME_ERROR_SET_FAILED,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to set segment in data block.",
 		 function );
 

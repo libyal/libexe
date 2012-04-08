@@ -25,12 +25,11 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_array_type.h"
 #include "libexe_extern.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 #include "libexe_types.h"
 
 #if defined( __cplusplus )
@@ -61,24 +60,24 @@ struct libexe_internal_file
 LIBEXE_EXTERN \
 int libexe_file_initialize(
      libexe_file_t **file,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_free(
      libexe_file_t **file,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_signal_abort(
      libexe_file_t *file,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_open(
      libexe_file_t *file,
      const char *filename,
      int access_flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 LIBEXE_EXTERN \
@@ -86,7 +85,7 @@ int libexe_file_open_wide(
      libexe_file_t *file,
      const wchar_t *filename,
      int access_flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 #endif
 
 LIBEXE_EXTERN \
@@ -94,41 +93,41 @@ int libexe_file_open_file_io_handle(
      libexe_file_t *file,
      libbfio_handle_t *file_io_handle,
      int access_flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_close(
      libexe_file_t *file,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_file_open_read(
      libexe_internal_file_t *internal_file,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_get_ascii_codepage(
      libexe_file_t *file,
      int *ascii_codepage,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_set_ascii_codepage(
      libexe_file_t *file,
      int ascii_codepage,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_get_number_of_sections(
      libexe_file_t *file,
      int *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_get_section(
      libexe_file_t *file,
      int section_index,
      libexe_section_t **section,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_file_get_section_by_name(
@@ -136,7 +135,7 @@ int libexe_file_get_section_by_name(
      const char *name,
      size_t name_length,
      libexe_section_t **section,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

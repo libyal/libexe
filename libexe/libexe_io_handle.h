@@ -25,10 +25,9 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_array_type.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 
 #if defined( __cplusplus )
 extern "C" {
@@ -59,70 +58,70 @@ struct libexe_io_handle
 
 int libexe_io_handle_initialize(
      libexe_io_handle_t **io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_free(
      libexe_io_handle_t **io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_mz_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t *extended_header_offset,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_extended_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t extended_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_le_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t le_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_ne_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t ne_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_pe_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint32_t pe_header_offset,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_coff_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t *number_of_sections,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_coff_optional_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t optional_header_size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_io_handle_read_section_table(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
      libexe_array_t *sections_array,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

@@ -1,7 +1,7 @@
 /*
- * Debug functions
+ * The internal libcnotify header
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2010-2012, Joachim Metz <jbmetz@users.sourceforge.net>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,29 +19,33 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_DEBUG_H )
-#define _LIBEXE_DEBUG_H
+#if !defined( _EXETOOLS_LIBCNOTIFY_H )
+#define _EXETOOLS_LIBCNOTIFY_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libexe_libbfio.h"
-#include "libexe_libcerror.h"
+/* Define HAVE_LOCAL_LIBCNOTIFY for local use of libcnotify
+ */
+#if defined( HAVE_LOCAL_LIBCNOTIFY )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libcnotify_definitions.h>
+#include <libcnotify_print.h>
+#include <libcnotify_stream.h>
+#include <libcnotify_verbose.h>
+
+#elif defined( HAVE_LIBCNOTIFY_H )
+
+/* If libtool DLL support is enabled set LIBCNOTIFY_DLL_IMPORT
+ * before including libcnotify.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCNOTIFY_DLL_IMPORT
 #endif
 
-#if defined( HAVE_DEBUG_OUTPUT )
+#include <libcnotify.h>
 
-int libexe_debug_print_read_offsets(
-     libbfio_handle_t *file_io_handle,
-     libcerror_error_t **error );
-
-#endif
-
-#if defined( __cplusplus )
-}
+#else
+#error Missing libcnotify.h
 #endif
 
 #endif

@@ -25,8 +25,7 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
+#include "libexe_libcerror.h"
 #include "libexe_types.h"
 
 #if defined( __cplusplus )
@@ -53,56 +52,56 @@ struct libexe_section_io_handle
 int libexe_section_io_handle_initialize(
      libexe_section_io_handle_t **io_handle,
      libexe_section_t *section,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_free(
      libexe_section_io_handle_t **io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_clone(
      libexe_section_io_handle_t **destination_io_handle,
      libexe_section_io_handle_t *source_io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_open(
      libexe_section_io_handle_t *io_handle,
      int flags,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_close(
      libexe_section_io_handle_t *io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 ssize_t libexe_section_io_handle_read(
          libexe_section_io_handle_t *io_handle,
          uint8_t *buffer,
          size_t size,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 ssize_t libexe_section_io_handle_write(
          libexe_section_io_handle_t *io_handle,
          const uint8_t *buffer,
          size_t size,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 off64_t libexe_section_io_handle_seek_offset(
          libexe_section_io_handle_t *io_handle,
          off64_t offset,
          int whence,
-         liberror_error_t **error );
+         libcerror_error_t **error );
 
 int libexe_section_io_handle_exists(
      libexe_section_io_handle_t *io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_is_open(
      libexe_section_io_handle_t *io_handle,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_io_handle_get_size(
      libexe_section_io_handle_t *io_handle,
      size64_t *size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

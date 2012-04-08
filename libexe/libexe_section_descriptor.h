@@ -25,10 +25,9 @@
 #include <common.h>
 #include <types.h>
 
-#include <liberror.h>
-
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcerror.h"
 #include "libexe_libfdata.h"
 
 #if defined( __cplusplus )
@@ -58,17 +57,17 @@ struct libexe_section_descriptor
 
 int libexe_section_descriptor_initialize(
      libexe_section_descriptor_t **section_descriptor,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_descriptor_free(
      libexe_section_descriptor_t **section_descriptor,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 int libexe_section_descriptor_set_data_range(
      libexe_section_descriptor_t *section_descriptor,
      off64_t data_offset,
      size64_t data_size,
-     liberror_error_t **error );
+     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }
