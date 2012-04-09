@@ -11,6 +11,10 @@ Format support:
 
 Update man pages
 
+20120409
+* fix for non-debug compilation
+* updated dependencies
+
 20120408
 * updated dependencies
 

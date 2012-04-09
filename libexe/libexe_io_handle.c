@@ -452,8 +452,8 @@ int libexe_io_handle_read_mz_header(
 			 112,
 			 0 );
 		}
-	}
 #endif
+	}
 /* TODO print data between realloc and current offset */
 	if( number_of_relocation_entries > 0 )
 	{
@@ -2112,8 +2112,8 @@ int libexe_io_handle_read_coff_optional_header(
 			libcnotify_printf(
 			 "\n" );
 		}
-		number_of_data_directory_entries--;
 #endif
+		number_of_data_directory_entries--;
 	}
 	memory_free(
 	 coff_optional_header );
