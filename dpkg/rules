@@ -38,6 +38,8 @@ install_libexe_tools:
 	install -p -m755 debian/tmp/usr/bin/* debian/libexe-tools/usr/bin
 	install -p -m755 debian/tmp/usr/share/man/man1/* debian/libexe-tools/usr/share/man/man1
 
+override_dh_auto_test:
+
 override_dh_installinit: install_libexe install_libexe_dev install_libexe_tools
 
 override_dh_installmenu:

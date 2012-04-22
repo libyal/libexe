@@ -11,6 +11,9 @@ Format support:
 
 Update man pages
 
+20120422
+* libfdatetime update
+
 20120409
 * fix for non-debug compilation
 * updated dependencies
