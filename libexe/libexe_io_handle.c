@@ -1746,7 +1746,7 @@ int libexe_io_handle_read_coff_optional_header(
 		 "\n" );
 	}
 #endif
-	if( number_of_data_directory_entries != 16 )
+	if( number_of_data_directory_entries > 16 )
 	{
 		libcerror_error_set(
 		 error,
