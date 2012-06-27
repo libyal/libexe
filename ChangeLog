@@ -11,6 +11,11 @@ Format support:
 
 Update man pages
 
+20120627
+* applied updates
+* reversed library order in tools for mingw
+* fix for deployment
+
 20120501
 * applied updates
 

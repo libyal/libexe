@@ -27,6 +27,7 @@ exeinfo_SOURCES = \
 	exetools_libcerror.h \
 	exetools_libclocale.h \
 	exetools_libcnotify.h \
+	exetools_libcstring.h \
 	exetools_libcsystem.h \
 	exetools_libfdatetime.h \
 	exetools_libexe.h \
@@ -34,13 +35,13 @@ exeinfo_SOURCES = \
 	info_handle.c info_handle.h
 
 exeinfo_LDADD = \
-	@LIBCSTRING_LIBADD@ \
-	@LIBCERROR_LIBADD@ \
-	@LIBCLOCALE_LIBADD@ \
-	@LIBCNOTIFY_LIBADD@ \
-	@LIBUNA_LIBADD@ \
+	@LIBCSYSTEM_LIBADD@ \
 	../libexe/libexe.la \
-	@LIBCSYSTEM_LIBADD@
+	@LIBUNA_LIBADD@ \
+	@LIBCNOTIFY_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@ \
 	@MEMWATCH_LIBADD@
 
