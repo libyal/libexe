@@ -1,7 +1,7 @@
 /*
  * The internal definitions
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -37,11 +37,11 @@
  * for local use of libexe
  */
 #else
-#define LIBEXE_VERSION						20120627
+#define LIBEXE_VERSION						20120912
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING					"20120627"
+#define LIBEXE_VERSION_STRING					"20120912"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access

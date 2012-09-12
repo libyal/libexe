@@ -1,7 +1,7 @@
 /*
  * File functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -23,13 +23,13 @@
 #include <memory.h>
 #include <types.h>
 
-#include "libexe_array_type.h"
 #include "libexe_codepage.h"
 #include "libexe_debug.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_file.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcdata.h"
 #include "libexe_libcerror.h"
 #include "libexe_libcnotify.h"
 #include "libexe_libcstring.h"
@@ -100,7 +100,7 @@ int libexe_file_initialize(
 
 		return( -1 );
 	}
-	if( libexe_array_initialize(
+	if( libcdata_array_initialize(
 	     &( internal_file->sections_array ),
 	     0,
 	     error ) != 1 )
@@ -136,7 +136,7 @@ on_error:
 	{
 		if( internal_file->sections_array != NULL )
 		{
-			libexe_array_free(
+			libcdata_array_free(
 			 &( internal_file->sections_array ),
 			 NULL,
 			 NULL );
@@ -191,7 +191,7 @@ int libexe_file_free(
 		}
 		*file = NULL;
 
-		if( libexe_array_free(
+		if( libcdata_array_free(
 		     &( internal_file->sections_array ),
 		     (int (*)(intptr_t **, libcerror_error_t **)) &libexe_section_descriptor_free,
 		     error ) != 1 )
@@ -748,7 +748,7 @@ int libexe_file_close(
 	internal_file->file_io_handle                    = NULL;
 	internal_file->file_io_handle_created_in_library = 0;
 
-	if( libexe_array_resize(
+	if( libcdata_array_resize(
 	     internal_file->sections_array,
 	     0,
 	     (int (*)(intptr_t **, libcerror_error_t **)) &libexe_section_descriptor_free,
@@ -990,7 +990,7 @@ int libexe_file_get_number_of_sections(
 	}
 	internal_file = (libexe_internal_file_t *) file;
 
-	if( libexe_array_get_number_of_entries(
+	if( libcdata_array_get_number_of_entries(
 	     internal_file->sections_array,
 	     number_of_sections,
 	     error ) != 1 )
@@ -1055,7 +1055,7 @@ int libexe_file_get_section(
 
 		return( -1 );
 	}
-	if( libexe_array_get_entry_by_index(
+	if( libcdata_array_get_entry_by_index(
 	     internal_file->sections_array,
 	     section_index,
 	     (intptr_t **) &section_descriptor,
@@ -1164,7 +1164,7 @@ int libexe_file_get_section_by_name(
 
 		return( -1 );
 	}
-	if( libexe_array_get_number_of_entries(
+	if( libcdata_array_get_number_of_entries(
 	     internal_file->sections_array,
 	     &number_of_sections,
 	     error ) != 1 )
@@ -1182,7 +1182,7 @@ int libexe_file_get_section_by_name(
 	     section_index < number_of_sections;
 	     section_index++ )
 	{
-		if( libexe_array_get_entry_by_index(
+		if( libcdata_array_get_entry_by_index(
 		     internal_file->sections_array,
 		     section_index,
 		     (intptr_t **) &section_descriptor,

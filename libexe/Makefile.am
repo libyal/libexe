@@ -3,16 +3,17 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/common \
 	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
+	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
 	@LIBCNOTIFY_CPPFLAGS@ \
+	@LIBCSPLIT_CPPFLAGS@ \
 	@LIBUNA_CPPFLAGS@ \
 	@LIBCFILE_CPPFLAGS@ \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
 	@LIBFCACHE_CPPFLAGS@ \
 	@LIBFDATA_CPPFLAGS@ \
-	@LIBFDATETIME_CPPFLAGS@ \
-	@MEMWATCH_CPPFLAGS@
+	@LIBFDATETIME_CPPFLAGS@
 
 lib_LTLIBRARIES = libexe.la
 
@@ -20,7 +21,6 @@ libexe_la_SOURCES = \
 	exe_file_header.h \
 	exe_section_table.h \
 	libexe.c \
-	libexe_array_type.c libexe_array_type.h \
 	libexe_codepage.h \
 	libexe_debug.c libexe_debug.h \
 	libexe_definitions.h \
@@ -29,6 +29,7 @@ libexe_la_SOURCES = \
 	libexe_file.c libexe_file.h \
 	libexe_io_handle.c libexe_io_handle.h \
 	libexe_libbfio.h \
+	libexe_libcdata.h \
 	libexe_libcerror.h \
 	libexe_libclocale.h \
 	libexe_libcnotify.h \
@@ -48,8 +49,10 @@ libexe_la_SOURCES = \
 libexe_la_LIBADD = \
 	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCFILE_LIBADD@ \
 	@LIBCPATH_LIBADD@ \

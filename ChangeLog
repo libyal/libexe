@@ -1,4 +1,7 @@
 TODO:
+* update msvscpp files
+* update man pages
+* update examples
 * sanitize stream names with control characters
 * libexe
   - get section by name function
@@ -9,7 +12,10 @@ Format support:
 * NE executable
 * LE executable
 
-Update man pages
+20120912
+* applied updates
+* changes regarding project move
+* changes for libcdata
 
 20120627
 * applied updates

@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -25,8 +25,8 @@
 #include <common.h>
 #include <types.h>
 
-#include "libexe_array_type.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcdata.h"
 #include "libexe_libcerror.h"
 
 #if defined( __cplusplus )
@@ -120,7 +120,7 @@ int libexe_io_handle_read_section_table(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
-     libexe_array_t *sections_array,
+     libcdata_array_t *sections_array,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

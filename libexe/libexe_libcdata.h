@@ -1,5 +1,5 @@
 /*
- * The internal libcstring header
+ * The internal libcdata header
  *
  * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,32 +19,36 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _EXETOOLS_LIBCSTRING_H )
-#define _EXETOOLS_LIBCSTRING_H
+#if !defined( _LIBEXE_LIBCDATA_H )
+#define _LIBEXE_LIBCDATA_H
 
 #include <common.h>
 
-/* Define HAVE_LOCAL_LIBCSTRING for local use of libcstring
+/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
  */
-#if defined( HAVE_LOCAL_LIBCSTRING )
+#if defined( HAVE_LOCAL_LIBCDATA )
 
-#include <libcstring_definitions.h>
-#include <libcstring_narrow_string.h>
-#include <libcstring_system_string.h>
-#include <libcstring_types.h>
-#include <libcstring_wide_string.h>
+#include <libcdata_array.h>
+#include <libcdata_btree.h>
+#include <libcdata_definitions.h>
+#include <libcdata_list.h>
+#include <libcdata_list_element.h>
+#include <libcdata_tree_node.h>
+#include <libcdata_types.h>
 
-#else
+#elif defined( HAVE_LIBCDATA_H )
 
-/* If libtool DLL support is enabled set LIBCSTRING_DLL_IMPORT
- * before including libcstring.h
+/* If libtool DLL support is enabled set LIBCDATA_DLL_IMPORT
+ * before including libcdata.h
  */
 #if defined( _WIN32 ) && defined( DLL_IMPORT )
-#define LIBCSTRING_DLL_IMPORT
+#define LIBCDATA_DLL_IMPORT
 #endif
 
-#include <libcstring.h>
+#include <libcdata.h>
 
+#else
+#error Missing libcdata.h
 #endif
 
 #endif

@@ -1,7 +1,7 @@
 /*
  * File functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -25,10 +25,10 @@
 #include <common.h>
 #include <types.h>
 
-#include "libexe_array_type.h"
 #include "libexe_extern.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
+#include "libexe_libcdata.h"
 #include "libexe_libcerror.h"
 #include "libexe_types.h"
 
@@ -42,7 +42,7 @@ struct libexe_internal_file
 {
 	/* The sections array
 	 */
-	libexe_array_t *sections_array;
+	libcdata_array_t *sections_array;
 
 	/* The IO handle
 	 */

@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <jbmetz@users.sourceforge.net>
+ * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -24,12 +24,12 @@
 #include <memory.h>
 #include <types.h>
 
-#include "libexe_array_type.h"
 #include "libexe_codepage.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
+#include "libexe_libcdata.h"
 #include "libexe_libcnotify.h"
 #include "libexe_libfdatetime.h"
 #include "libexe_section_descriptor.h"
@@ -2134,7 +2134,7 @@ int libexe_io_handle_read_section_table(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t number_of_sections,
-     libexe_array_t *sections_array,
+     libcdata_array_t *sections_array,
      libcerror_error_t **error )
 {
 	libexe_section_descriptor_t *section_descriptor = NULL;
@@ -2362,7 +2362,7 @@ int libexe_io_handle_read_section_table(
 
 			goto on_error;
 		}
-		if( libexe_array_append_entry(
+		if( libcdata_array_append_entry(
 		     sections_array,
 		     &section_entry_index,
 		     (intptr_t *) section_descriptor,
