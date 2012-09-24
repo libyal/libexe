@@ -1,19 +1,21 @@
 EXTRA_DIST = \
+	exeinfo/exeinfo.vcproj \
 	libbfio/libbfio.vcproj \
+	libcdata/libcdata.vcproj \
+	libcerror/libcerror.vcproj \
+	libcfile/libcfile.vcproj \
+	libclocale/libclocale.vcproj \
+	libcnotify/libcnotify.vcproj \
+	libcpath/libcpath.vcproj \
+	libcsplit/libcsplit.vcproj \
 	libcstring/libcstring.vcproj \
-	liberror/liberror.vcproj \
+	libcsystem/libcsystem.vcproj \
+	libexe_dll/libexe_dll.vcproj \
+	libfcache/libfcache.vcproj \
+	libfdata/libfdata.vcproj \
 	libfdatetime/libfdatetime.vcproj \
-	libfguid/libfguid.vcproj \
-	libfmapi/libfmapi.vcproj \
-	libfvalue/libfvalue.vcproj \
-	libfwnt/libfwnt.vcproj \
-	libnk2_dll/libnk2_dll.vcproj \
-	libnotify/libnotify.vcproj \
-	libsystem/libsystem.vcproj \
 	libuna/libuna.vcproj \
-	libnk2.sln \
-	nk2export/nk2export.vcproj \
-	nk2info/nk2info.vcproj
+	libexe.sln
 
 MAINTAINERCLEANFILES = \
 	Makefile.in
