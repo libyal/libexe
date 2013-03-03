@@ -1,7 +1,7 @@
 /*
  * Input/Output (IO) handle functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -644,6 +644,17 @@ int libexe_io_handle_read_le_header(
 
 		return( -1 );
 	}
+	if( number_of_sections == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid number of sections.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -730,6 +741,8 @@ int libexe_io_handle_read_le_header(
 /* TODO */
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_LE;
 
+	*number_of_sections = 0;
+
 	return( 1 );
 }
 
@@ -755,6 +768,17 @@ int libexe_io_handle_read_ne_header(
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( number_of_sections == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid number of sections.",
 		 function );
 
 		return( -1 );
@@ -844,6 +868,8 @@ int libexe_io_handle_read_ne_header(
 
 /* TODO */
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_NE;
+
+	*number_of_sections = 0;
 
 	return( 1 );
 }

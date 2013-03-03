@@ -1,7 +1,7 @@
 /*
  * Section decriptor functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -97,12 +97,12 @@ int libexe_section_descriptor_initialize(
 
 		return( -1 );
 	}
-	if( libfdata_block_initialize(
-	     &( ( *section_descriptor )->data_block ),
+	if( libfdata_stream_initialize(
+	     &( ( *section_descriptor )->data_stream ),
 	     NULL,
 	     NULL,
 	     NULL,
-	     &libfdata_block_read_segment_data,
+	     &libfdata_stream_read_segment_data,
 	     0,
 	     error ) != 1 )
 	{
@@ -110,13 +110,13 @@ int libexe_section_descriptor_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create data block.",
+		 "%s: unable to create data stream.",
 		 function );
 
 		goto on_error;
 	}
-	if( libfdata_block_resize_segments(
-	     ( *section_descriptor )->data_block,
+	if( libfdata_stream_resize_segments(
+	     ( *section_descriptor )->data_stream,
 	     1,
 	     error ) != 1 )
 	{
@@ -124,7 +124,7 @@ int libexe_section_descriptor_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
-		 "%s: unable to resize number of segments of data block.",
+		 "%s: unable to resize number of segments of data stream.",
 		 function );
 
 		goto on_error;
@@ -134,10 +134,10 @@ int libexe_section_descriptor_initialize(
 on_error:
 	if( *section_descriptor != NULL )
 	{
-		if( ( *section_descriptor )->data_block != NULL )
+		if( ( *section_descriptor )->data_stream != NULL )
 		{
-			libfdata_block_free(
-			 &( ( *section_descriptor )->data_block ),
+			libfdata_stream_free(
+			 &( ( *section_descriptor )->data_stream ),
 			 NULL );
 		}
 		memory_free(
@@ -171,15 +171,15 @@ int libexe_section_descriptor_free(
 	}
 	if( *section_descriptor != NULL )
 	{
-		if( libfdata_block_free(
-		     &( ( *section_descriptor )->data_block ),
+		if( libfdata_stream_free(
+		     &( ( *section_descriptor )->data_stream ),
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free data block.",
+			 "%s: unable to free data stream.",
 			 function );
 
 			result = -1;
@@ -214,8 +214,9 @@ int libexe_section_descriptor_set_data_range(
 
 		return( -1 );
 	}
-	if( libfdata_block_set_segment_by_index(
-	     section_descriptor->data_block,
+	if( libfdata_stream_set_segment_by_index(
+	     section_descriptor->data_stream,
+	     0,
 	     0,
 	     data_offset,
 	     data_size,
@@ -226,7 +227,7 @@ int libexe_section_descriptor_set_data_range(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set segment in data block.",
+		 "%s: unable to set segment in data stream.",
 		 function );
 
 		return( -1 );

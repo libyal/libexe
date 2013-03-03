@@ -1,7 +1,7 @@
 /*
  * Section functions
  *
- * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -439,8 +439,8 @@ ssize_t libexe_section_read_buffer(
 
 		return( -1 );
 	}
-	read_count = libfdata_block_read_buffer(
-	              internal_section->section_descriptor->data_block,
+	read_count = libfdata_stream_read_buffer(
+	              internal_section->section_descriptor->data_stream,
 	              internal_section->file_io_handle,
 	              internal_section->data_cache,
 	              buffer,
@@ -453,7 +453,7 @@ ssize_t libexe_section_read_buffer(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read buffer from section data block.",
+		 "%s: unable to read buffer from section data stream.",
 		 function );
 
 		return( -1 );
@@ -545,8 +545,8 @@ off64_t libexe_section_seek_offset(
 
 		return( -1 );
 	}
-	offset = libfdata_block_seek_offset(
-	          internal_section->section_descriptor->data_block,
+	offset = libfdata_stream_seek_offset(
+	          internal_section->section_descriptor->data_stream,
 	          offset,
 	          whence,
 	          error );
@@ -557,7 +557,7 @@ off64_t libexe_section_seek_offset(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek in section data block.",
+		 "%s: unable to seek in section data stream.",
 		 function );
 
 		return( -1 );
@@ -600,8 +600,8 @@ int libexe_section_get_size(
 
 		return( -1 );
 	}
-	if( libfdata_block_get_size(
-	     internal_section->section_descriptor->data_block,
+	if( libfdata_stream_get_size(
+	     internal_section->section_descriptor->data_stream,
 	     size,
 	     error ) != 1 )
 	{
@@ -609,7 +609,7 @@ int libexe_section_get_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve section data block size.",
+		 "%s: unable to retrieve section data stream size.",
 		 function );
 
 		return( -1 );

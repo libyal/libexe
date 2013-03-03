@@ -1,7 +1,7 @@
 /*
  * Shows information obtained from an executable (EXE) file
  *
- * Copyright (c) 2011-2012, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -75,7 +75,7 @@ void exeinfo_signal_handler(
       libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
-	static char *function   = "exeinfo_signal_handler";
+	static char *function    = "exeinfo_signal_handler";
 
 	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
 

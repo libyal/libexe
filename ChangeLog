@@ -1,8 +1,8 @@
 TODO:
-* update msvscpp files
 * update man pages
 * update examples
 * sanitize stream names with control characters
+  - see olecf
 * libexe
   - get section by name function
 * exeexport
@@ -11,6 +11,12 @@ TODO:
 Format support:
 * NE executable
 * LE executable
+
+20120303
+* 2013 update
+* updated msvscpp files
+* changes for libfdata update
+* changes to spec file
 
 20120924
 * applied updates
