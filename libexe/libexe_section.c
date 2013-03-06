@@ -441,7 +441,7 @@ ssize_t libexe_section_read_buffer(
 	}
 	read_count = libfdata_stream_read_buffer(
 	              internal_section->section_descriptor->data_stream,
-	              internal_section->file_io_handle,
+	              (intptr_t *) internal_section->file_io_handle,
 	              internal_section->data_cache,
 	              buffer,
 	              buffer_size,
@@ -600,7 +600,7 @@ int libexe_section_get_size(
 
 		return( -1 );
 	}
-	if( libfdata_stream_get_size(
+	if( libfdata_stream_get_data_size(
 	     internal_section->section_descriptor->data_stream,
 	     size,
 	     error ) != 1 )
