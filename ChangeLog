@@ -12,31 +12,36 @@ Format support:
 * NE executable
 * LE executable
 
+20120319
+* updated dependencies
+* changes for libfdata update
+
 20120303
 * 2013 update
+* updated dependencies
 * updated msvscpp files
 * changes for libfdata update
 * changes to spec file
 
 20120924
-* applied updates
+* updated dependencies
 * worked on msvscpp files
 
 20120919
-* applied updates
+* updated dependencies
 
 20120912
-* applied updates
+* updated dependencies
 * changes regarding project move
 * changes for libcdata
 
 20120627
-* applied updates
+* updated dependencies
 * reversed library order in tools for mingw
 * fix for deployment
 
 20120501
-* applied updates
+* updated dependencies
 
 20120422
 * libfdatetime update
