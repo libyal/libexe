@@ -326,7 +326,7 @@ int libexe_section_io_handle_close(
 }
 
 /* Reads a buffer from the IO handle
- * Returns the number of bytes read if successful, or -1 on errror
+ * Returns the number of bytes read if successful, or -1 on error
  */
 ssize_t libexe_section_io_handle_read(
          libexe_section_io_handle_t *io_handle,
@@ -402,7 +402,7 @@ ssize_t libexe_section_io_handle_read(
 }
 
 /* Writes a buffer to the IO handle
- * Returns the number of bytes written if successful, or -1 on errror
+ * Returns the number of bytes written if successful, or -1 on error
  */
 ssize_t libexe_section_io_handle_write(
          libexe_section_io_handle_t *io_handle,

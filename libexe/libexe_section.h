@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,7 +29,6 @@
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
-#include "libexe_libfcache.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_types.h"
 
@@ -52,10 +51,6 @@ struct libexe_internal_section
 	/* The section descriptor
 	 */
 	libexe_section_descriptor_t *section_descriptor;
-
-	/* The data cache
-	 */
-	libfcache_cache_t *data_cache;
 
 	/* The flags
 	 */

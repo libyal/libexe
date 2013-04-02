@@ -102,7 +102,10 @@ int libexe_section_descriptor_initialize(
 	     NULL,
 	     NULL,
 	     NULL,
-	     &libfdata_stream_read_segment_data,
+	     NULL,
+	     (ssize_t (*)(intptr_t *, intptr_t *, int, int, uint8_t *, size_t, uint32_t, uint8_t, libcerror_error_t **)) &libexe_io_handle_read_segment_data,
+	     NULL,
+	     (off64_t (*)(intptr_t *, intptr_t *, int, int, off64_t, libcerror_error_t **)) &libexe_io_handle_seek_segment_offset,
 	     0,
 	     error ) != 1 )
 	{

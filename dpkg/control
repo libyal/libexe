@@ -10,8 +10,8 @@ Package: libexe
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Library to support the executable (EXE) format
- libexe is a library to support the executable (EXE) format.
+Description: Library to access the executable (EXE) format
+ libexe is a library to access the executable (EXE) format.
 
 Package: libexe-dev
 Section: libdevel

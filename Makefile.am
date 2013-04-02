@@ -23,7 +23,6 @@ SUBDIRS = \
 	manuals \
 	examples \
 	tests \
-	macosx \
 	msvscpp
 
 DPKG_FILES = \
@@ -50,10 +49,7 @@ SPEC_FILES = \
 	libexe.spec.in
 
 EXTRA_DIST = \
-	README.dll \
 	README.macosx \
-	README.mingw \
-	README.static \
 	$(DPKG_FILES) \
 	$(GETTEXT_FILES) \
         $(PKGCONFIG_FILES) \

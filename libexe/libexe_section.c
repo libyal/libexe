@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,7 +27,6 @@
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
-#include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 #include "libexe_section.h"
 #include "libexe_section_io_handle.h"
@@ -157,20 +156,6 @@ int libexe_section_initialize(
 			goto on_error;
 		}
 	}
-	if( libfcache_cache_initialize(
-	     &( internal_section->data_cache ),
-	     LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create data cache.",
-		 function );
-
-		goto on_error;
-	}
 	internal_section->io_handle          = io_handle;
 	internal_section->section_descriptor = section_descriptor;
 	internal_section->flags              = flags;
@@ -254,19 +239,6 @@ int libexe_section_free(
 
 				result = -1;
 			}
-		}
-		if( libfcache_cache_free(
-		     &( internal_section->data_cache ),
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free data cache.",
-			 function );
-
-			result = -1;
 		}
 		memory_free(
 		 internal_section );
@@ -442,9 +414,9 @@ ssize_t libexe_section_read_buffer(
 	read_count = libfdata_stream_read_buffer(
 	              internal_section->section_descriptor->data_stream,
 	              (intptr_t *) internal_section->file_io_handle,
-	              internal_section->data_cache,
 	              buffer,
 	              buffer_size,
+	              0,
 	              error );
 
 	if( read_count == -1 )
@@ -600,7 +572,7 @@ int libexe_section_get_size(
 
 		return( -1 );
 	}
-	if( libfdata_stream_get_data_size(
+	if( libfdata_stream_get_size(
 	     internal_section->section_descriptor->data_stream,
 	     size,
 	     error ) != 1 )

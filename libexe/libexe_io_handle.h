@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -122,6 +122,25 @@ int libexe_io_handle_read_section_table(
      uint16_t number_of_sections,
      libcdata_array_t *sections_array,
      libcerror_error_t **error );
+
+ssize_t libexe_io_handle_read_segment_data(
+         intptr_t *data_handle,
+         libbfio_handle_t *file_io_handle,
+         int segment_index,
+         int segment_file_index,
+         uint8_t *segment_data,
+         size_t segment_data_size,
+         uint32_t segment_flags,
+         uint8_t read_flags,
+         libcerror_error_t **error );
+
+off64_t libexe_io_handle_seek_segment_offset(
+         intptr_t *data_handle,
+         libbfio_handle_t *file_io_handle,
+         int segment_index,
+         int segment_file_index,
+         off64_t segment_offset,
+         libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

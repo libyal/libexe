@@ -273,10 +273,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\libexe\libexe_libfcache.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\libexe\libexe_libfdata.h"
 				>
 			</File>

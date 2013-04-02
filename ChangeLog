@@ -1,4 +1,5 @@
 TODO:
+* update msvscpp files (libfdata change)
 * update man pages
 * update examples
 * sanitize stream names with control characters
@@ -11,6 +12,13 @@ TODO:
 Format support:
 * NE executable
 * LE executable
+
+Deployment:
+* add macosx files
+
+20120402
+* updated dependencies
+* changes for libfdata update
 
 20120319
 * updated dependencies
