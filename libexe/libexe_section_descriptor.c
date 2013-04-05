@@ -118,7 +118,7 @@ int libexe_section_descriptor_initialize(
 
 		goto on_error;
 	}
-	if( libfdata_stream_resize_segments(
+	if( libfdata_stream_resize(
 	     ( *section_descriptor )->data_stream,
 	     1,
 	     error ) != 1 )
@@ -127,7 +127,7 @@ int libexe_section_descriptor_initialize(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
-		 "%s: unable to resize number of segments of data stream.",
+		 "%s: unable to resize data stream.",
 		 function );
 
 		goto on_error;
