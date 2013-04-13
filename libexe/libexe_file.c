@@ -36,8 +36,8 @@
 #include "libexe_section.h"
 #include "libexe_section_descriptor.h"
 
-/* Initializes a file
- * Make sure the value file is pointing to is set to NULL
+/* Creates a file
+ * Make sure the value file is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libexe_file_initialize(

@@ -16,6 +16,10 @@ Format support:
 Deployment:
 * add macosx files
 
+20120413
+* updated dependencies
+* textual changes
+
 20120405
 * updated dependencies
 * changes for libfdata update

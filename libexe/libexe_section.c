@@ -31,7 +31,8 @@
 #include "libexe_section.h"
 #include "libexe_section_io_handle.h"
 
-/* Initializes the section and its values
+/* Creates a section
+ * Make sure the value section is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_initialize(
@@ -182,7 +183,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees an section
+/* Frees a section
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_free(

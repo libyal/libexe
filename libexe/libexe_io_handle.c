@@ -43,8 +43,8 @@ const char *exe_le_signature = "LE";
 const char *exe_ne_signature = "NE";
 const char *exe_pe_signature = "PE\x0\x0";
 
-/* Initialize an IO handle
- * Make sure the value io_handle is pointing to is set to NULL
+/* Creates an IO handle
+ * Make sure the value io_handle is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libexe_io_handle_initialize(
@@ -119,7 +119,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees a IO handle
+/* Frees an IO handle
  * Returns 1 if successful or -1 on error
  */
 int libexe_io_handle_free(

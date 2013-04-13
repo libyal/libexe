@@ -33,7 +33,8 @@
 
 #include "exe_section_table.h"
 
-/* Initialize the section descriptor
+/* Creates a section descriptor
+ * Make sure the value section_descriptor is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_descriptor_initialize(
@@ -151,7 +152,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees the section descriptor including elements
+/* Frees a section descriptor
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_descriptor_free(

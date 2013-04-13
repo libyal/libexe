@@ -30,7 +30,8 @@
 #include "libexe_section_io_handle.h"
 #include "libexe_types.h"
 
-/* Initializes the IO handle
+/* Creates a section IO handle
+ * Make sure the value io_handle is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_io_handle_initialize(
@@ -116,7 +117,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees the IO handle and its attributes
+/* Frees a section IO handle
  * Returns 1 if succesful or -1 on error
  */
 int libexe_section_io_handle_free(
