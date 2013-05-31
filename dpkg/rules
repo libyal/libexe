@@ -7,6 +7,8 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+PYTHON_PACKAGE_DIR=$(shell python -c "import distutils.sysconfig;print distutils.sysconfig.get_python_lib(True) ")
+
 
 %:
 	dh  $@
@@ -38,9 +40,17 @@ install_libexe_tools:
 	install -p -m755 debian/tmp/usr/bin/* debian/libexe-tools/usr/bin
 	install -p -m755 debian/tmp/usr/share/man/man1/* debian/libexe-tools/usr/share/man/man1
 
+install_libexe_python:
+	# Set up libexe-python package directories and files
+	mkdir -p debian/libexe-python/$(PYTHON_PACKAGE_DIR)
+	install -p -m775 debian/tmp$(PYTHON_PACKAGE_DIR)/pyexe.* debian/libexe-python$(PYTHON_PACKAGE_DIR)
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-python
+
 override_dh_auto_test:
 
-override_dh_installinit: install_libexe install_libexe_dev install_libexe_tools
+override_dh_installinit: install_libexe install_libexe_dev install_libexe_tools install_libexe_python
 
 override_dh_installmenu:
 

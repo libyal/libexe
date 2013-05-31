@@ -21,7 +21,6 @@ SUBDIRS = \
 	exetools \
 	po \
 	manuals \
-	examples \
 	tests \
 	msvscpp
 

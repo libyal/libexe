@@ -112,6 +112,12 @@ int libexe_section_get_size(
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \
+int libexe_section_get_start_offset(
+     libexe_section_t *section,
+     off64_t *start_offset,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
 int libexe_section_get_virtual_address(
      libexe_section_t *section,
      uint32_t *virtual_address,

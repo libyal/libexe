@@ -1,7 +1,6 @@
 TODO:
 * update msvscpp files (libfdata change)
 * update man pages
-* update examples
 * sanitize stream names with control characters
   - see olecf
 * libexe
@@ -15,6 +14,14 @@ Format support:
 
 Deployment:
 * add macosx files
+
+20120528
+* exeinfo: added offset to output
+
+20120526
+* removed examples, to move to project site
+* updated dependencies
+* worked on Python bindings
 
 20120421
 * updated dependencies

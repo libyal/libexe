@@ -27,3 +27,10 @@ Depends: libexe (= ${Source-Version}), ${shlibs:Depends}
 Description: Several tools for reading executable (EXE) files
  Several tools for reading executable (EXE) files.
 
+Package: libexe-python
+Section: python
+Architecture: any
+Depends: libexe (= ${Source-Version}), ${shlibs:Depends}, ${python:Depends}
+Description: Python bindings for libexe
+ Python bindings for libexe.
+

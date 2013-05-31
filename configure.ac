@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20130421],
+ [20130530],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -108,6 +108,9 @@ AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
 dnl Check if libexe should be build with debug output
 AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
 
+dnl Check if libexe python bindings (pyexe) should be build
+AX_PYTHON_CHECK_ENABLE
+
 dnl Check if DLL support is needed in exetools
 AS_IF(
  [test x"$enable_shared" = xyes && test "x$ac_cv_enable_static_executables" = xno],
@@ -176,11 +179,11 @@ AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libexe/Makefile])
 AC_CONFIG_FILES([libcsystem/Makefile])
 AC_CONFIG_FILES([exetools/Makefile])
+AC_CONFIG_FILES([pyexe/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
 AC_CONFIG_FILES([manuals/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
-AC_CONFIG_FILES([examples/Makefile])
 AC_CONFIG_FILES([msvscpp/Makefile])
 dnl Have configure make the include files
 AC_CONFIG_FILES([include/libexe.h])
@@ -220,6 +223,7 @@ Building:
 Features:
    Wide character type support:              $ac_cv_enable_wide_character_type
    exetools are build as static executables: $ac_cv_enable_static_executables
+   Python (pyexe) support:                   $ac_cv_enable_python
    Verbose output:                           $ac_cv_enable_verbose_output
    Debug output:                             $ac_cv_enable_debug_output
 ]);

@@ -1,4 +1,4 @@
-.Dd April 2, 2013
+.Dd May 28, 2013
 .Dt libexe 3
 .Os libexe
 .Sh NAME
@@ -60,16 +60,6 @@ File functions
 .Fn libexe_file_open "libexe_file_t *file, const char *filename, int access_flags, libexe_error_t **error"
 .Ft int
 .Fn libexe_file_close "libexe_file_t *file, libexe_error_t **error"
-.Ft int
-.Fn libexe_file_get_ascii_codepage "libexe_file_t *file, int *ascii_codepage, libexe_error_t **error"
-.Ft int
-.Fn libexe_file_set_ascii_codepage "libexe_file_t *file, int ascii_codepage, libexe_error_t **error"
-.Ft int
-.Fn libexe_file_get_modification_time "libexe_file_t *file, uint64_t *modification_time, libexe_error_t **error"
-.Ft int
-.Fn libexe_file_get_number_of_items "libexe_file_t *file, int *number_of_items, libexe_error_t **error"
-.Ft int
-.Fn libexe_file_get_item "libexe_file_t *file, int item_index, libexe_item_t **item, libexe_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
@@ -79,39 +69,9 @@ Available when compiled with libbfio support:
 .Ft int
 .Fn libexe_file_open_file_io_handle "libexe_file_t *file, libbfio_handle_t *file_io_handle, int access_flags, libexe_error_t **error"
 .PP
-Item functions
+Section functions
 .Ft int
-.Fn libexe_item_free "libexe_item_t **item, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_identifier "libexe_item_t *item, uint32_t *identifier, libexe_error_t **error
-.Ft int
-.Fn libexe_item_get_number_of_entries "libexe_item_t *item, uint32_t *number_of_entries, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_type "libexe_item_t *item, int entry_index, uint32_t *entry_type, uint32_t *value_type, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value "libexe_item_t *item, uint32_t entry_type, uint32_t *value_type, uint8_t **value_data, size_t *value_data_size, uint8_t flags, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_boolean "libexe_item_t *item, uint32_t entry_type, uint8_t *value_boolean, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_32bit "libexe_item_t *item, uint32_t entry_type, uint32_t *value_32bit, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_64bit "libexe_item_t *item, uint32_t entry_type, uint64_t *value_64bit, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_size "libexe_item_t *item, uint32_t entry_type, size_t *value_size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_utf8_string_size "libexe_item_t *item, uint32_t entry_type, size_t *utf8_string_size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_utf8_string "libexe_item_t *item, uint32_t entry_type, uint8_t *utf8_string, size_t utf8_string_size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_utf16_string_size "libexe_item_t *item, uint32_t entry_type, size_t *utf16_string_size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_utf16_string "libexe_item_t *item, uint32_t entry_type, uint8_t *utf16_string, size_t utf16_string_size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_binary_data_size "libexe_item_t *item, int set_index, uint32_t entry_type, size_t *size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_binary_data "libexe_item_t *item, uint32_t entry_type, uint8_t *binary_data, size_t size, libexe_error_t **error"
-.Ft int
-.Fn libexe_item_get_entry_value_guid "libexe_item_t *item, uint32_t entry_type, uint8_t *guid, size_t size, libexe_error_t **error"
+.Fn libexe_section_free "libexe_section_t **section, libexe_error_t **error"
 .Sh DESCRIPTION
 The
 .Fn libexe_get_version

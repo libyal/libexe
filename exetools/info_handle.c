@@ -30,7 +30,7 @@
 #include "exetools_libexe.h"
 #include "info_handle.h"
 
-#define INFO_HANDLE_NOTIFY_STREAM	stdout
+#define INFO_HANDLE_NOTIFY_STREAM		stdout
 
 /* Creates an info handle
  * Make sure the value info_handle is referencing, is set to NULL
@@ -362,7 +362,8 @@ int info_handle_file_fprint(
 
 	libexe_section_t *section = NULL;
 	static char *function     = "info_handle_file_fprint";
-	uint64_t size             = 0;
+	off64_t start_offset      = 0;
+	size64_t size             = 0;
 	uint32_t virtual_address  = 0;
 	int number_of_sections    = 0;
 	int section_index         = 0;
@@ -454,6 +455,26 @@ int info_handle_file_fprint(
 			 info_handle->notify_stream,
 			 "\tName\t\t\t: %s\n",
 			 name );
+
+			if( libexe_section_get_start_offset(
+			     section,
+			     &start_offset,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve section: %d start offset.",
+				 function,
+				 section_index );
+
+				goto on_error;
+			}
+			fprintf(
+			 info_handle->notify_stream,
+			 "\tStart offset\t\t: 0x%08" PRIx64 "\n",
+			 start_offset );
 
 			if( libexe_section_get_size(
 			     section,

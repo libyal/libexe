@@ -590,8 +590,66 @@ int libexe_section_get_size(
 	return( 1 );
 }
 
+/* Retrieves the start offset
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_start_offset(
+     libexe_section_t *section,
+     off64_t *start_offset,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_start_offset";
+	size64_t segment_size                       = 0;
+	uint32_t segment_flags                      = 0;
+	int segment_file_index                      = 0;
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libfdata_stream_get_segment_by_index(
+	     internal_section->section_descriptor->data_stream,
+	     0,
+	     &segment_file_index,
+	     start_offset,
+	     &segment_size,
+	     &segment_flags,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve section data stream segment: 0.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Retrieves the virtual address
- * The returned size includes the end of string character
  * Returns 1 if successful or -1 on error
  */
 int libexe_section_get_virtual_address(
