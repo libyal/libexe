@@ -1,5 +1,5 @@
 /*
- * Python object definition of the stores sequence and iterator
+ * Python object definition of the sections sequence and iterator
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -27,22 +27,22 @@
 #endif
 
 #include "pyexe.h"
+#include "pyexe_file.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
-#include "pyexe_store.h"
-#include "pyexe_stores.h"
-#include "pyexe_volume.h"
+#include "pyexe_section.h"
+#include "pyexe_sections.h"
 
-PySequenceMethods pyexe_stores_sequence_methods = {
+PySequenceMethods pyexe_sections_sequence_methods = {
 	/* sq_length */
-	(lenfunc) pyexe_stores_len,
+	(lenfunc) pyexe_sections_len,
 	/* sq_concat */
 	0,
 	/* sq_repeat */
 	0,
 	/* sq_item */
-	(ssizeargfunc) pyexe_stores_getitem,
+	(ssizeargfunc) pyexe_sections_getitem,
 	/* sq_slice */
 	0,
 	/* sq_ass_item */
@@ -57,19 +57,19 @@ PySequenceMethods pyexe_stores_sequence_methods = {
 	0
 };
 
-PyTypeObject pyexe_stores_type_object = {
+PyTypeObject pyexe_sections_type_object = {
 	PyObject_HEAD_INIT( NULL )
 
 	/* ob_size */
 	0,
 	/* tp_name */
-	"pyexe._stores",
+	"pyexe._sections",
 	/* tp_basicsize */
-	sizeof( pyexe_stores_t ),
+	sizeof( pyexe_sections_t ),
 	/* tp_itemsize */
 	0,
 	/* tp_dealloc */
-	(destructor) pyexe_stores_free,
+	(destructor) pyexe_sections_free,
 	/* tp_print */
 	0,
 	/* tp_getattr */
@@ -83,7 +83,7 @@ PyTypeObject pyexe_stores_type_object = {
 	/* tp_as_number */
 	0,
 	/* tp_as_sequence */
-	&pyexe_stores_sequence_methods,
+	&pyexe_sections_sequence_methods,
 	/* tp_as_mapping */
 	0,
 	/* tp_hash */
@@ -101,7 +101,7 @@ PyTypeObject pyexe_stores_type_object = {
         /* tp_flags */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_ITER,
 	/* tp_doc */
-	"internal pyexe stores sequence and iterator object",
+	"internal pyexe sections sequence and iterator object",
 	/* tp_traverse */
 	0,
 	/* tp_clear */
@@ -111,9 +111,9 @@ PyTypeObject pyexe_stores_type_object = {
 	/* tp_weaklistoffset */
 	0,
 	/* tp_iter */
-	(getiterfunc) pyexe_stores_iter,
+	(getiterfunc) pyexe_sections_iter,
 	/* tp_iternext */
-	(iternextfunc) pyexe_stores_iternext,
+	(iternextfunc) pyexe_sections_iternext,
 	/* tp_methods */
 	0,
 	/* tp_members */
@@ -131,7 +131,7 @@ PyTypeObject pyexe_stores_type_object = {
 	/* tp_dictoffset */
 	0,
 	/* tp_init */
-	(initproc) pyexe_stores_init,
+	(initproc) pyexe_sections_init,
 	/* tp_alloc */
 	0,
 	/* tp_new */
@@ -154,207 +154,207 @@ PyTypeObject pyexe_stores_type_object = {
 	0
 };
 
-/* Creates a new stores object
+/* Creates a new sections object
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_stores_new(
-           pyexe_volume_t *volume_object,
-           PyObject* (*get_store_by_index)(
-                        pyexe_volume_t *volume_object,
-                        int store_index ),
-           int number_of_stores )
+PyObject *pyexe_sections_new(
+           pyexe_file_t *file_object,
+           PyObject* (*get_section_by_index)(
+                        pyexe_file_t *file_object,
+                        int section_index ),
+           int number_of_sections )
 {
-	pyexe_stores_t *pyexe_stores = NULL;
-	static char *function                = "pyexe_stores_new";
+	pyexe_sections_t *pyexe_sections = NULL;
+	static char *function            = "pyexe_sections_new";
 
-	if( volume_object == NULL )
+	if( file_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid volume object.",
+		 "%s: invalid file object.",
 		 function );
 
 		return( NULL );
 	}
-	if( get_store_by_index == NULL )
+	if( get_section_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid get store by index function.",
+		 "%s: invalid get section by index function.",
 		 function );
 
 		return( NULL );
 	}
-	/* Make sure the stores values are initialized
+	/* Make sure the sections values are initialized
 	 */
-	pyexe_stores = PyObject_New(
-	                    struct pyexe_stores,
-	                    &pyexe_stores_type_object );
+	pyexe_sections = PyObject_New(
+	                  struct pyexe_sections,
+	                  &pyexe_sections_type_object );
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize stores.",
+		 "%s: unable to initialize sections.",
 		 function );
 
 		goto on_error;
 	}
-	if( pyexe_stores_init(
-	     pyexe_stores ) != 0 )
+	if( pyexe_sections_init(
+	     pyexe_sections ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize stores.",
+		 "%s: unable to initialize sections.",
 		 function );
 
 		goto on_error;
 	}
-	pyexe_stores->volume_object      = volume_object;
-	pyexe_stores->get_store_by_index = get_store_by_index;
-	pyexe_stores->number_of_stores   = number_of_stores;
+	pyexe_sections->file_object          = file_object;
+	pyexe_sections->get_section_by_index = get_section_by_index;
+	pyexe_sections->number_of_sections   = number_of_sections;
 
 	Py_IncRef(
-	 (PyObject *) pyexe_stores->volume_object );
+	 (PyObject *) pyexe_sections->file_object );
 
-	return( (PyObject *) pyexe_stores );
+	return( (PyObject *) pyexe_sections );
 
 on_error:
-	if( pyexe_stores != NULL )
+	if( pyexe_sections != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyexe_stores );
+		 (PyObject *) pyexe_sections );
 	}
 	return( NULL );
 }
 
-/* Intializes a stores object
+/* Intializes a sections object
  * Returns 0 if successful or -1 on error
  */
-int pyexe_stores_init(
-     pyexe_stores_t *pyexe_stores )
+int pyexe_sections_init(
+     pyexe_sections_t *pyexe_sections )
 {
-	static char *function = "pyexe_stores_init";
+	static char *function = "pyexe_sections_init";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return( -1 );
 	}
-	/* Make sure the stores values are initialized
+	/* Make sure the sections values are initialized
 	 */
-	pyexe_stores->volume_object      = NULL;
-	pyexe_stores->get_store_by_index = NULL;
-	pyexe_stores->store_index        = 0;
-	pyexe_stores->number_of_stores   = 0;
+	pyexe_sections->file_object          = NULL;
+	pyexe_sections->get_section_by_index = NULL;
+	pyexe_sections->section_index        = 0;
+	pyexe_sections->number_of_sections   = 0;
 
 	return( 0 );
 }
 
-/* Frees a stores object
+/* Frees a sections object
  */
-void pyexe_stores_free(
-      pyexe_stores_t *pyexe_stores )
+void pyexe_sections_free(
+      pyexe_sections_t *pyexe_sections )
 {
-	static char *function = "pyexe_stores_free";
+	static char *function = "pyexe_sections_free";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return;
 	}
-	if( pyexe_stores->ob_type == NULL )
+	if( pyexe_sections->ob_type == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - missing ob_type.",
+		 "%s: invalid sections - missing ob_type.",
 		 function );
 
 		return;
 	}
-	if( pyexe_stores->ob_type->tp_free == NULL )
+	if( pyexe_sections->ob_type->tp_free == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - invalid ob_type - missing tp_free.",
+		 "%s: invalid sections - invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
 	}
-	if( pyexe_stores->volume_object != NULL )
+	if( pyexe_sections->file_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyexe_stores->volume_object );
+		 (PyObject *) pyexe_sections->file_object );
 	}
-	pyexe_stores->ob_type->tp_free(
-	 (PyObject*) pyexe_stores );
+	pyexe_sections->ob_type->tp_free(
+	 (PyObject*) pyexe_sections );
 }
 
-/* The stores len() function
+/* The sections len() function
  */
-Py_ssize_t pyexe_stores_len(
-            pyexe_stores_t *pyexe_stores )
+Py_ssize_t pyexe_sections_len(
+            pyexe_sections_t *pyexe_sections )
 {
-	static char *function = "pyexe_stores_len";
+	static char *function = "pyexe_sections_len";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) pyexe_stores->number_of_stores );
+	return( (Py_ssize_t) pyexe_sections->number_of_sections );
 }
 
-/* The stores getitem() function
+/* The sections getitem() function
  */
-PyObject *pyexe_stores_getitem(
-           pyexe_stores_t *pyexe_stores,
+PyObject *pyexe_sections_getitem(
+           pyexe_sections_t *pyexe_sections,
            Py_ssize_t item_index )
 {
-	PyObject *store_object = NULL;
-	static char *function  = "pyexe_stores_getitem";
+	PyObject *section_object = NULL;
+	static char *function    = "pyexe_sections_getitem";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->get_store_by_index == NULL )
+	if( pyexe_sections->get_section_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - missing get store by index function.",
+		 "%s: invalid sections - missing get section by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->number_of_stores < 0 )
+	if( pyexe_sections->number_of_sections < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - invalid number of stores.",
+		 "%s: invalid sections - invalid number of sections.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) pyexe_stores->number_of_stores ) )
+	 || ( item_index >= (Py_ssize_t) pyexe_sections->number_of_sections ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,94 +363,94 @@ PyObject *pyexe_stores_getitem(
 
 		return( NULL );
 	}
-	store_object = pyexe_stores->get_store_by_index(
-	                pyexe_stores->volume_object,
-	                (int) item_index );
+	section_object = pyexe_sections->get_section_by_index(
+	                  pyexe_sections->file_object,
+	                  (int) item_index );
 
-	return( store_object );
+	return( section_object );
 }
 
-/* The stores iter() function
+/* The sections iter() function
  */
-PyObject *pyexe_stores_iter(
-           pyexe_stores_t *pyexe_stores )
+PyObject *pyexe_sections_iter(
+           pyexe_sections_t *pyexe_sections )
 {
-	static char *function = "pyexe_stores_iter";
+	static char *function = "pyexe_sections_iter";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return( NULL );
 	}
 	Py_IncRef(
-	 (PyObject *) pyexe_stores );
+	 (PyObject *) pyexe_sections );
 
-	return( (PyObject *) pyexe_stores );
+	return( (PyObject *) pyexe_sections );
 }
 
-/* The stores iternext() function
+/* The sections iternext() function
  */
-PyObject *pyexe_stores_iternext(
-           pyexe_stores_t *pyexe_stores )
+PyObject *pyexe_sections_iternext(
+           pyexe_sections_t *pyexe_sections )
 {
-	PyObject *store_object = NULL;
-	static char *function  = "pyexe_stores_iternext";
+	PyObject *section_object = NULL;
+	static char *function    = "pyexe_sections_iternext";
 
-	if( pyexe_stores == NULL )
+	if( pyexe_sections == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores.",
+		 "%s: invalid sections.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->get_store_by_index == NULL )
+	if( pyexe_sections->get_section_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - missing get store by index function.",
+		 "%s: invalid sections - missing get section by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->store_index < 0 )
+	if( pyexe_sections->section_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - invalid store index.",
+		 "%s: invalid sections - invalid section index.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->number_of_stores < 0 )
+	if( pyexe_sections->number_of_sections < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid stores - invalid number of stores.",
+		 "%s: invalid sections - invalid number of sections.",
 		 function );
 
 		return( NULL );
 	}
-	if( pyexe_stores->store_index >= pyexe_stores->number_of_stores )
+	if( pyexe_sections->section_index >= pyexe_sections->number_of_sections )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	store_object = pyexe_stores->get_store_by_index(
-	                pyexe_stores->volume_object,
-	                pyexe_stores->store_index );
+	section_object = pyexe_sections->get_section_by_index(
+	                  pyexe_sections->file_object,
+	                  pyexe_sections->section_index );
 
-	if( store_object != NULL )
+	if( section_object != NULL )
 	{
-		pyexe_stores->store_index++;
+		pyexe_sections->section_index++;
 	}
-	return( store_object );
+	return( section_object );
 }
 

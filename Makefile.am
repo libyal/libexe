@@ -19,6 +19,7 @@ SUBDIRS = \
 	libexe \
 	libcsystem \
 	exetools \
+	pyexe \
 	po \
 	manuals \
 	tests \

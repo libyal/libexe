@@ -333,6 +333,48 @@ int libexe_section_get_name(
      size_t name_size,
      libexe_error_t **error );
 
+/* Retrieves the size of the UTF-8 formatted name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_utf8_name_size(
+     libexe_section_t *section,
+     size_t *name,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-8 formatted name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_utf8_name(
+     libexe_section_t *section,
+     uint8_t *name,
+     size_t name_size,
+     libexe_error_t **error );
+
+/* Retrieves the size of the UTF-16 formatted name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_utf16_name_size(
+     libexe_section_t *section,
+     size_t *name,
+     libexe_error_t **error );
+
+/* Retrieves the UTF-16 formatted name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_utf16_name(
+     libexe_section_t *section,
+     uint16_t *name,
+     size_t name_size,
+     libexe_error_t **error );
+
 /* Reads data at the current offset into a buffer
  * Returns the number of bytes read or -1 on error
  */
@@ -363,6 +405,15 @@ off64_t libexe_section_seek_offset(
          off64_t offset,
          int whence,
          libexe_error_t **error );
+
+/* Retrieves the (current) offset
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_EXTERN \
+int libexe_section_get_offset(
+     libexe_section_t *section,
+     off64_t *offset,
+     libexe_error_t **error );
 
 /* Retrieves the size
  * Returns 1 if successful or -1 on error

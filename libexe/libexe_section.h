@@ -84,6 +84,32 @@ int libexe_section_get_name(
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \
+int libexe_section_get_utf8_name_size(
+     libexe_section_t *section,
+     size_t *utf8_string_size,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_section_get_utf8_name(
+     libexe_section_t *section,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_section_get_utf16_name_size(
+     libexe_section_t *section,
+     size_t *utf16_string_size,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_section_get_utf16_name(
+     libexe_section_t *section,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
 ssize_t libexe_section_read_buffer(
          libexe_section_t *section,
          void *buffer,
@@ -104,6 +130,12 @@ off64_t libexe_section_seek_offset(
          off64_t offset,
          int whence,
          libcerror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_section_get_offset(
+     libexe_section_t *section,
+     off64_t *offset,
+     libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_size(

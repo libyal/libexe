@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libexe store
+ * Python object definition of the libexe section
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,112 +19,83 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYEXE_STORE_H )
-#define _PYEXE_STORE_H
+#if !defined( _PYEXE_SECTION_H )
+#define _PYEXE_SECTION_H
 
 #include <common.h>
 #include <types.h>
 
+#include "pyexe_file.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
-#include "pyexe_volume.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct pyexe_store pyexe_store_t;
+typedef struct pyexe_section pyexe_section_t;
 
-struct pyexe_store
+struct pyexe_section
 {
 	/* Python object initialization
 	 */
 	PyObject_HEAD
 
-	/* The libexe store
+	/* The libexe section
 	 */
-	libexe_store_t *store;
+	libexe_section_t *section;
 
-	/* The pyexe volume object
+	/* The pyexe file object
 	 */
-	pyexe_volume_t *volume_object;
+	pyexe_file_t *file_object;
 };
 
-extern PyMethodDef pyexe_store_object_methods[];
-extern PyTypeObject pyexe_store_type_object;
+extern PyMethodDef pyexe_section_object_methods[];
+extern PyTypeObject pyexe_section_type_object;
 
-PyObject *pyexe_store_new(
-           libexe_store_t *store,
-           pyexe_volume_t *volume_object );
+PyObject *pyexe_section_new(
+           libexe_section_t *section,
+           pyexe_file_t *file_object );
 
-int pyexe_store_init(
-     pyexe_store_t *pyexe_store );
+int pyexe_section_init(
+     pyexe_section_t *pyexe_section );
 
-void pyexe_store_free(
-      pyexe_store_t *pyexe_store );
+void pyexe_section_free(
+      pyexe_section_t *pyexe_section );
 
-PyObject *pyexe_store_read_buffer(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_read_buffer(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_store_read_random(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_read_random(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_store_seek_offset(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_seek_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_store_get_offset(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments );
 
-PyObject *pyexe_store_get_size(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_size(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments );
 
-PyObject *pyexe_store_get_volume_size(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_start_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments );
 
-PyObject *pyexe_store_get_identifier(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_virtual_address(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments );
 
-PyObject *pyexe_store_get_creation_time(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments );
-
-PyObject *pyexe_store_get_creation_time_as_integer(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments );
-
-PyObject *pyexe_store_get_copy_identifier(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments );
-
-PyObject *pyexe_store_get_copy_set_identifier(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments );
-
-PyObject *pyexe_store_get_number_of_blocks(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments );
-
-PyObject *pyexe_store_get_block_by_index(
-           pyexe_store_t *pyexe_store,
-           int block_index );
-
-PyObject *pyexe_store_get_block(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments,
-           PyObject *keywords );
-
-PyObject *pyexe_store_get_blocks(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_name(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments );
 
 #if defined( __cplusplus )

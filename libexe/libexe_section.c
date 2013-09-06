@@ -28,6 +28,7 @@
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
 #include "libexe_libfdata.h"
+#include "libexe_libuna.h"
 #include "libexe_section.h"
 #include "libexe_section_io_handle.h"
 
@@ -375,6 +376,274 @@ int libexe_section_get_name(
 	return( 1 );
 }
 
+/* Retrieves the size of the UTF-8 formatted name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_utf8_name_size(
+     libexe_section_t *section,
+     size_t *utf8_string_size,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_utf8_name_size";
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libuna_utf8_string_size_from_byte_stream(
+	     (uint8_t *) internal_section->section_descriptor->name,
+	     internal_section->section_descriptor->name_size,
+	     internal_section->io_handle->ascii_codepage,
+	     utf8_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-8 string size.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the UTF-8 formatted name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_utf8_name(
+     libexe_section_t *section,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_utf8_name";
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libuna_utf8_string_copy_from_byte_stream(
+	     utf8_string,
+	     utf8_string_size,
+	     (uint8_t *) internal_section->section_descriptor->name,
+	     internal_section->section_descriptor->name_size,
+	     internal_section->io_handle->ascii_codepage,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy name to UTF-8 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the size of the UTF-16 formatted name
+ * The returned size includes the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_utf16_name_size(
+     libexe_section_t *section,
+     size_t *utf16_string_size,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_utf16_name_size";
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libuna_utf16_string_size_from_byte_stream(
+	     (uint8_t *) internal_section->section_descriptor->name,
+	     internal_section->section_descriptor->name_size,
+	     internal_section->io_handle->ascii_codepage,
+	     utf16_string_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve UTF-16 string size.",
+		 function );
+
+		return( -1 );
+	}
+	return( -1 );
+}
+
+/* Retrieves the UTF-16 formatted name
+ * The size should include the end of string character
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_utf16_name(
+     libexe_section_t *section,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_utf16_name";
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->io_handle == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing IO handle.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid internal section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libuna_utf16_string_copy_from_byte_stream(
+	     utf16_string,
+	     utf16_string_size,
+	     (uint8_t *) internal_section->section_descriptor->name,
+	     internal_section->section_descriptor->name_size,
+	     internal_section->io_handle->ascii_codepage,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
+		 "%s: unable to copy name to UTF-16 string.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Reads data at the current offset into a buffer
  * Returns the number of bytes read or -1 on error
  */
@@ -536,6 +805,58 @@ off64_t libexe_section_seek_offset(
 		return( -1 );
 	}
 	return( offset );
+}
+
+/* Retrieves the (current) offset
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_get_offset(
+     libexe_section_t *section,
+     off64_t *offset,
+     libcerror_error_t **error )
+{
+	libexe_internal_section_t *internal_section = NULL;
+	static char *function                       = "libexe_section_get_offset";
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	internal_section = (libexe_internal_section_t *) section;
+
+	if( internal_section->section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid section - missing section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libfdata_stream_get_offset(
+	     internal_section->section_descriptor->data_stream,
+	     offset,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve section data stream offset.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
 }
 
 /* Retrieves the size

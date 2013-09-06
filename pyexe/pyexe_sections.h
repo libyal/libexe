@@ -1,5 +1,5 @@
 /*
- * Python object definition of the stores sequence and iterator
+ * Python object definition of the sections sequence and iterator
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,74 +19,74 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYEXE_STORES_H )
-#define _PYEXE_STORES_H
+#if !defined( _PYEXE_SECTIONS_H )
+#define _PYEXE_SECTIONS_H
 
 #include <common.h>
 #include <types.h>
 
+#include "pyexe_file.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
-#include "pyexe_volume.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct pyexe_stores pyexe_stores_t;
+typedef struct pyexe_sections pyexe_sections_t;
 
-struct pyexe_stores
+struct pyexe_sections
 {
 	/* Python object initialization
 	 */
 	PyObject_HEAD
 
-	/* The pyexe volume object
+	/* The pyexe file object
 	 */
-	pyexe_volume_t *volume_object;
+	pyexe_file_t *file_object;
 
-	/* The get store by index callback function
+	/* The get section by index callback function
 	 */
-	PyObject* (*get_store_by_index)(
-	             pyexe_volume_t *volume_object,
-	             int store_index );
+	PyObject* (*get_section_by_index)(
+	             pyexe_file_t *file_object,
+	             int section_index );
 
-	/* The (current) store index
+	/* The (current) section index
 	 */
-	int store_index;
+	int section_index;
 
-	/* The number of stores
+	/* The number of sections
 	 */
-	int number_of_stores;
+	int number_of_sections;
 };
 
-extern PyTypeObject pyexe_stores_type_object;
+extern PyTypeObject pyexe_sections_type_object;
 
-PyObject *pyexe_stores_new(
-           pyexe_volume_t *volume_object,
-           PyObject* (*get_store_by_index)(
-                        pyexe_volume_t *volume_object,
-                        int store_index ),
-           int number_of_stores );
+PyObject *pyexe_sections_new(
+           pyexe_file_t *file_object,
+           PyObject* (*get_section_by_index)(
+                        pyexe_file_t *file_object,
+                        int section_index ),
+           int number_of_sections );
 
-int pyexe_stores_init(
-     pyexe_stores_t *pyexe_stores );
+int pyexe_sections_init(
+     pyexe_sections_t *pyexe_sections );
 
-void pyexe_stores_free(
-      pyexe_stores_t *pyexe_stores );
+void pyexe_sections_free(
+      pyexe_sections_t *pyexe_sections );
 
-Py_ssize_t pyexe_stores_len(
-            pyexe_stores_t *pyexe_stores );
+Py_ssize_t pyexe_sections_len(
+            pyexe_sections_t *pyexe_sections );
 
-PyObject *pyexe_stores_getitem(
-           pyexe_stores_t *pyexe_stores,
+PyObject *pyexe_sections_getitem(
+           pyexe_sections_t *pyexe_sections,
            Py_ssize_t item_index );
 
-PyObject *pyexe_stores_iter(
-           pyexe_stores_t *pyexe_stores );
+PyObject *pyexe_sections_iter(
+           pyexe_sections_t *pyexe_sections );
 
-PyObject *pyexe_stores_iternext(
-           pyexe_stores_t *pyexe_stores );
+PyObject *pyexe_sections_iternext(
+           pyexe_sections_t *pyexe_sections );
 
 #if defined( __cplusplus )
 }

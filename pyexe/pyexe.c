@@ -27,11 +27,11 @@
 #endif
 
 #include "pyexe.h"
+#include "pyexe_file.h"
 #include "pyexe_file_object_io_handle.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libcstring.h"
 #include "pyexe_libexe.h"
-#include "pyexe_file.h"
 #include "pyexe_python.h"
 #include "pyexe_section.h"
 #include "pyexe_sections.h"
@@ -59,14 +59,14 @@ PyMethodDef pyexe_module_methods[] = {
 	  METH_VARARGS | METH_KEYWORDS,
 	  "check_file_signature(filename) -> Boolean\n"
 	  "\n"
-	  "Checks if a file has a Windows NT Volume Shadow Snapshot (VSS) file signature." },
+	  "Checks if a file has an executable (EXE) signature." },
 
 	{ "check_file_signature_file_object",
 	  (PyCFunction) pyexe_check_file_signature_file_object,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "check_file_signature(file_object) -> Boolean\n"
+	  "check_file_signature_file_object(file_object) -> Boolean\n"
 	  "\n"
-	  "Checks if a file has a Windows NT Volume Shadow Snapshot (VSS) file signature using a file-like object." },
+	  "Checks if a file has an executable (EXE) signature using a file-like object." },
 
 	{ "open",
 	  (PyCFunction) pyexe_file_new_open,
@@ -78,7 +78,7 @@ PyMethodDef pyexe_module_methods[] = {
 	{ "open_file_object",
 	  (PyCFunction) pyexe_file_new_open_file_object,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "open(file_object, mode='r') -> Object\n"
+	  "open_file_object(file_object, mode='r') -> Object\n"
 	  "\n"
 	  "Opens a file using a file-like object." },
 
@@ -119,7 +119,7 @@ PyObject *pyexe_get_version(
 	         errors ) );
 }
 
-/* Checks if the file has a Windows NT Volume Shadow Snapshot (VSS) file signature
+/* Checks if the file has an executable (EXE) signature
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature(
@@ -186,7 +186,7 @@ PyObject *pyexe_check_file_signature(
 	return( Py_False );
 }
 
-/* Checks if the file has a Windows NT Volume Shadow Snapshot (VSS) file signature using a file-like object
+/* Checks if the file has an executable (EXE) signature using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature_file_object(
@@ -364,8 +364,8 @@ PyMODINIT_FUNC initpyexe(
 
 	PyModule_AddObject(
 	 module,
-	 "file",
-	 (PyObject *) file_type_object );
+	"file",
+	(PyObject *) file_type_object );
 
 	/* Setup the sections type object
 	 */

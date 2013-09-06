@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libexe store
+ * Python object definition of the libexe section
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -27,218 +27,147 @@
 #endif
 
 #include "pyexe.h"
-#include "pyexe_block.h"
-#include "pyexe_blocks.h"
 #include "pyexe_datetime.h"
-#include "pyexe_guid.h"
+#include "pyexe_file.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libcstring.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
-#include "pyexe_store.h"
+#include "pyexe_section.h"
 #include "pyexe_unused.h"
 
-PyMethodDef pyexe_store_object_methods[] = {
+PyMethodDef pyexe_section_object_methods[] = {
 
-	/* Functions to access the store data */
+	/* Functions to access the section data */
 
 	{ "read_buffer",
-	  (PyCFunction) pyexe_store_read_buffer,
+	  (PyCFunction) pyexe_section_read_buffer,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read_buffer(size) -> String\n"
 	  "\n"
-	  "Reads a buffer of store data from the file(s)." },
+	  "Reads a buffer of section data." },
 
 	{ "read_random",
-	  (PyCFunction) pyexe_store_read_random,
+	  (PyCFunction) pyexe_section_read_random,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read_random(size, offset) -> String\n"
 	  "\n"
-	  "Reads a buffer of store data at a specific offset from the file(s)." },
+	  "Reads a buffer of secton data at a specific offset." },
 
 	{ "seek_offset",
-	  (PyCFunction) pyexe_store_seek_offset,
+	  (PyCFunction) pyexe_section_seek_offset,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "seek_offset(offset, whence) -> None\n"
 	  "\n"
-	  "Seeks an offset within the store data." },
+	  "Seeks an offset within the section data." },
 
 	{ "get_offset",
-	  (PyCFunction) pyexe_store_get_offset,
+	  (PyCFunction) pyexe_section_get_offset,
 	  METH_NOARGS,
 	  "get_offset() -> Long\n"
 	  "\n"
-	  "Retrieves the current offset within the store data." },
+	  "Retrieves the current offset within the section data." },
 
 	/* Some Pythonesque aliases */
 
 	{ "read",
-	  (PyCFunction) pyexe_store_read_buffer,
+	  (PyCFunction) pyexe_section_read_buffer,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "read(size) -> String\n"
 	  "\n"
-	  "Reads a buffer of store data from the file(s)." },
+	  "Reads a buffer of section data." },
 
 	{ "seek",
-	  (PyCFunction) pyexe_store_seek_offset,
+	  (PyCFunction) pyexe_section_seek_offset,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "seek(offset, whence) -> None\n"
 	  "\n"
-	  "Seeks an offset within the store data." },
+	  "Seeks an offset within the section data." },
 
 	{ "tell",
-	  (PyCFunction) pyexe_store_get_offset,
+	  (PyCFunction) pyexe_section_get_offset,
 	  METH_NOARGS,
 	  "tell() -> Long\n"
 	  "\n"
-	  "Retrieves the current offset within the store data." },
+	  "Retrieves the current offset within the section data." },
 
-	/* Functions to access the store values */
+	/* Functions to access the section values */
 
 	{ "get_size",
-	  (PyCFunction) pyexe_store_get_size,
+	  (PyCFunction) pyexe_section_get_size,
 	  METH_NOARGS,
 	  "get_size() -> Long\n"
 	  "\n"
-	  "Retrieves the size of the store data." },
+	  "Retrieves the size of the section data." },
 
-	{ "get_volume_size",
-	  (PyCFunction) pyexe_store_get_volume_size,
+	{ "get_start_offset",
+	  (PyCFunction) pyexe_section_get_start_offset,
 	  METH_NOARGS,
-	  "get_volume_size() -> Long\n"
+	  "get_start_offset() -> Long\n"
 	  "\n"
-	  "Retrieves the size of the volume as stored in the store information." },
+	  "Retrieves the start offset." },
 
-	{ "get_identifier",
-	  (PyCFunction) pyexe_store_get_identifier,
+	{ "get_virtual_address",
+	  (PyCFunction) pyexe_section_get_virtual_address,
 	  METH_NOARGS,
-	  "get_identifier() -> Unicode string or None\n"
+	  "get_virtual_address() -> Long\n"
 	  "\n"
-	  "Retrieves the identifier (GUID)." },
+	  "Retrieves the virtual address." },
 
-	{ "get_creation_time",
-	  (PyCFunction) pyexe_store_get_creation_time,
+	{ "get_name",
+	  (PyCFunction) pyexe_section_get_name,
 	  METH_NOARGS,
-	  "get_creation_time() -> Datetime\n"
+	  "get_name() -> Unicode string or None\n"
 	  "\n"
-	  "Returns the creation date and time." },
-
-	{ "get_creation_time_as_integer",
-	  (PyCFunction) pyexe_store_get_creation_time_as_integer,
-	  METH_NOARGS,
-	  "pyexe_store_get_creation_time_as_integer() -> Long\n"
-	  "\n"
-	  "Returns the creation date and time as a 64-bit integer containing a FILETIME value." },
-
-	{ "get_copy_identifier",
-	  (PyCFunction) pyexe_store_get_copy_identifier,
-	  METH_NOARGS,
-	  "get_copy_identifier() -> Unicode string or None\n"
-	  "\n"
-	  "Retrieves the copy identifier (GUID)." },
-
-	{ "get_copy_set_identifier",
-	  (PyCFunction) pyexe_store_get_copy_set_identifier,
-	  METH_NOARGS,
-	  "get_copy_set_identifier() -> Unicode string or None\n"
-	  "\n"
-	  "Retrieves the copy set identifier (GUID)." },
-
-	/* Functions to access the blocks */
-
-	{ "get_number_of_blocks",
-	  (PyCFunction) pyexe_store_get_number_of_blocks,
-	  METH_NOARGS,
-	  "get_number_of_blocks() -> Integer\n"
-	  "\n"
-	  "Retrieves the number of blocks." },
-
-	{ "get_block",
-	  (PyCFunction) pyexe_store_get_block,
-	  METH_VARARGS | METH_KEYWORDS,
-	  "get_block(block_index) -> Object or None\n"
-	  "\n"
-	  "Retrieves a specific block." },
-
-	{ "get_blocks",
-	  (PyCFunction) pyexe_store_get_blocks,
-	  METH_VARARGS | METH_KEYWORDS,
-	  "get_blocks() -> Object\n"
-	  "\n"
-	  "Retrieves a sequence object of the blocks." },
-
+	  "Returns the name." },
 
 	/* Sentinel */
 	{ NULL, NULL, 0, NULL }
 };
 
-PyGetSetDef pyexe_store_object_get_set_definitions[] = {
+PyGetSetDef pyexe_section_object_get_set_definitions[] = {
 
 	{ "size",
-	  (getter) pyexe_store_get_size,
+	  (getter) pyexe_section_get_size,
 	  (setter) 0,
 	  "The size.",
 	  NULL },
 
-	{ "volume_size",
-	  (getter) pyexe_store_get_volume_size,
+	{ "start_offset",
+	  (getter) pyexe_section_get_start_offset,
 	  (setter) 0,
-	  "The volume size.",
+	  "The start offset.",
 	  NULL },
 
-	{ "identifier",
-	  (getter) pyexe_store_get_identifier,
+	{ "virtual_address",
+	  (getter) pyexe_section_get_virtual_address,
 	  (setter) 0,
-	  "The identifier.",
+	  "The virtual address.",
 	  NULL },
 
-	{ "creation_time",
-	  (getter) pyexe_store_get_creation_time,
+	{ "name",
+	  (getter) pyexe_section_get_name,
 	  (setter) 0,
-	  "The creation date and time.",
-	  NULL },
-
-	{ "copy_identifier",
-	  (getter) pyexe_store_get_copy_identifier,
-	  (setter) 0,
-	  "The copy identifier.",
-	  NULL },
-
-	{ "copy_set_identifier",
-	  (getter) pyexe_store_get_copy_set_identifier,
-	  (setter) 0,
-	  "The copy set identifier.",
-	  NULL },
-
-	{ "number_of_blocks",
-	  (getter) pyexe_store_get_number_of_blocks,
-	  (setter) 0,
-	  "The number of blocks.",
-	  NULL },
-
-	{ "blocks",
-	  (getter) pyexe_store_get_blocks,
-	  (setter) 0,
-	  "The blocks.",
+	  "The name.",
 	  NULL },
 
 	/* Sentinel */
 	{ NULL, NULL, NULL, NULL, NULL }
 };
 
-PyTypeObject pyexe_store_type_object = {
+PyTypeObject pyexe_section_type_object = {
 	PyObject_HEAD_INIT( NULL )
 
 	/* ob_size */
 	0,
 	/* tp_name */
-	"pyexe.store",
+	"pyexe.section",
 	/* tp_basicsize */
-	sizeof( pyexe_store_t ),
+	sizeof( pyexe_section_t ),
 	/* tp_itemsize */
 	0,
 	/* tp_dealloc */
-	(destructor) pyexe_store_free,
+	(destructor) pyexe_section_free,
 	/* tp_print */
 	0,
 	/* tp_getattr */
@@ -270,7 +199,7 @@ PyTypeObject pyexe_store_type_object = {
         /* tp_flags */
 	Py_TPFLAGS_DEFAULT,
 	/* tp_doc */
-	"pyexe store object (wraps libexe_store_t)",
+	"pyexe section object (wraps libexe_section_t)",
 	/* tp_traverse */
 	0,
 	/* tp_clear */
@@ -284,11 +213,11 @@ PyTypeObject pyexe_store_type_object = {
 	/* tp_iternext */
 	0,
 	/* tp_methods */
-	pyexe_store_object_methods,
+	pyexe_section_object_methods,
 	/* tp_members */
 	0,
 	/* tp_getset */
-	pyexe_store_object_get_set_definitions,
+	pyexe_section_object_get_set_definitions,
 	/* tp_base */
 	0,
 	/* tp_dict */
@@ -300,7 +229,7 @@ PyTypeObject pyexe_store_type_object = {
 	/* tp_dictoffset */
 	0,
 	/* tp_init */
-	(initproc) pyexe_store_init,
+	(initproc) pyexe_section_init,
 	/* tp_alloc */
 	0,
 	/* tp_new */
@@ -323,137 +252,137 @@ PyTypeObject pyexe_store_type_object = {
 	0
 };
 
-/* Creates a new store object
+/* Creates a new section object
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_new(
-           libexe_store_t *store,
-           pyexe_volume_t *volume_object )
+PyObject *pyexe_section_new(
+           libexe_section_t *section,
+           pyexe_file_t *file_object )
 {
-	pyexe_store_t *pyexe_store = NULL;
-	static char *function              = "pyexe_store_new";
+	pyexe_section_t *pyexe_section = NULL;
+	static char *function          = "pyexe_section_new";
 
-	if( store == NULL )
+	if( section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
-	pyexe_store = PyObject_New(
-	                   struct pyexe_store,
-	                   &pyexe_store_type_object );
+	pyexe_section = PyObject_New(
+	                 struct pyexe_section,
+	                 &pyexe_section_type_object );
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize store.",
+		 "%s: unable to initialize section.",
 		 function );
 
 		goto on_error;
 	}
-	if( pyexe_store_init(
-	     pyexe_store ) != 0 )
+	if( pyexe_section_init(
+	     pyexe_section ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize store.",
+		 "%s: unable to initialize section.",
 		 function );
 
 		goto on_error;
 	}
-	pyexe_store->store         = store;
-	pyexe_store->volume_object = volume_object;
+	pyexe_section->section     = section;
+	pyexe_section->file_object = file_object;
 
 	Py_IncRef(
-	 (PyObject *) pyexe_store->volume_object );
+	 (PyObject *) pyexe_section->file_object );
 
-	return( (PyObject *) pyexe_store );
+	return( (PyObject *) pyexe_section );
 
 on_error:
-	if( pyexe_store != NULL )
+	if( pyexe_section != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyexe_store );
+		 (PyObject *) pyexe_section );
 	}
 	return( NULL );
 }
 
-/* Intializes an store object
+/* Intializes an section object
  * Returns 0 if successful or -1 on error
  */
-int pyexe_store_init(
-     pyexe_store_t *pyexe_store )
+int pyexe_section_init(
+     pyexe_section_t *pyexe_section )
 {
-	static char *function = "pyexe_store_init";
+	static char *function = "pyexe_section_init";
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( -1 );
 	}
-	/* Make sure libexe store is set to NULL
+	/* Make sure libexe section is set to NULL
 	 */
-	pyexe_store->store = NULL;
+	pyexe_section->section = NULL;
 
 	return( 0 );
 }
 
-/* Frees an store object
+/* Frees an section object
  */
-void pyexe_store_free(
-      pyexe_store_t *pyexe_store )
+void pyexe_section_free(
+      pyexe_section_t *pyexe_section )
 {
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_free";
+	static char *function    = "pyexe_section_free";
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return;
 	}
-	if( pyexe_store->ob_type == NULL )
+	if( pyexe_section->ob_type == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store - missing ob_type.",
+		 "%s: invalid section - missing ob_type.",
 		 function );
 
 		return;
 	}
-	if( pyexe_store->ob_type->tp_free == NULL )
+	if( pyexe_section->ob_type->tp_free == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store - invalid ob_type - missing tp_free.",
+		 "%s: invalid section - invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
 	}
-	if( pyexe_store->store == NULL )
+	if( pyexe_section->section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store - missing libexe store.",
+		 "%s: invalid section - missing libexe section.",
 		 function );
 
 		return;
 	}
-	if( libexe_store_free(
-	     &( pyexe_store->store ),
+	if( libexe_section_free(
+	     &( pyexe_section->section ),
 	     &error ) != 1 )
 	{
 		if( libcerror_error_backtrace_sprint(
@@ -463,34 +392,34 @@ void pyexe_store_free(
                 {
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to free libexe store.",
+			 "%s: unable to free libexe section.",
 			 function );
 		}
 		else
                 {
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to free libexe store.\n%s",
+			 "%s: unable to free libexe section.\n%s",
 			 function,
 			 error_string );
 		}
 		libcerror_error_free(
 		 &error );
 	}
-	if( pyexe_store->volume_object != NULL )
+	if( pyexe_section->file_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyexe_store->volume_object );
+		 (PyObject *) pyexe_section->file_object );
 	}
-	pyexe_store->ob_type->tp_free(
-	 (PyObject*) pyexe_store );
+	pyexe_section->ob_type->tp_free(
+	 (PyObject*) pyexe_section );
 }
 
-/* Reads (store) data at the current offset into a buffer
+/* Reads (section) data at the current offset into a buffer
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_read_buffer(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_read_buffer(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords )
 {
@@ -498,16 +427,16 @@ PyObject *pyexe_store_read_buffer(
 
 	libcerror_error_t *error    = NULL;
 	PyObject *result_data       = NULL;
-	static char *function       = "pyexe_store_read_buffer";
+	static char *function       = "pyexe_section_read_buffer";
 	static char *keyword_list[] = { "size", NULL };
 	ssize_t read_count          = 0;
 	int read_size               = -1;
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid pyexe store.",
+		 "%s: invalid pyexe section.",
 		 function );
 
 		return( NULL );
@@ -547,8 +476,8 @@ PyObject *pyexe_store_read_buffer(
 
 	Py_BEGIN_ALLOW_THREADS
 
-	read_count = libexe_store_read_buffer(
-	              pyexe_store->store,
+	read_count = libexe_section_read_buffer(
+	              pyexe_section->section,
 	              PyString_AsString(
 	               result_data ),
 	              (size_t) read_size,
@@ -584,11 +513,11 @@ PyObject *pyexe_store_read_buffer(
 	return( result_data );
 }
 
-/* Reads (store) data at a specific offset
+/* Reads (section) data at a specific offset
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_read_random(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_read_random(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords )
 {
@@ -596,17 +525,17 @@ PyObject *pyexe_store_read_random(
 
 	libcerror_error_t *error    = NULL;
 	PyObject *result_data       = NULL;
-	static char *function       = "pyexe_store_read_random";
+	static char *function       = "pyexe_section_read_random";
 	static char *keyword_list[] = { "size", "offset", NULL };
 	off64_t read_offset         = 0;
 	ssize_t read_count          = 0;
 	int read_size               = 0;
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid pyexe store.",
+		 "%s: invalid pyexe section.",
 		 function );
 
 		return( NULL );
@@ -658,8 +587,8 @@ PyObject *pyexe_store_read_random(
 
 	Py_BEGIN_ALLOW_THREADS
 
-	read_count = libexe_store_read_random(
-	              pyexe_store->store,
+	read_count = libexe_section_read_random(
+	              pyexe_section->section,
 	              PyString_AsString(
 	               result_data ),
 	              (size_t) read_size,
@@ -696,27 +625,27 @@ PyObject *pyexe_store_read_random(
 	return( result_data );
 }
 
-/* Seeks a certain offset in the (store) data
+/* Seeks a certain offset in the (section) data
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_seek_offset(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_seek_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords )
 {
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error    = NULL;
-	static char *function       = "pyexe_store_seek_offset";
+	static char *function       = "pyexe_section_seek_offset";
 	static char *keyword_list[] = { "offset", "whence", NULL };
 	off64_t offset              = 0;
 	int whence                  = 0;
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid pyexe store.",
+		 "%s: invalid pyexe section.",
 		 function );
 
 		return( NULL );
@@ -733,8 +662,8 @@ PyObject *pyexe_store_seek_offset(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	offset = libexe_store_seek_offset(
-	          pyexe_store->store,
+	offset = libexe_section_seek_offset(
+	          pyexe_section->section,
 	          offset,
 	          whence,
 	          &error );
@@ -772,35 +701,35 @@ PyObject *pyexe_store_seek_offset(
 	return( Py_None );
 }
 
-/* Retrieves the current offset in the (store) data
+/* Retrieves the current offset in the (section) data
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_get_offset(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_get_offset";
+	static char *function    = "pyexe_section_get_offset";
 	off64_t current_offset   = 0;
 	int result               = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( arguments )
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_store_get_offset(
-	          pyexe_store->store,
+	result = libexe_section_get_offset(
+	          pyexe_section->section,
 	          &current_offset,
 	          &error );
 
@@ -861,32 +790,32 @@ PyObject *pyexe_store_get_offset(
 /* Retrieves the size
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_get_size(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_size(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_get_size";
+	static char *function    = "pyexe_section_get_size";
 	size64_t size            = 0;
 	int result               = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( arguments )
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_store_get_size(
-	          pyexe_store->store,
+	result = libexe_section_get_size(
+	          pyexe_section->section,
 	          &size,
 	          &error );
 
@@ -944,36 +873,36 @@ PyObject *pyexe_store_get_size(
 #endif
 }
 
-/* Retrieves the volume size as stored in the store information
+/* Retrieves the start offset
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_get_volume_size(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_start_offset(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_get_volume_size";
-	size64_t volume_size     = 0;
+	static char *function    = "pyexe_section_get_start_offset";
+	off64_t start_offset     = 0;
 	int result               = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( arguments )
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_store_get_volume_size(
-	          pyexe_store->store,
-	          &volume_size,
+	result = libexe_section_get_start_offset(
+	          pyexe_section->section,
+	          &start_offset,
 	          &error );
 
 	Py_END_ALLOW_THREADS
@@ -984,17 +913,17 @@ PyObject *pyexe_store_get_volume_size(
 		     error,
 		     error_string,
 		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
+                {
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: failed to retrieve volume size.",
+			 "%s: unable to retrieve start offset.",
 			 function );
 		}
 		else
 		{
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: failed to retrieve volume size.\n%s",
+			 "%s: unable to retrieve start offset.\n%s",
 			 function,
 			 error_string );
 		}
@@ -1004,131 +933,62 @@ PyObject *pyexe_store_get_volume_size(
 		return( NULL );
 	}
 #if defined( HAVE_LONG_LONG )
-	if( volume_size > (size64_t) LLONG_MAX )
+	if( start_offset > (off64_t) LLONG_MAX )
 	{
 		PyErr_Format(
 		 PyExc_OverflowError,
-		 "%s: size value exceeds maximum.",
+		 "%s: start offset value exceeds maximum.",
 		 function );
 
 		return( NULL );
 	}
 	return( PyLong_FromLongLong(
-	         (long long) volume_size ) );
+	         (long long) start_offset ) );
 #else
-	if( volume_size > (size64_t) LONG_MAX )
+	if( start_offset > (off64_t) LONG_MAX )
 	{
 		PyErr_Format(
 		 PyExc_OverflowError,
-		 "%s: size value exceeds maximum.",
+		 "%s: start offset value exceeds maximum.",
 		 function );
 
 		return( NULL );
 	}
 	return( PyLong_FromLong(
-	         (long) volume_size ) );
+	         (long) start_offset ) );
 #endif
 }
 
-/* Retrieves the identifier
+/* Retrieves the virtual address
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_get_identifier(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_virtual_address(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	uint8_t guid_data[ 16 ];
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
-	PyObject *string_object  = NULL;
-	static char *function    = "pyexe_store_get_identifier";
+	static char *function    = "pyexe_section_get_virtual_address";
+	uint32_t virtual_address = 0;
 	int result               = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( arguments )
 
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_identifier(
-	          pyexe_store->store,
-	          guid_data,
-	          16,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve identifier.",
-			 function );
-		}
-		else
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve identifier.\n%s",
-			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	string_object = pyexe_string_new_from_guid(
-			 guid_data,
-			 16 );
-
-	return( string_object );
-}
-
-/* Retrieves the creation date and time
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_creation_time(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
-{
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error   = NULL;
-	PyObject *date_time_object = NULL;
-	static char *function      = "pyexe_store_get_creation_time";
-	uint64_t filetime          = 0;
-	int result                 = 0;
-
-	PYEXE_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid store.",
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_store_get_creation_time(
-	          pyexe_store->store,
-	          &filetime,
+	result = libexe_section_get_virtual_address(
+	          pyexe_section->section,
+	          &virtual_address,
 	          &error );
 
 	Py_END_ALLOW_THREADS
@@ -1142,79 +1002,14 @@ PyObject *pyexe_store_get_creation_time(
 		{
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to retrieve creation time.",
+			 "%s: unable to retrieve virtual address.",
 			 function );
 		}
 		else
 		{
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to retrieve creation time.\n%s",
-			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	date_time_object = pyexe_datetime_new_from_filetime(
-	                    filetime );
-
-	return( date_time_object );
-}
-
-/* Retrieves the creation date and time as an integer
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_creation_time_as_integer(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
-{
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_get_creation_time_as_integer";
-	uint64_t filetime        = 0;
-	int result               = 0;
-
-	PYEXE_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_creation_time(
-	          pyexe_store->store,
-	          &filetime,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve creation time.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve creation time.\n%s",
+			 "%s: unable to retrieve virtual address.\n%s",
 			 function,
 			 error_string );
 		}
@@ -1224,64 +1019,65 @@ PyObject *pyexe_store_get_creation_time_as_integer(
 		return( NULL );
 	}
 #if defined( HAVE_LONG_LONG )
-	if( filetime > (uint64_t) LLONG_MAX )
+	if( (uint64_t) virtual_address > (uint64_t) LLONG_MAX )
 	{
 		PyErr_Format(
 		 PyExc_OverflowError,
-		 "%s: filetime value exceeds maximum.",
+		 "%s: FAT date time value exceeds maximum.",
 		 function );
 
 		return( NULL );
 	}
 	return( PyLong_FromLongLong(
-	         (long long) filetime ) );
+	         (long long) virtual_address ) );
 #else
-	if( filetime > (uint64_t) LONG_MAX )
+	if( (uint64_t) virtual_address > (uint64_t) LONG_MAX )
 	{
 		PyErr_Format(
 		 PyExc_OverflowError,
-		 "%s: filetime value exceeds maximum.",
+		 "%s: FAT date time value exceeds maximum.",
 		 function );
 
 		return( NULL );
 	}
 	return( PyLong_FromLong(
-	         (long) filetime ) );
+	         (long) virtual_address ) );
 #endif
 }
 
-/* Retrieves the copy identifier
+/* Retrieves the name
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_store_get_copy_identifier(
-           pyexe_store_t *pyexe_store,
+PyObject *pyexe_section_get_name(
+           pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	uint8_t guid_data[ 16 ];
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
-	static char *function    = "pyexe_store_get_copy_identifier";
+	static char *function    = "pyexe_section_get_name";
+	const char *errors       = NULL;
+	char *name               = NULL;
+	size_t name_size         = 0;
 	int result               = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( arguments )
 
-	if( pyexe_store == NULL )
+	if( pyexe_section == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
+		 PyExc_ValueError,
+		 "%s: invalid section.",
 		 function );
 
 		return( NULL );
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_store_get_copy_identifier(
-	          pyexe_store->store,
-	          guid_data,
-	          16,
+	result = libexe_section_get_utf8_name_size(
+	          pyexe_section->section,
+	          &name_size,
 	          &error );
 
 	Py_END_ALLOW_THREADS
@@ -1292,217 +1088,18 @@ PyObject *pyexe_store_get_copy_identifier(
 		     error,
 		     error_string,
 		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
+		{
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to retrieve copy identifier.",
-			 function );
-		}
-		else
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve copy identifier.\n%s",
-			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	string_object = pyexe_string_new_from_guid(
-			 guid_data,
-			 16 );
-
-	return( string_object );
-}
-
-/* Retrieves the copy set identifier
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_copy_set_identifier(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
-{
-	uint8_t guid_data[ 16 ];
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error = NULL;
-	PyObject *string_object  = NULL;
-	static char *function    = "pyexe_store_get_copy_set_identifier";
-	int result               = 0;
-
-	PYEXE_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_copy_set_identifier(
-	          pyexe_store->store,
-	          guid_data,
-	          16,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result == -1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve copy set identifier.",
-			 function );
-		}
-		else
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve copy set identifier.\n%s",
-			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	string_object = pyexe_string_new_from_guid(
-			 guid_data,
-			 16 );
-
-	return( string_object );
-}
-
-/* Retrieves the number of blocks
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_number_of_blocks(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
-{
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_store_get_number_of_blocks";
-	int number_of_blocks     = 0;
-	int result               = 0;
-
-	PYEXE_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_number_of_blocks(
-	          pyexe_store->store,
-	          &number_of_blocks,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of blocks.",
+			 "%s: unable to retrieve UTF-8 name size.",
 			 function );
 		}
 		else
 		{
 			PyErr_Format(
 			 PyExc_IOError,
-			 "%s: unable to retrieve number of blocks.\n%s",
+			 "%s: unable to retrieve UTF-8 name size.\n%s",
 			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	return( PyInt_FromLong(
-	         (long) number_of_blocks ) );
-}
-
-/* Retrieves a specific block by index
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_block_by_index(
-           pyexe_store_t *pyexe_store,
-           int block_index )
-{
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error  = NULL;
-	libexe_block_t *block = NULL;
-	PyObject *block_object    = NULL;
-	static char *function     = "pyexe_store_get_block_by_index";
-	int result                = 0;
-
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_block_by_index(
-	          pyexe_store->store,
-	          block_index,
-	          &block,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve block: %d.",
-			 function,
-			 block_index );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve block: %d.\n%s",
-			 function,
-			 block_index,
 			 error_string );
 		}
 		libcerror_error_free(
@@ -1510,133 +1107,104 @@ PyObject *pyexe_store_get_block_by_index(
 
 		goto on_error;
 	}
-	block_object = pyexe_block_new(
-	                block,
-	                pyexe_store );
+	/* Check if the name is present
+	 */
+	else if( ( result == 0 )
+	      || ( name_size == 0 ) )
+	{
+		Py_IncRef(
+		 Py_None );
 
-	if( block_object == NULL )
+		return( Py_None );
+	}
+	name = (char *) PyMem_Malloc(
+	                 sizeof( char ) * name_size );
+
+	if( name == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to create block object.",
+		 "%s: unable to create UTF-8 name.",
 		 function );
 
 		goto on_error;
 	}
-	return( block_object );
+	Py_BEGIN_ALLOW_THREADS
+
+	result = libexe_section_get_utf8_name(
+	          pyexe_section->section,
+	          (uint8_t *) name,
+	          name_size,
+	          &error );
+
+	Py_END_ALLOW_THREADS
+
+	if( result == -1 )
+	{
+		if( libcerror_error_backtrace_sprint(
+		     error,
+		     error_string,
+		     PYEXE_ERROR_STRING_SIZE ) == -1 )
+		{
+			PyErr_Format(
+			 PyExc_IOError,
+			 "%s: unable to retrieve UTF-8 name.",
+			 function );
+		}
+		else
+		{
+			PyErr_Format(
+			 PyExc_IOError,
+			 "%s: unable to retrieve UTF-8 name.\n%s",
+			 function,
+			 error_string );
+		}
+		libcerror_error_free(
+		 &error );
+
+		goto on_error;
+	}
+	/* Check if the name is present
+	 */
+	else if( result == 0 )
+	{
+		PyMem_Free(
+		 name );
+
+		Py_IncRef(
+		 Py_None );
+
+		return( Py_None );
+	}
+	/* Pass the string length to PyUnicode_DecodeUTF8
+	 * otherwise it makes the end of string character is part
+	 * of the string
+	 */
+	string_object = PyUnicode_DecodeUTF8(
+	                 name,
+	                 (Py_ssize_t) name_size - 1,
+	                 errors );
+
+	if( string_object == NULL )
+	{
+		PyErr_Format(
+		 PyExc_IOError,
+		 "%s: unable to convert UTF-8 name into Unicode.",
+		 function );
+
+		goto on_error;
+	}
+	PyMem_Free(
+	 name );
+
+	return( string_object );
 
 on_error:
-	if( block != NULL )
+	if( name != NULL )
 	{
-		libexe_block_free(
-		 &block,
-		 NULL );
+		PyMem_Free(
+		 name );
 	}
 	return( NULL );
-}
-
-/* Retrieves a specific block
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_block(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments,
-           PyObject *keywords )
-{
-	PyObject *block_object      = NULL;
-	static char *keyword_list[] = { "block_index", NULL };
-	int block_index             = 0;
-
-	if( PyArg_ParseTupleAndKeywords(
-	     arguments,
-	     keywords,
-	     "i",
-	     keyword_list,
-	     &block_index ) == 0 )
-        {
-		return( NULL );
-        }
-	block_object = pyexe_store_get_block_by_index(
-	                pyexe_store,
-	                block_index );
-
-	return( block_object );
-}
-
-/* Retrieves a blocks sequence and iterator object for the blocks
- * Returns a Python object if successful or NULL on error
- */
-PyObject *pyexe_store_get_blocks(
-           pyexe_store_t *pyexe_store,
-           PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
-{
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
-	libcerror_error_t *error = NULL;
-	PyObject *blocks_object  = NULL;
-	static char *function    = "pyexe_store_get_blocks";
-	int number_of_blocks     = 0;
-	int result               = 0;
-
-	PYEXE_UNREFERENCED_PARAMETER( arguments )
-
-	if( pyexe_store == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid store.",
-		 function );
-
-		return( NULL );
-	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_store_get_number_of_blocks(
-	          pyexe_store->store,
-	          &number_of_blocks,
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
-	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of blocks.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of blocks.\n%s",
-			 function,
-			 error_string );
-		}
-		libcerror_error_free(
-		 &error );
-
-		return( NULL );
-	}
-	blocks_object = pyexe_blocks_new(
-	                 pyexe_store,
-	                 &pyexe_store_get_block_by_index,
-	                 number_of_blocks );
-
-	if( blocks_object == NULL )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to create blocks object.",
-		 function );
-
-		return( NULL );
-	}
-	return( blocks_object );
 }
 

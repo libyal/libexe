@@ -1,5 +1,5 @@
 /*
- * Python object definition of the libexe volume
+ * Python object definition of the libexe file
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -32,75 +32,98 @@
 extern "C" {
 #endif
 
-typedef struct pyexe_volume pyexe_volume_t;
+typedef struct pyexe_file pyexe_file_t;
 
-struct pyexe_volume
+struct pyexe_file
 {
 	/* Python object initialization
 	 */
 	PyObject_HEAD
 
-	/* The libexe volume
+	/* The libexe file
 	 */
-	libexe_volume_t *volume;
+	libexe_file_t *file;
 };
 
-extern PyMethodDef pyexe_volume_object_methods[];
-extern PyTypeObject pyexe_volume_type_object;
+extern PyMethodDef pyexe_file_object_methods[];
+extern PyTypeObject pyexe_file_type_object;
 
-PyObject *pyexe_volume_new(
+PyObject *pyexe_file_new(
            void );
 
-PyObject *pyexe_volume_new_open(
+PyObject *pyexe_file_new_open(
            PyObject *self,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_volume_new_open_file_object(
+PyObject *pyexe_file_new_open_file_object(
            PyObject *self,
            PyObject *arguments,
            PyObject *keywords );
 
-int pyexe_volume_init(
-     pyexe_volume_t *pyexe_volume );
+int pyexe_file_init(
+     pyexe_file_t *pyexe_file );
 
-void pyexe_volume_free(
-      pyexe_volume_t *pyexe_volume );
+void pyexe_file_free(
+      pyexe_file_t *pyexe_file );
 
-PyObject *pyexe_volume_signal_abort(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_signal_abort(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments );
 
-PyObject *pyexe_volume_open(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_open(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_volume_open_file_object(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_open_file_object(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_volume_close(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_close(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments );
 
-PyObject *pyexe_volume_get_number_of_stores(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_get_ascii_codepage(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments );
 
-PyObject *pyexe_volume_get_store_by_index(
-           pyexe_volume_t *pyexe_volume,
-           int store_index );
+int pyexe_file_set_ascii_codepage_from_string(
+     pyexe_file_t *pyexe_file,
+     const char *codepage_string );
 
-PyObject *pyexe_volume_get_store(
-           pyexe_volume_t *pyexe_volume,
+PyObject *pyexe_file_set_ascii_codepage(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_volume_get_stores(
-           pyexe_volume_t *pyexe_volume,
+int pyexe_file_set_ascii_codepage_setter(
+     pyexe_file_t *pyexe_file,
+     PyObject *value_object,
+     void *closure );
+
+PyObject *pyexe_file_get_number_of_sections(
+           pyexe_file_t *pyexe_file,
            PyObject *arguments );
+
+PyObject *pyexe_file_get_section_by_index(
+           pyexe_file_t *pyexe_file,
+           int section_index );
+
+PyObject *pyexe_file_get_section(
+           pyexe_file_t *pyexe_file,
+           PyObject *arguments,
+           PyObject *keywords );
+
+PyObject *pyexe_file_get_sections(
+           pyexe_file_t *pyexe_file,
+           PyObject *arguments );
+
+PyObject *pyexe_file_get_section_by_name(
+           pyexe_file_t *pyexe_file,
+           PyObject *arguments,
+           PyObject *keywords );
 
 #if defined( __cplusplus )
 }
