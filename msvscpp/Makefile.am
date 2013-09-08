@@ -10,11 +10,13 @@ MSVSCPP_FILES = \
 	libcsplit/libcsplit.vcproj \
 	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
+	libcthreads/libcthreads.vcproj \
 	libexe_dll/libexe_dll.vcproj \
 	libfcache/libfcache.vcproj \
 	libfdata/libfdata.vcproj \
 	libfdatetime/libfdatetime.vcproj \
 	libuna/libuna.vcproj \
+	pyexe/pyexe.vcproj \
 	libexe.sln
 
 SCRIPT_FILES = \

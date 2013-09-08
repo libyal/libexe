@@ -628,7 +628,7 @@ int libexe_file_open_file_io_handle(
 		 "%s: unable to determine if file IO handle is open.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	else if( file_io_handle_is_open == 0 )
 	{
@@ -644,8 +644,9 @@ int libexe_file_open_file_io_handle(
 			 "%s: unable to open file IO handle.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
+		internal_file->file_io_handle_opened_in_library = 1;
 	}
 	if( libexe_file_open_read(
 	     internal_file,
@@ -658,9 +659,21 @@ int libexe_file_open_file_io_handle(
 		 "%s: unable to read from file handle.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	return( 1 );
+
+on_error:
+	if( file_io_handle_is_open == 0 )
+	{
+		libbfio_handle_close(
+		 file_io_handle,
+		 error );
+	}
+	internal_file->file_io_handle                   = NULL;
+	internal_file->file_io_handle_opened_in_library = 0;
+
+	return( -1 );
 }
 
 /* Closes a file
@@ -718,6 +731,9 @@ int libexe_file_close(
 			}
 		}
 #endif
+	}
+	if( internal_file->file_io_handle_opened_in_library != 0 )
+	{
 		if( libbfio_handle_close(
 		     internal_file->file_io_handle,
 		     error ) != 0 )
@@ -731,6 +747,10 @@ int libexe_file_close(
 
 			result = -1;
 		}
+		internal_file->file_io_handle_opened_in_library = 0;
+	}
+	if( internal_file->file_io_handle_created_in_library != 0 )
+	{
 		if( libbfio_handle_free(
 		     &( internal_file->file_io_handle ),
 		     error ) != 1 )
@@ -748,6 +768,19 @@ int libexe_file_close(
 	internal_file->file_io_handle                    = NULL;
 	internal_file->file_io_handle_created_in_library = 0;
 
+	if( libexe_io_handle_clear(
+	     internal_file->io_handle,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to clear IO handle.",
+		 function );
+
+		result = -1;
+	}
 	if( libcdata_array_resize(
 	     internal_file->sections_array,
 	     0,
@@ -943,11 +976,14 @@ int libexe_file_set_ascii_codepage(
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_874 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_932 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_936 )
+	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_949 )
+	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_950 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1250 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1251 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1252 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1253 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1254 )
+	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1255 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1256 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1257 )
 	 && ( ascii_codepage != LIBEXE_CODEPAGE_WINDOWS_1258 ) )

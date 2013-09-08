@@ -64,6 +64,10 @@ int libexe_io_handle_free(
      libexe_io_handle_t **io_handle,
      libcerror_error_t **error );
 
+int libexe_io_handle_clear(
+     libexe_io_handle_t *io_handle,
+     libcerror_error_t **error );
+
 int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,

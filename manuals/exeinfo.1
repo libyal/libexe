@@ -1,4 +1,4 @@
-.Dd April 2, 2013
+.Dd September 8, 2013
 .Dt exeinfo
 .Os libexe
 .Sh NAME
@@ -6,7 +6,8 @@
 .Nd determines information about an executable (EXE) file
 .Sh SYNOPSIS
 .Nm exeinfo
-.Op Fl ahvV
+.Op Fl c Ar codepage
+.Op Fl hvV
 .Va Ar source
 .Sh DESCRIPTION
 .Nm exeinfo
@@ -24,8 +25,8 @@ is the source file.
 .Pp
 The options are as follows:
 .Bl -tag -width Ds
-.It Fl a
-shows allocation information
+.It Fl c Ar codepage
+specify the codepage of ASCII strings, options: ascii, windows-874, windows-932, windows-936, windows-949, windows-950, windows-1250, windows-1251, windows-1252 (default), windows-1253, windows-1254, windows-1255, windows-1256, windows-1257 or windows-1258
 .It Fl h
 shows this help
 .It Fl v

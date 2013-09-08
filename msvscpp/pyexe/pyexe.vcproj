@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="exeinfo"
-	ProjectGUID="{A7545354-5D50-49F6-A3D0-1F97F6228955}"
-	RootNamespace="exeinfo"
+	Name="pyexe"
+	ProjectGUID="{E221DB4C-B254-47CB-993D-DC7FED580DA1}"
+	RootNamespace="pyexe"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -20,7 +20,7 @@
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -41,8 +41,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcstring;..\..\libcerror;..\..\libcthreads;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;..\..\libfcache;..\..\libfdata;..\..\libfdatetime;..\..\libcsystem"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCSTRING;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCTHREADS;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;HAVE_LOCAL_LIBFCACHE;HAVE_LOCAL_LIBFDATA;HAVE_LOCAL_LIBFDATETIME;HAVE_LOCAL_LIBCSYSTEM;LIBEXE_DLL_IMPORT"
+				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcstring;..\..\libcerror;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;C:\Python27\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCSTRING;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;LIBEXE_DLL_IMPORT"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;C:\Python27\libs"
 				GenerateDebugInformation="false"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -119,8 +120,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcstring;..\..\libcerror;..\..\libcthreads;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;..\..\libfcache;..\..\libfdata;..\..\libfdatetime;..\..\libcsystem"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCSTRING;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCTHREADS;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;HAVE_LOCAL_LIBFCACHE;HAVE_LOCAL_LIBFDATA;HAVE_LOCAL_LIBFDATETIME;HAVE_LOCAL_LIBCSYSTEM;LIBEXE_DLL_IMPORT"
+				AdditionalIncludeDirectories="..\..\include;..\..\common;..\..\libcstring;..\..\libcerror;..\..\libcdata;..\..\libclocale;..\..\libcnotify;..\..\libcsplit;..\..\libuna;..\..\libcfile;..\..\libcpath;..\..\libbfio;C:\Python27\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;HAVE_LOCAL_LIBCSTRING;HAVE_LOCAL_LIBCERROR;HAVE_LOCAL_LIBCDATA;HAVE_LOCAL_LIBCLOCALE;HAVE_LOCAL_LIBCNOTIFY;HAVE_LOCAL_LIBCSPLIT;HAVE_LOCAL_LIBUNA;HAVE_LOCAL_LIBCFILE;HAVE_LOCAL_LIBCPATH;HAVE_LOCAL_LIBBFIO;LIBEXE_DLL_IMPORT"
 				BasicRuntimeChecks="3"
 				SmallerTypeCheck="true"
 				RuntimeLibrary="3"
@@ -141,8 +142,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).pyd"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;"
+				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;C:\Python27\libs"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -183,15 +185,31 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\exetools\exeinfo.c"
+				RelativePath="..\..\pyexe\pyexe.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exeoutput.c"
+				RelativePath="..\..\pyexe\pyexe_codepage.c"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\info_handle.c"
+				RelativePath="..\..\pyexe\pyexe_datetime.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_file.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_file_object_io_handle.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_section.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_sections.c"
 				>
 			</File>
 		</Filter>
@@ -201,35 +219,59 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\exetools\exeoutput.h"
+				RelativePath="..\..\pyexe\pyexe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libcerror.h"
+				RelativePath="..\..\pyexe\pyexe_codepage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libclocale.h"
+				RelativePath="..\..\pyexe\pyexe_datetime.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libcnotify.h"
+				RelativePath="..\..\pyexe\pyexe_file.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libcstring.h"
+				RelativePath="..\..\pyexe\pyexe_file_object_io_handle.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libcsystem.h"
+				RelativePath="..\..\pyexe\pyexe_libbfio.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\exetools_libexe.h"
+				RelativePath="..\..\pyexe\pyexe_libcerror.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\exetools\info_handle.h"
+				RelativePath="..\..\pyexe\pyexe_libclocale.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_libcstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_libexe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_python.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_section.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_sections.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_unused.h"
 				>
 			</File>
 		</Filter>

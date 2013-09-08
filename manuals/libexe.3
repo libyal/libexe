@@ -1,4 +1,4 @@
-.Dd May 28, 2013
+.Dd September 8, 2013
 .Dt libexe 3
 .Os libexe
 .Sh NAME
@@ -60,6 +60,16 @@ File functions
 .Fn libexe_file_open "libexe_file_t *file, const char *filename, int access_flags, libexe_error_t **error"
 .Ft int
 .Fn libexe_file_close "libexe_file_t *file, libexe_error_t **error"
+.Ft int
+.Fn libexe_file_get_ascii_codepage "libexe_file_t *file, int *ascii_codepage, libexe_error_t **error"
+.Ft int
+.Fn libexe_file_set_ascii_codepage "libexe_file_t *file, int ascii_codepage, libexe_error_t **error"
+.Ft int
+.Fn libexe_file_get_number_of_sections "libexe_file_t *file, int *number_of_sections, libexe_error_t **error"
+.Ft int
+.Fn libexe_file_get_section "libexe_file_t *file, int section_index, libexe_section_t **section, libexe_error_t **error"
+.Ft int
+.Fn libexe_file_get_section_by_name "libexe_file_t *file, const char *name, size_t name_length, libexe_section_t **section, libexe_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
@@ -68,10 +78,36 @@ Available when compiled with wide character string support:
 Available when compiled with libbfio support:
 .Ft int
 .Fn libexe_file_open_file_io_handle "libexe_file_t *file, libbfio_handle_t *file_io_handle, int access_flags, libexe_error_t **error"
-.PP
+.Pp
 Section functions
 .Ft int
 .Fn libexe_section_free "libexe_section_t **section, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_name "libexe_section_t *section, char *name, size_t name_size, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_utf8_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_utf8_name "libexe_section_t *section, uint8_t *name, size_t name_size, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_utf16_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_utf16_name "libexe_section_t *section, uint16_t *name, size_t name_size, libexe_error_t **error"
+.Ft ssize_t
+.Fn libexe_section_read_buffer "libexe_section_t *section, void *buffer, size_t buffer_size, libexe_error_t **error"
+.Ft ssize_t
+.Fn libexe_section_read_random "libexe_section_t *section, void *buffer, size_t buffer_size, off64_t offset, libexe_error_t **error"
+.Ft off64_t
+.Fn libexe_section_seek_offset "libexe_section_t *section, off64_t offset, int whence, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_offset "libexe_section_t *section, off64_t *offset, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_size "libexe_section_t *section, size64_t *size, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_start_offset "libexe_section_t *section, off64_t *start_offset, libexe_error_t **error"
+.Ft int
+.Fn libexe_section_get_virtual_address "libexe_section_t *section, uint32_t *virtual_address, libexe_error_t **error"
 .Sh DESCRIPTION
 The
 .Fn libexe_get_version

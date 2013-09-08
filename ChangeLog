@@ -1,12 +1,8 @@
 TODO:
-* add libexe_section_get_offset
-* add libexe_section_get_utf8_name and libexe_section_get_utf8_name_size
-* update msvscpp files (libfdata change)
-* update man pages
-* sanitize stream names with control characters
-  - see olecf
 * libexe
   - get section by name function
+* exeinfo
+  - sanitize stream names with control characters (see olecf)
 * exeexport
   - dump segment data?
 
@@ -14,8 +10,23 @@ Format support:
 * NE executable
 * LE executable
 
+API:
+* expose build time
+
+Python binding:
+* expose build time
+
 Deployment:
 * add macosx files
+* update man pages
+
+20120908
+* worked on Python bindings
+* updated dependencies
+* added libcthreads build support
+* updated man pages
+* updated msvscpp files
+* worked on tests
 
 20120906
 * worked on Python bindings
