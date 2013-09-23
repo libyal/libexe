@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20130908],
+ [20130923],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -226,6 +226,7 @@ Building:
    libfdatetime support:                     $ac_cv_libfdatetime
 
 Features:
+   Multi-threading support:                  $ac_cv_libcthreads_multi_threading
    Wide character type support:              $ac_cv_enable_wide_character_type
    exetools are build as static executables: $ac_cv_enable_static_executables
    Python (pyexe) support:                   $ac_cv_enable_python

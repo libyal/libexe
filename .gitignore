@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20130831
+# Version: 20130922
 
 # Generic auto-generated build files
 *~
@@ -101,6 +101,14 @@ stamp-h1
 /include/libexe/types.h
 /libexe/libexe.rc
 /libexe/libexe.h
+/macosx/Introduction.rtf
+/macosx/libexe.pmdoc/01bin.xml
+/macosx/libexe.pmdoc/02include.xml
+/macosx/libexe.pmdoc/03lib.xml
+/macosx/libexe.pmdoc/04share.xml
+/macosx/libexe.pmdoc/05python.xml
+/macosx/libexe.pmdoc/index.xml
+/tests/input
 /tests/exe_test_open_close
 /tests/exe_test_set_ascii_codepage
 
