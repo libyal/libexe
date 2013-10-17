@@ -100,7 +100,7 @@ stamp-h1
 /include/libexe/features.h
 /include/libexe/types.h
 /libexe/libexe.rc
-/libexe/libexe.h
+/libexe/libexe_definitions.h
 /macosx/Introduction.rtf
 /macosx/libexe.pmdoc/01bin.xml
 /macosx/libexe.pmdoc/02include.xml
@@ -108,7 +108,9 @@ stamp-h1
 /macosx/libexe.pmdoc/04share.xml
 /macosx/libexe.pmdoc/05python.xml
 /macosx/libexe.pmdoc/index.xml
+/pyexe/setup.py
 /tests/input
+/tests/tmp
 /tests/exe_test_open_close
 /tests/exe_test_set_ascii_codepage
 

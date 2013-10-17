@@ -17,51 +17,54 @@ Format support:
 Deployment:
 * add macosx files
 
-20120923
+20131017
+* updated dependencies
+
+20130923
 * code clean up
 * update msvscpp files
 
-20120908
+20130908
 * worked on Python bindings
 * updated dependencies
 * added libcthreads build support
 * updated man pages
 * worked on tests
 
-20120906
+20130906
 * worked on Python bindings
 
-20120718
+20130718
 * updated dependencies
 
-20120528
+20130528
 * exeinfo: added offset to output
 
-20120526
+20130526
 * removed examples, to move to project site
 * updated dependencies
 * worked on Python bindings
 
-20120421
+20130421
 * updated dependencies
 
-20120413
+20130413
 * updated dependencies
 * textual changes
 
-20120405
+20130405
 * updated dependencies
 * changes for libfdata update
 
-20120402
+20130402
 * updated dependencies
 * changes for libfdata update
 
-20120319
+20130319
 * updated dependencies
 * changes for libfdata update
 
-20120303
+20130303
 * 2013 update
 * updated dependencies
 * updated msvscpp files

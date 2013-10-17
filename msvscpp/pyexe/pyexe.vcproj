@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyexe\pyexe_integer.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyexe\pyexe_section.c"
 				>
 			</File>
@@ -236,6 +240,10 @@
 			</File>
 			<File
 				RelativePath="..\..\pyexe\pyexe_file_object_io_handle.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_integer.h"
 				>
 			</File>
 			<File

@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20130923],
+ [20131017],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -200,6 +200,7 @@ AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libexe/libexe.rc])
+AC_CONFIG_FILES([pyexe/setup.py])
 AC_CONFIG_FILES([libexe.pc])
 AC_CONFIG_FILES([libexe.spec])
 dnl Have configure write its configuration

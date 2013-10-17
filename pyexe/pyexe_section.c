@@ -29,6 +29,7 @@
 #include "pyexe.h"
 #include "pyexe_datetime.h"
 #include "pyexe_file.h"
+#include "pyexe_integer.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libcstring.h"
 #include "pyexe_libexe.h"
@@ -64,7 +65,7 @@ PyMethodDef pyexe_section_object_methods[] = {
 	{ "get_offset",
 	  (PyCFunction) pyexe_section_get_offset,
 	  METH_NOARGS,
-	  "get_offset() -> Long\n"
+	  "get_offset() -> Integer\n"
 	  "\n"
 	  "Retrieves the current offset within the section data." },
 
@@ -87,7 +88,7 @@ PyMethodDef pyexe_section_object_methods[] = {
 	{ "tell",
 	  (PyCFunction) pyexe_section_get_offset,
 	  METH_NOARGS,
-	  "tell() -> Long\n"
+	  "tell() -> Integer\n"
 	  "\n"
 	  "Retrieves the current offset within the section data." },
 
@@ -96,21 +97,21 @@ PyMethodDef pyexe_section_object_methods[] = {
 	{ "get_size",
 	  (PyCFunction) pyexe_section_get_size,
 	  METH_NOARGS,
-	  "get_size() -> Long\n"
+	  "get_size() -> Integer\n"
 	  "\n"
 	  "Retrieves the size of the section data." },
 
 	{ "get_start_offset",
 	  (PyCFunction) pyexe_section_get_start_offset,
 	  METH_NOARGS,
-	  "get_start_offset() -> Long\n"
+	  "get_start_offset() -> Integer\n"
 	  "\n"
 	  "Retrieves the start offset." },
 
 	{ "get_virtual_address",
 	  (PyCFunction) pyexe_section_get_virtual_address,
 	  METH_NOARGS,
-	  "get_virtual_address() -> Long\n"
+	  "get_virtual_address() -> Integer\n"
 	  "\n"
 	  "Retrieves the virtual address." },
 
@@ -711,6 +712,7 @@ PyObject *pyexe_section_get_offset(
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_offset";
 	off64_t current_offset   = 0;
 	int result               = 0;
@@ -760,31 +762,10 @@ PyObject *pyexe_section_get_offset(
 
 		return( NULL );
 	}
-#if defined( HAVE_LONG_LONG )
-	if( current_offset > (off64_t) LLONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: offset value exceeds maximum.",
-		 function );
+	integer_object = pyexe_integer_signed_new_from_64bit(
+	                  (int64_t) current_offset );
 
-		return( NULL );
-	}
-	return( PyLong_FromLongLong(
-	         (long long) current_offset ) );
-#else
-	if( current_offset > (off64_t) LONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: offset value exceeds maximum.",
-		 function );
-
-		return( NULL );
-	}
-	return( PyLong_FromLong(
-	         (long) current_offset ) );
-#endif
+	return( integer_object );
 }
 
 /* Retrieves the size
@@ -797,6 +778,7 @@ PyObject *pyexe_section_get_size(
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_size";
 	size64_t size            = 0;
 	int result               = 0;
@@ -846,31 +828,10 @@ PyObject *pyexe_section_get_size(
 
 		return( NULL );
 	}
-#if defined( HAVE_LONG_LONG )
-	if( size > (size64_t) LLONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: size value exceeds maximum.",
-		 function );
+	integer_object = pyexe_integer_unsigned_new_from_64bit(
+	                  (uint64_t) size );
 
-		return( NULL );
-	}
-	return( PyLong_FromLongLong(
-	         (long long) size ) );
-#else
-	if( size > (size64_t) LONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: size value exceeds maximum.",
-		 function );
-
-		return( NULL );
-	}
-	return( PyLong_FromLong(
-	         (long) size ) );
-#endif
+	return( integer_object );
 }
 
 /* Retrieves the start offset
@@ -883,6 +844,7 @@ PyObject *pyexe_section_get_start_offset(
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_start_offset";
 	off64_t start_offset     = 0;
 	int result               = 0;
@@ -932,31 +894,10 @@ PyObject *pyexe_section_get_start_offset(
 
 		return( NULL );
 	}
-#if defined( HAVE_LONG_LONG )
-	if( start_offset > (off64_t) LLONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: start offset value exceeds maximum.",
-		 function );
+	integer_object = pyexe_integer_signed_new_from_64bit(
+	                  (int64_t) start_offset );
 
-		return( NULL );
-	}
-	return( PyLong_FromLongLong(
-	         (long long) start_offset ) );
-#else
-	if( start_offset > (off64_t) LONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: start offset value exceeds maximum.",
-		 function );
-
-		return( NULL );
-	}
-	return( PyLong_FromLong(
-	         (long) start_offset ) );
-#endif
+	return( integer_object );
 }
 
 /* Retrieves the virtual address
@@ -969,6 +910,7 @@ PyObject *pyexe_section_get_virtual_address(
 	char error_string[ PYEXE_ERROR_STRING_SIZE ];
 
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_virtual_address";
 	uint32_t virtual_address = 0;
 	int result               = 0;
@@ -1018,31 +960,10 @@ PyObject *pyexe_section_get_virtual_address(
 
 		return( NULL );
 	}
-#if defined( HAVE_LONG_LONG )
-	if( (uint64_t) virtual_address > (uint64_t) LLONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: FAT date time value exceeds maximum.",
-		 function );
+	integer_object = pyexe_integer_unsigned_new_from_64bit(
+	                  (uint64_t) virtual_address );
 
-		return( NULL );
-	}
-	return( PyLong_FromLongLong(
-	         (long long) virtual_address ) );
-#else
-	if( (uint64_t) virtual_address > (uint64_t) LONG_MAX )
-	{
-		PyErr_Format(
-		 PyExc_OverflowError,
-		 "%s: FAT date time value exceeds maximum.",
-		 function );
-
-		return( NULL );
-	}
-	return( PyLong_FromLong(
-	         (long) virtual_address ) );
-#endif
+	return( integer_object );
 }
 
 /* Retrieves the name
