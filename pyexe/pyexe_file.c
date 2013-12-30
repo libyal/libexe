@@ -26,9 +26,9 @@
 #include <stdlib.h>
 #endif
 
-#include "pyexe.h"
 #include "pyexe_codepage.h"
 #include "pyexe_datetime.h"
+#include "pyexe_error.h"
 #include "pyexe_file.h"
 #include "pyexe_file_object_io_handle.h"
 #include "pyexe_libbfio.h"
@@ -347,8 +347,6 @@ PyObject *pyexe_file_new_open_file_object(
 int pyexe_file_init(
      pyexe_file_t *pyexe_file )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	static char *function    = "pyexe_file_init";
 	libcerror_error_t *error = NULL;
 
@@ -369,24 +367,12 @@ int pyexe_file_init(
 	     &( pyexe_file->file ),
 	     &error ) != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to initialize file.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to initialize file.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_MemoryError,
+		 "%s: unable to initialize file.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -400,8 +386,6 @@ int pyexe_file_init(
 void pyexe_file_free(
       pyexe_file_t *pyexe_file )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_file_free";
 	int result               = 0;
@@ -452,24 +436,12 @@ void pyexe_file_free(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to free libexe file.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to free libexe file.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_MemoryError,
+		 "%s: unable to free libexe file.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 	}
@@ -484,8 +456,6 @@ PyObject *pyexe_file_signal_abort(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_file_signal_abort";
 	int result               = 0;
@@ -511,24 +481,12 @@ PyObject *pyexe_file_signal_abort(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to signal abort.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to signal abort.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to signal abort.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -548,8 +506,6 @@ PyObject *pyexe_file_open(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
 	char *filename              = NULL;
 	char *mode                  = NULL;
@@ -599,24 +555,12 @@ PyObject *pyexe_file_open(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to open file.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to open file.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to open file.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -636,8 +580,6 @@ PyObject *pyexe_file_open_file_object(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	PyObject *file_object            = NULL;
 	libbfio_handle_t *file_io_handle = NULL;
 	libcerror_error_t *error         = NULL;
@@ -681,24 +623,12 @@ PyObject *pyexe_file_open_file_object(
 	     file_object,
 	     &error ) != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to initialize file IO handle.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_MemoryError,
-			 "%s: unable to initialize file IO handle.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_MemoryError,
+		 "%s: unable to initialize file IO handle.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -716,24 +646,12 @@ PyObject *pyexe_file_open_file_object(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to open file.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to open file.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to open file.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -761,8 +679,6 @@ PyObject *pyexe_file_close(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_file_close";
 	int result               = 0;
@@ -788,24 +704,12 @@ PyObject *pyexe_file_close(
 
 	if( result != 0 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to close file.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to close file.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to close file.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -824,8 +728,6 @@ PyObject *pyexe_file_get_ascii_codepage(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
 	const char *codepage_string = NULL;
@@ -855,24 +757,12 @@ PyObject *pyexe_file_get_ascii_codepage(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve ASCII codepage.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve ASCII codepage.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve ASCII codepage.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -913,8 +803,6 @@ int pyexe_file_set_ascii_codepage_from_string(
      pyexe_file_t *pyexe_file,
      const char *codepage_string )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error      = NULL;
 	static char *function         = "pyexe_file_set_ascii_codepage_from_string";
 	size_t codepage_string_length = 0;
@@ -952,24 +840,12 @@ int pyexe_file_set_ascii_codepage_from_string(
 	     feature_flags,
 	     &error ) != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_RuntimeError,
-			 "%s: unable to determine ASCII codepage.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_RuntimeError,
-			 "%s: unable to determine ASCII codepage.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_RuntimeError,
+		 "%s: unable to determine ASCII codepage.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -986,24 +862,12 @@ int pyexe_file_set_ascii_codepage_from_string(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to set ASCII codepage.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to set ASCII codepage.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to set ASCII codepage.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -1085,8 +949,6 @@ PyObject *pyexe_file_get_number_of_sections(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_file_get_number_of_sections";
 	int number_of_sections   = 0;
@@ -1114,24 +976,12 @@ PyObject *pyexe_file_get_number_of_sections(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of sections.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of sections.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve number of sections.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -1148,8 +998,6 @@ PyObject *pyexe_file_get_section_by_index(
            pyexe_file_t *pyexe_file,
            int section_index )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error  = NULL;
 	libexe_section_t *section = NULL;
 	PyObject *section_object  = NULL;
@@ -1177,26 +1025,13 @@ PyObject *pyexe_file_get_section_by_index(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section: %d.",
-			 function,
-			 section_index );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section: %d.\n%s",
-			 function,
-			 section_index,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve section: %d.",
+		 function,
+		 section_index );
+
 		libcerror_error_free(
 		 &error );
 
@@ -1262,8 +1097,6 @@ PyObject *pyexe_file_get_sections(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error  = NULL;
 	PyObject *sections_object = NULL;
 	static char *function     = "pyexe_file_get_sections";
@@ -1292,24 +1125,12 @@ PyObject *pyexe_file_get_sections(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of sections.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve number of sections.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve number of sections.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -1340,8 +1161,6 @@ PyObject *pyexe_file_get_section_by_name(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
 	libexe_section_t *section   = NULL;
 	PyObject *section_object    = NULL;
@@ -1386,24 +1205,12 @@ PyObject *pyexe_file_get_section_by_name(
 
 	if( result == -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve section.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve section.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 

@@ -1,5 +1,5 @@
 /*
- * Python bindings for libexe (pyexe)
+ * Error functions
  *
  * Copyright (c) 2011-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,34 +19,26 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _PYEXE_H )
-#define _PYEXE_H
+#if !defined( _PYEXE_ERROR_H )
+#define _PYEXE_ERROR_H
 
 #include <common.h>
 #include <types.h>
 
+#include "pyexe_libcerror.h"
 #include "pyexe_python.h"
+
+#define PYEXE_ERROR_STRING_SIZE		768
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-PyObject *pyexe_get_version(
-           PyObject *self,
-           PyObject *arguments );
-
-PyObject *pyexe_check_file_signature(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
-PyObject *pyexe_check_file_signature_file_object(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
-PyMODINIT_FUNC initpyexe(
-                void );
+void pyexe_error_raise(
+      libcerror_error_t *error,
+      PyObject *exception_object,
+      const char *format_string,
+      ... );
 
 #if defined( __cplusplus )
 }

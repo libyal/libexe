@@ -16,6 +16,7 @@ pyexec_LTLIBRARIES = pyexe.la
 pyexe_la_SOURCES = \
 	pyexe.c pyexe.h \
 	pyexe_codepage.c pyexe_codepage.h \
+	pyexe_error.c pyexe_error.h \
 	pyexe_datetime.c pyexe_datetime.h \
 	pyexe_file.c pyexe_file.h \
 	pyexe_file_object_io_handle.c pyexe_file_object_io_handle.h \

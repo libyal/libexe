@@ -24,6 +24,7 @@ SUBDIRS = \
 	po \
 	manuals \
 	tests \
+	macosx \
 	msvscpp
 
 DPKG_FILES = \

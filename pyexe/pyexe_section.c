@@ -26,8 +26,8 @@
 #include <stdlib.h>
 #endif
 
-#include "pyexe.h"
 #include "pyexe_datetime.h"
+#include "pyexe_error.h"
 #include "pyexe_file.h"
 #include "pyexe_integer.h"
 #include "pyexe_libcerror.h"
@@ -341,8 +341,6 @@ int pyexe_section_init(
 void pyexe_section_free(
       pyexe_section_t *pyexe_section )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_section_free";
 
@@ -386,24 +384,12 @@ void pyexe_section_free(
 	     &( pyexe_section->section ),
 	     &error ) != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to free libexe section.",
-			 function );
-		}
-		else
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to free libexe section.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to free libexe section.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 	}
@@ -424,10 +410,8 @@ PyObject *pyexe_section_read_buffer(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
-	PyObject *result_data       = NULL;
+	PyObject *string_object     = NULL;
 	static char *function       = "pyexe_section_read_buffer";
 	static char *keyword_list[] = { "size", NULL };
 	ssize_t read_count          = 0;
@@ -471,47 +455,49 @@ PyObject *pyexe_section_read_buffer(
 
 		return( NULL );
 	}
-	result_data = PyString_FromStringAndSize(
-	               NULL,
-	               read_size );
+	string_object = PyString_FromStringAndSize(
+	                 NULL,
+	                 read_size );
 
 	Py_BEGIN_ALLOW_THREADS
 
 	read_count = libexe_section_read_buffer(
 	              pyexe_section->section,
 	              PyString_AsString(
-	               result_data ),
+	               string_object ),
 	              (size_t) read_size,
 	              &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( read_count != (ssize_t) read_size )
+	if( read_count <= -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to read data.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to read data.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to read data.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
+		Py_DecRef(
+		 (PyObject *) string_object );
+
 		return( NULL );
 	}
-	return( result_data );
+	/* Need to resize the string here in case read_size was not fully read.
+	 */
+	if( _PyString_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+	{
+		Py_DecRef(
+		 (PyObject *) string_object );
+
+		return( NULL );
+	}
+	return( string_object );
 }
 
 /* Reads (section) data at a specific offset
@@ -522,10 +508,8 @@ PyObject *pyexe_section_read_random(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
-	PyObject *result_data       = NULL;
+	PyObject *string_object     = NULL;
 	static char *function       = "pyexe_section_read_random";
 	static char *keyword_list[] = { "size", "offset", NULL };
 	off64_t read_offset         = 0;
@@ -582,48 +566,50 @@ PyObject *pyexe_section_read_random(
 	}
 	/* Make sure the data fits into the memory buffer
 	 */
-	result_data = PyString_FromStringAndSize(
-	               NULL,
-	               read_size );
+	string_object = PyString_FromStringAndSize(
+	                 NULL,
+	                 read_size );
 
 	Py_BEGIN_ALLOW_THREADS
 
 	read_count = libexe_section_read_random(
 	              pyexe_section->section,
 	              PyString_AsString(
-	               result_data ),
+	               string_object ),
 	              (size_t) read_size,
 	              (off64_t) read_offset,
 	              &error );
 
 	Py_END_ALLOW_THREADS
 
-	if( read_count != (ssize_t) read_size )
+	if( read_count <= -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to read data.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to read data.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to read data.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
+		Py_DecRef(
+		 (PyObject *) string_object );
+
 		return( NULL );
 	}
-	return( result_data );
+	/* Need to resize the string here in case read_size was not fully read.
+	 */
+	if( _PyString_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+	{
+		Py_DecRef(
+		 (PyObject *) string_object );
+
+		return( NULL );
+	}
+	return( string_object );
 }
 
 /* Seeks a certain offset in the (section) data
@@ -634,8 +620,6 @@ PyObject *pyexe_section_seek_offset(
            PyObject *arguments,
            PyObject *keywords )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error    = NULL;
 	static char *function       = "pyexe_section_seek_offset";
 	static char *keyword_list[] = { "offset", "whence", NULL };
@@ -673,24 +657,12 @@ PyObject *pyexe_section_seek_offset(
 
  	if( offset == -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to seek offset.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to seek offset.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to seek offset.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -709,8 +681,6 @@ PyObject *pyexe_section_get_offset(
            pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_offset";
@@ -739,24 +709,12 @@ PyObject *pyexe_section_get_offset(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve offset.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve offset.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve offset.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -775,8 +733,6 @@ PyObject *pyexe_section_get_size(
            pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_size";
@@ -805,24 +761,12 @@ PyObject *pyexe_section_get_size(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: failed to retrieve size.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: failed to retrieve size.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: failed to retrieve size.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -841,8 +785,6 @@ PyObject *pyexe_section_get_start_offset(
            pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_start_offset";
@@ -871,24 +813,12 @@ PyObject *pyexe_section_get_start_offset(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-                {
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve start offset.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve start offset.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve start offset.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -907,8 +837,6 @@ PyObject *pyexe_section_get_virtual_address(
            pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_section_get_virtual_address";
@@ -937,24 +865,12 @@ PyObject *pyexe_section_get_virtual_address(
 
 	if( result != 1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve virtual address.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve virtual address.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve virtual address.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -973,8 +889,6 @@ PyObject *pyexe_section_get_name(
            pyexe_section_t *pyexe_section,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	char error_string[ PYEXE_ERROR_STRING_SIZE ];
-
 	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
 	static char *function    = "pyexe_section_get_name";
@@ -1005,24 +919,12 @@ PyObject *pyexe_section_get_name(
 
 	if( result == -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve UTF-8 name size.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve UTF-8 name size.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve UTF-8 name size.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 
@@ -1062,24 +964,12 @@ PyObject *pyexe_section_get_name(
 
 	if( result == -1 )
 	{
-		if( libcerror_error_backtrace_sprint(
-		     error,
-		     error_string,
-		     PYEXE_ERROR_STRING_SIZE ) == -1 )
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve UTF-8 name.",
-			 function );
-		}
-		else
-		{
-			PyErr_Format(
-			 PyExc_IOError,
-			 "%s: unable to retrieve UTF-8 name.\n%s",
-			 function,
-			 error_string );
-		}
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: unable to retrieve UTF-8 name.",
+		 function );
+
 		libcerror_error_free(
 		 &error );
 

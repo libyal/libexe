@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\pyexe\pyexe_error.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\pyexe\pyexe_datetime.c"
 				>
 			</File>
@@ -228,6 +232,10 @@
 			</File>
 			<File
 				RelativePath="..\..\pyexe\pyexe_codepage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\pyexe\pyexe_error.h"
 				>
 			</File>
 			<File

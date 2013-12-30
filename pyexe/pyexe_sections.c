@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #endif
 
-#include "pyexe.h"
 #include "pyexe_file.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libexe.h"

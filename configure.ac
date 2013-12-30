@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20131017],
+ [20131230],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -188,6 +188,7 @@ AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
 AC_CONFIG_FILES([manuals/Makefile])
 AC_CONFIG_FILES([tests/Makefile])
+AC_CONFIG_FILES([macosx/Makefile])
 AC_CONFIG_FILES([msvscpp/Makefile])
 dnl Have configure make the include files
 AC_CONFIG_FILES([include/libexe.h])
@@ -200,6 +201,13 @@ AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libexe/libexe.rc])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/01bin.xml])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/02include.xml])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/03lib.xml])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/04share.xml])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/05python.xml])
+AC_CONFIG_FILES([macosx/libexe.pmdoc/index.xml])
+AC_CONFIG_FILES([macosx/Introduction.rtf])
 AC_CONFIG_FILES([pyexe/setup.py])
 AC_CONFIG_FILES([libexe.pc])
 AC_CONFIG_FILES([libexe.spec])
