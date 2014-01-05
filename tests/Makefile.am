@@ -49,7 +49,7 @@ exe_test_open_close_SOURCES = \
 	exe_test_open_close.c
 
 exe_test_open_close_LDADD = \
-	../libexe/libexe.la
+	../libexe/libexe.la \
 	@LIBBFIO_LIBADD@ \
 	@LIBCPATH_LIBADD@ \
 	@LIBCFILE_LIBADD@ \
@@ -69,7 +69,7 @@ exe_test_set_ascii_codepage_SOURCES = \
 	exe_test_set_ascii_codepage.c
 
 exe_test_set_ascii_codepage_LDADD = \
-	../libexe/libexe.la
+	../libexe/libexe.la \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@
