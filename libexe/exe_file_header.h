@@ -351,10 +351,10 @@ struct exe_coff_optional_header_pe32
 	 */
 	uint8_t unknown2[ 4 ];
 
-	/* The number of data-directory entries
+	/* The number of data-directories entries
 	 * Consists of 4 bytes
 	 */
-	uint8_t number_of_data_directory_entries[ 4 ];
+	uint8_t number_of_data_directories_entries[ 4 ];
 };
 
 typedef struct exe_coff_optional_header_pe32_plus exe_coff_optional_header_pe32_plus_t;
@@ -461,10 +461,10 @@ struct exe_coff_optional_header_pe32_plus
 	 */
 	uint8_t unknown2[ 4 ];
 
-	/* The number of data-directory entries
+	/* The number of data-directories entries
 	 * Consists of 4 bytes
 	 */
-	uint8_t number_of_data_directory_entries[ 4 ];
+	uint8_t number_of_data_directories_entries[ 4 ];
 };
 
 typedef struct exe_coff_optional_header_data_directories exe_coff_optional_header_data_directories_t;

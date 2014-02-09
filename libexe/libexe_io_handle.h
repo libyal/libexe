@@ -25,6 +25,8 @@
 #include <common.h>
 #include <types.h>
 
+#include "libexe_data_directory_descriptor.h"
+#include "libexe_definitions.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcdata.h"
 #include "libexe_libcerror.h"
@@ -46,6 +48,10 @@ struct libexe_io_handle
 	/* The creation time
 	 */
 	uint32_t creation_time;
+
+	/* The data directory
+	 */
+        libexe_data_directory_descriptor_t data_directories[ LIBEXE_NUMBER_OF_DATA_DIRECTORIES ];
 
 	/* The codepage of the extended ASCII strings
 	 */

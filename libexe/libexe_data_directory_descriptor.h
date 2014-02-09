@@ -1,5 +1,5 @@
 /*
- * Section descriptor functions
+ * Data directory descriptor functions
  *
  * Copyright (c) 2011-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,53 +19,30 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_SECTION_DESCRIPTOR_H )
-#define _LIBEXE_SECTION_DESCRIPTOR_H
+#if !defined( _LIBEXE_DATA_DIRECTORY_DESCRIPTOR_H )
+#define _LIBEXE_DATA_DIRECTORY_DESCRIPTOR_H
 
 #include <common.h>
 #include <types.h>
 
 #include "libexe_libcerror.h"
-#include "libexe_libfdata.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct libexe_section_descriptor libexe_section_descriptor_t;
+typedef struct libexe_data_directory_descriptor libexe_data_directory_descriptor_t;
 
-struct libexe_section_descriptor
+struct libexe_data_directory_descriptor
 {
-	/* The name
-	 */
-	char name[ 9 ];
-
-	/* The name size
-	 */
-	size_t name_size;
-
 	/* The virtual address
 	 */
 	uint32_t virtual_address;
 
-	/* The data stream
+	/* The size
 	 */
-	libfdata_stream_t *data_stream;
+	uint32_t size;
 };
-
-int libexe_section_descriptor_initialize(
-     libexe_section_descriptor_t **section_descriptor,
-     libcerror_error_t **error );
-
-int libexe_section_descriptor_free(
-     libexe_section_descriptor_t **section_descriptor,
-     libcerror_error_t **error );
-
-int libexe_section_descriptor_set_data_range(
-     libexe_section_descriptor_t *section_descriptor,
-     off64_t data_offset,
-     size64_t data_size,
-     libcerror_error_t **error );
 
 #if defined( __cplusplus )
 }

@@ -25,6 +25,7 @@
 #include <types.h>
 
 #include "libexe_codepage.h"
+#include "libexe_data_directory_descriptor.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
@@ -101,7 +102,12 @@ int libexe_io_handle_initialize(
 		 "%s: unable to clear file.",
 		 function );
 
-		goto on_error;
+		memory_free(
+		 *io_handle );
+
+		*io_handle = NULL;
+
+		return( -1 );
 	}
 	( *io_handle )->executable_type = LIBEXE_EXECUTABLE_TYPE_MZ;
 	( *io_handle )->ascii_codepage  = LIBEXE_CODEPAGE_WINDOWS_1252;
@@ -1307,17 +1313,18 @@ int libexe_io_handle_read_coff_optional_header(
      uint16_t optional_header_size,
      libcerror_error_t **error )
 {
-	uint8_t *coff_optional_header             = NULL;
-	uint8_t *coff_optional_header_data        = NULL;
-	static char *function                     = "libexe_io_handle_read_coff_optional_header";
-	ssize_t read_count                        = 0;
-	uint32_t number_of_data_directory_entries = 0;
-	uint16_t signature                        = 0;
+	libexe_data_directory_descriptor_t *data_directory_descriptor = NULL;
+	uint8_t *coff_optional_header                                 = NULL;
+	uint8_t *coff_optional_header_data                            = NULL;
+	static char *function                                         = "libexe_io_handle_read_coff_optional_header";
+	ssize_t read_count                                            = 0;
+	uint32_t number_of_data_directories_entries                   = 0;
+	uint16_t signature                                            = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	uint64_t value_64bit                      = 0;
-	uint32_t value_32bit                      = 0;
-	uint16_t value_16bit                      = 0;
+	uint64_t value_64bit                                          = 0;
+	uint32_t value_32bit                                          = 0;
+	uint16_t value_16bit                                          = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -1469,8 +1476,8 @@ int libexe_io_handle_read_coff_optional_header(
 	if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
 	{
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->number_of_data_directory_entries,
-		 number_of_data_directory_entries );
+		 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->number_of_data_directories_entries,
+		 number_of_data_directories_entries );
 
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -1638,7 +1645,7 @@ int libexe_io_handle_read_coff_optional_header(
 			libcnotify_printf(
 			 "%s: number of data directory entries\t: %" PRIu32 "\n",
 			 function,
-			 number_of_data_directory_entries );
+			 number_of_data_directories_entries );
 		}
 #endif
 		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_t );
@@ -1646,8 +1653,8 @@ int libexe_io_handle_read_coff_optional_header(
 	else if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
 	{
 		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->number_of_data_directory_entries,
-		 number_of_data_directory_entries );
+		 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->number_of_data_directories_entries,
+		 number_of_data_directories_entries );
 
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -1815,7 +1822,7 @@ int libexe_io_handle_read_coff_optional_header(
 			libcnotify_printf(
 			 "%s: number of data directory entries\t: %" PRIu32 "\n",
 			 function,
-			 number_of_data_directory_entries );
+			 number_of_data_directories_entries );
 		}
 #endif
 		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_plus_t );
@@ -1827,7 +1834,7 @@ int libexe_io_handle_read_coff_optional_header(
 		 "\n" );
 	}
 #endif
-	if( number_of_data_directory_entries > 16 )
+	if( number_of_data_directories_entries > 16 )
 	{
 		libcerror_error_set(
 		 error,
@@ -1835,179 +1842,207 @@ int libexe_io_handle_read_coff_optional_header(
 		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
 		 "%s: unsupported number of data directory entries: %" PRIu32 ".",
 		 function,
-		 number_of_data_directory_entries );
+		 number_of_data_directories_entries );
 
 		goto on_error;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: export table size\t\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: import table size\t\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_RESOURCE_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: resource table size\t\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXCEPTION_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: exception table size\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_CERTIFICATE_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: certificate table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_BASE_RELOCATION_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: base relocation table size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: debug data size\t\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -2029,9 +2064,9 @@ int libexe_io_handle_read_coff_optional_header(
 			 value_32bit );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -2053,129 +2088,149 @@ int libexe_io_handle_read_coff_optional_header(
 			 value_32bit );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_THREAD_LOCAL_STORAGE_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: thread local storage table size\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_LOAD_CONFIGURATION_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: load configuration table size\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_ADDRESS_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: import address table size\t\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DELAY_IMPORT_DESCRIPTOR ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: delay import descriptor size\t: %" PRIu32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_COM_PLUS_RUNTIME_HEADER ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
+		 data_directory_descriptor->size );
+
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
 		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->virtual_address );
 
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
-			 value_32bit );
 			libcnotify_printf(
 			 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
 			 function,
-			 value_32bit );
+			 data_directory_descriptor->size );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
-	if( number_of_data_directory_entries > 0 )
+	if( number_of_data_directories_entries > 0 )
 	{
 #if defined( HAVE_DEBUG_OUTPUT )
 		if( libcnotify_verbose != 0 )
@@ -2192,7 +2247,7 @@ int libexe_io_handle_read_coff_optional_header(
 			 "\n" );
 		}
 #endif
-		number_of_data_directory_entries--;
+		number_of_data_directories_entries--;
 	}
 	memory_free(
 	 coff_optional_header );
@@ -2248,6 +2303,17 @@ int libexe_io_handle_read_section_table(
 	section_table_size = sizeof( exe_section_table_entry_t )
 	                   * number_of_sections;
 
+	if( section_table_size > (size_t) SSIZE_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid section table size value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
 	section_table = (uint8_t *) memory_allocate(
 	                             sizeof( uint8_t ) * section_table_size );
 

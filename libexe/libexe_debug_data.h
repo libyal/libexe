@@ -1,5 +1,5 @@
 /*
- * Section descriptor functions
+ * Debug data functions
  *
  * Copyright (c) 2011-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,52 +19,41 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_SECTION_DESCRIPTOR_H )
-#define _LIBEXE_SECTION_DESCRIPTOR_H
+#if !defined( _LIBEXE_DEBUG_DATA_H )
+#define _LIBEXE_DEBUG_DATA_H
 
 #include <common.h>
 #include <types.h>
 
+#include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
-#include "libexe_libfdata.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct libexe_section_descriptor libexe_section_descriptor_t;
+typedef struct libexe_debug_data libexe_debug_data_t;
 
-struct libexe_section_descriptor
+struct libexe_debug_data
 {
-	/* The name
+	/* Dummy
 	 */
-	char name[ 9 ];
-
-	/* The name size
-	 */
-	size_t name_size;
-
-	/* The virtual address
-	 */
-	uint32_t virtual_address;
-
-	/* The data stream
-	 */
-	libfdata_stream_t *data_stream;
+	int dummy;
 };
 
-int libexe_section_descriptor_initialize(
-     libexe_section_descriptor_t **section_descriptor,
+int libexe_debug_data_initialize(
+     libexe_debug_data_t **debug_data,
      libcerror_error_t **error );
 
-int libexe_section_descriptor_free(
-     libexe_section_descriptor_t **section_descriptor,
+int libexe_debug_data_free(
+     libexe_debug_data_t **debug_data,
      libcerror_error_t **error );
 
-int libexe_section_descriptor_set_data_range(
-     libexe_section_descriptor_t *section_descriptor,
-     off64_t data_offset,
-     size64_t data_size,
+int libexe_debug_data_read(
+     libexe_debug_data_t *debug_data,
+     libbfio_handle_t *file_io_handle,
+     uint32_t file_offset,
+     uint32_t size,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

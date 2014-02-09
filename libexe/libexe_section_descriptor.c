@@ -20,18 +20,13 @@
  */
 
 #include <common.h>
-#include <byte_stream.h>
 #include <memory.h>
 #include <types.h>
 
 #include "libexe_io_handle.h"
-#include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
-#include "libexe_libcnotify.h"
-#include "libexe_libcstring.h"
+#include "libexe_libfdata.h"
 #include "libexe_section_descriptor.h"
-
-#include "exe_section_table.h"
 
 /* Creates a section descriptor
  * Make sure the value section_descriptor is referencing, is set to NULL

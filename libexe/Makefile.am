@@ -24,7 +24,9 @@ libexe_la_SOURCES = \
 	exe_section_table.h \
 	libexe.c \
 	libexe_codepage.h \
+	libexe_data_directory_descriptor.h \
 	libexe_debug.c libexe_debug.h \
+	libexe_debug_data.c libexe_debug_data.h \
 	libexe_definitions.h \
 	libexe_error.c libexe_error.h \
 	libexe_extern.h \

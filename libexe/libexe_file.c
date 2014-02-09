@@ -23,6 +23,8 @@
 #include <memory.h>
 #include <types.h>
 
+#include "libexe_data_directory_descriptor.h"
+#include "libexe_debug_data.h"
 #include "libexe_codepage.h"
 #include "libexe_debug.h"
 #include "libexe_definitions.h"
@@ -806,8 +808,10 @@ int libexe_file_open_read(
      libexe_internal_file_t *internal_file,
      libcerror_error_t **error )
 {
-	static char *function       = "libexe_file_open_read";
-	uint16_t number_of_sections = 0;
+	libexe_data_directory_descriptor_t *data_directory_descriptor = NULL;
+	libexe_debug_data_t *debug_data                               = NULL;
+	static char *function                                         = "libexe_file_open_read";
+	uint16_t number_of_sections                                   = 0;
 
 	if( internal_file == NULL )
 	{
@@ -878,6 +882,53 @@ int libexe_file_open_read(
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read section table.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
+
+	if( data_directory_descriptor->size > 0 )
+	{
+		if( libexe_debug_data_initialize(
+		     &debug_data,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create debug data.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_debug_data_read(
+		     debug_data,
+		     internal_file->file_io_handle,
+		     data_directory_descriptor->virtual_address,
+		     data_directory_descriptor->size,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read debug data.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_debug_data_free(
+		     &debug_data,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free debug data.",
 			 function );
 
 			return( -1 );
