@@ -97,7 +97,7 @@ Section functions
 .Ft ssize_t
 .Fn libexe_section_read_buffer "libexe_section_t *section, void *buffer, size_t buffer_size, libexe_error_t **error"
 .Ft ssize_t
-.Fn libexe_section_read_random "libexe_section_t *section, void *buffer, size_t buffer_size, off64_t offset, libexe_error_t **error"
+.Fn libexe_section_read_buffer_at_offset "libexe_section_t *section, void *buffer, size_t buffer_size, off64_t offset, libexe_error_t **error"
 .Ft off64_t
 .Fn libexe_section_seek_offset "libexe_section_t *section, off64_t offset, int whence, libexe_error_t **error"
 .Ft int

@@ -68,7 +68,7 @@ PyObject *pyexe_section_read_buffer(
            PyObject *arguments,
            PyObject *keywords );
 
-PyObject *pyexe_section_read_random(
+PyObject *pyexe_section_read_buffer_at_offset(
            pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords );

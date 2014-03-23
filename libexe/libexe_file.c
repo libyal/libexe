@@ -615,10 +615,8 @@ int libexe_file_open_file_io_handle(
 	{
 		bfio_access_flags = LIBBFIO_ACCESS_FLAG_READ;
 	}
-	internal_file->file_io_handle = file_io_handle;
-
 	file_io_handle_is_open = libbfio_handle_is_open(
-	                          internal_file->file_io_handle,
+	                          file_io_handle,
 	                          error );
 
 	if( file_io_handle_is_open == -1 )
@@ -635,7 +633,7 @@ int libexe_file_open_file_io_handle(
 	else if( file_io_handle_is_open == 0 )
 	{
 		if( libbfio_handle_open(
-		     internal_file->file_io_handle,
+		     file_io_handle,
 		     bfio_access_flags,
 		     error ) != 1 )
 		{
@@ -652,6 +650,7 @@ int libexe_file_open_file_io_handle(
 	}
 	if( libexe_file_open_read(
 	     internal_file,
+	     file_io_handle,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -663,17 +662,21 @@ int libexe_file_open_file_io_handle(
 
 		goto on_error;
 	}
+	internal_file->file_io_handle = file_io_handle;
+
 	return( 1 );
 
 on_error:
-	if( file_io_handle_is_open == 0 )
+	if( ( file_io_handle_is_open == 0 )
+	 && ( internal_file->file_io_handle_opened_in_library != 0 ) )
 	{
 		libbfio_handle_close(
 		 file_io_handle,
 		 error );
+
+		internal_file->file_io_handle_opened_in_library = 0;
 	}
-	internal_file->file_io_handle                   = NULL;
-	internal_file->file_io_handle_opened_in_library = 0;
+	internal_file->file_io_handle = NULL;
 
 	return( -1 );
 }
@@ -713,10 +716,10 @@ int libexe_file_close(
 
 		return( -1 );
 	}
-	if( internal_file->file_io_handle_created_in_library != 0 )
-	{
 #if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
+	if( libcnotify_verbose != 0 )
+	{
+		if( internal_file->file_io_handle_created_in_library != 0 )
 		{
 			if( libexe_debug_print_read_offsets(
 			     internal_file->file_io_handle,
@@ -732,8 +735,8 @@ int libexe_file_close(
 				result = -1;
 			}
 		}
-#endif
 	}
+#endif
 	if( internal_file->file_io_handle_opened_in_library != 0 )
 	{
 		if( libbfio_handle_close(
@@ -766,9 +769,9 @@ int libexe_file_close(
 
 			result = -1;
 		}
+		internal_file->file_io_handle_created_in_library = 0;
 	}
-	internal_file->file_io_handle                    = NULL;
-	internal_file->file_io_handle_created_in_library = 0;
+	internal_file->file_io_handle = NULL;
 
 	if( libexe_io_handle_clear(
 	     internal_file->io_handle,
@@ -806,6 +809,7 @@ int libexe_file_close(
  */
 int libexe_file_open_read(
      libexe_internal_file_t *internal_file,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error )
 {
 	libexe_data_directory_descriptor_t *data_directory_descriptor = NULL;
@@ -848,7 +852,7 @@ int libexe_file_open_read(
 #endif
 	if( libexe_io_handle_read_file_header(
 	     internal_file->io_handle,
-	     internal_file->file_io_handle,
+	     file_io_handle,
 	     &number_of_sections,
 	     error ) != 1 )
 	{
@@ -872,7 +876,7 @@ int libexe_file_open_read(
 #endif
 		if( libexe_io_handle_read_section_table(
 		     internal_file->io_handle,
-		     internal_file->file_io_handle,
+		     file_io_handle,
 		     number_of_sections,
 		     internal_file->sections_array,
 		     error ) != 1 )
@@ -906,7 +910,7 @@ int libexe_file_open_read(
 		}
 		if( libexe_debug_data_read(
 		     debug_data,
-		     internal_file->file_io_handle,
+		     file_io_handle,
 		     data_directory_descriptor->virtual_address,
 		     data_directory_descriptor->size,
 		     error ) != 1 )

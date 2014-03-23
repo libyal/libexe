@@ -33,7 +33,7 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
-if ! PYTHONPATH=../pyexe/.libs/ ${PYTHON} pyexe_test_set_ascii_codepage.py ${FILENAME};
+if ! PYTHONPATH=../pyexe/.libs/ ${PYTHON} pyexe_test_set_ascii_codepage.py;
 then
 	exit ${EXIT_FAILURE};
 fi

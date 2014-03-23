@@ -40,10 +40,6 @@ typedef struct libexe_internal_file libexe_internal_file_t;
 
 struct libexe_internal_file
 {
-	/* The sections array
-	 */
-	libcdata_array_t *sections_array;
-
 	/* The IO handle
 	 */
 	libexe_io_handle_t *io_handle;
@@ -59,6 +55,10 @@ struct libexe_internal_file
 	/* Value to indicate if the file IO handle was opened inside the library
 	 */
 	uint8_t file_io_handle_opened_in_library;
+
+	/* The sections array
+	 */
+	libcdata_array_t *sections_array;
 };
 
 LIBEXE_EXTERN \
@@ -106,6 +106,7 @@ int libexe_file_close(
 
 int libexe_file_open_read(
      libexe_internal_file_t *internal_file,
+     libbfio_handle_t *file_io_handle,
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \

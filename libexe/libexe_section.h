@@ -117,7 +117,7 @@ ssize_t libexe_section_read_buffer(
          libcerror_error_t **error );
 
 LIBEXE_EXTERN \
-ssize_t libexe_section_read_random(
+ssize_t libexe_section_read_buffer_at_offset(
          libexe_section_t *section,
          void *buffer,
          size_t buffer_size,

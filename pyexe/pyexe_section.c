@@ -48,10 +48,10 @@ PyMethodDef pyexe_section_object_methods[] = {
 	  "\n"
 	  "Reads a buffer of section data." },
 
-	{ "read_random",
-	  (PyCFunction) pyexe_section_read_random,
+	{ "read_buffer_at_offset",
+	  (PyCFunction) pyexe_section_read_buffer_at_offset,
 	  METH_VARARGS | METH_KEYWORDS,
-	  "read_random(size, offset) -> String\n"
+	  "read_buffer_at_offset(size, offset) -> String\n"
 	  "\n"
 	  "Reads a buffer of secton data at a specific offset." },
 
@@ -503,14 +503,14 @@ PyObject *pyexe_section_read_buffer(
 /* Reads (section) data at a specific offset
  * Returns a Python object if successful or NULL on error
  */
-PyObject *pyexe_section_read_random(
+PyObject *pyexe_section_read_buffer_at_offset(
            pyexe_section_t *pyexe_section,
            PyObject *arguments,
            PyObject *keywords )
 {
 	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
-	static char *function       = "pyexe_section_read_random";
+	static char *function       = "pyexe_section_read_buffer_at_offset";
 	static char *keyword_list[] = { "size", "offset", NULL };
 	off64_t read_offset         = 0;
 	ssize_t read_count          = 0;
@@ -572,7 +572,7 @@ PyObject *pyexe_section_read_random(
 
 	Py_BEGIN_ALLOW_THREADS
 
-	read_count = libexe_section_read_random(
+	read_count = libexe_section_read_buffer_at_offset(
 	              pyexe_section->section,
 	              PyString_AsString(
 	               string_object ),

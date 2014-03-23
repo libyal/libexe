@@ -17,6 +17,9 @@ Format support:
 Deployment:
 * add macosx files
 
+20140323
+* worked on Python bindings
+
 20140209
 * worked on format support
 

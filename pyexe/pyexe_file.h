@@ -25,6 +25,7 @@
 #include <common.h>
 #include <types.h>
 
+#include "pyexe_libbfio.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
 
@@ -43,6 +44,10 @@ struct pyexe_file
 	/* The libexe file
 	 */
 	libexe_file_t *file;
+
+	/* The libbfio file IO handle
+	 */
+	libbfio_handle_t *file_io_handle;
 };
 
 extern PyMethodDef pyexe_file_object_methods[];

@@ -177,7 +177,6 @@ int libexe_io_handle_clear(
      libcerror_error_t **error )
 {
 	static char *function = "libexe_io_handle_clear";
-	int result            = 1;
 
 	if( io_handle == NULL )
 	{
@@ -202,12 +201,12 @@ int libexe_io_handle_clear(
 		 "%s: unable to clear IO handle.",
 		 function );
 
-		result = -1;
+		return( -1 );
 	}
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_MZ;
 	io_handle->ascii_codepage  = LIBEXE_CODEPAGE_WINDOWS_1252;
 
-	return( result );
+	return( 1 );
 }
 
 /* Reads the file header

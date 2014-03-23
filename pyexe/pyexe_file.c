@@ -359,9 +359,8 @@ int pyexe_file_init(
 
 		return( -1 );
 	}
-	/* Make sure libexe file is set to NULL
-	 */
-	pyexe_file->file = NULL;
+	pyexe_file->file           = NULL;
+	pyexe_file->file_io_handle = NULL;
 
 	if( libexe_file_initialize(
 	     &( pyexe_file->file ),
@@ -580,13 +579,12 @@ PyObject *pyexe_file_open_file_object(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *file_object            = NULL;
-	libbfio_handle_t *file_io_handle = NULL;
-	libcerror_error_t *error         = NULL;
-	char *mode                       = NULL;
-	static char *keyword_list[]      = { "file_object", "mode", NULL };
-	static char *function            = "pyexe_file_open_file_object";
-	int result                       = 0;
+	PyObject *file_object       = NULL;
+	libcerror_error_t *error    = NULL;
+	char *mode                  = NULL;
+	static char *keyword_list[] = { "file_object", "mode", NULL };
+	static char *function       = "pyexe_file_open_file_object";
+	int result                  = 0;
 
 	if( pyexe_file == NULL )
 	{
@@ -619,7 +617,7 @@ PyObject *pyexe_file_open_file_object(
 		return( NULL );
 	}
 	if( pyexe_file_object_initialize(
-	     &file_io_handle,
+	     &( pyexe_file->file_io_handle ),
 	     file_object,
 	     &error ) != 1 )
 	{
@@ -638,7 +636,7 @@ PyObject *pyexe_file_open_file_object(
 
 	result = libexe_file_open_file_io_handle(
 	          pyexe_file->file,
-                  file_io_handle,
+                  pyexe_file->file_io_handle ,
                   LIBEXE_OPEN_READ,
 	          &error );
 
@@ -663,10 +661,10 @@ PyObject *pyexe_file_open_file_object(
 	return( Py_None );
 
 on_error:
-	if( file_io_handle != NULL )
+	if( pyexe_file->file_io_handle  != NULL )
 	{
 		libbfio_handle_free(
-		 &file_io_handle,
+		 &( pyexe_file->file_io_handle ),
 		 NULL );
 	}
 	return( NULL );
@@ -714,6 +712,30 @@ PyObject *pyexe_file_close(
 		 &error );
 
 		return( NULL );
+	}
+	if( pyexe_file->file_io_handle != NULL )
+	{
+		Py_BEGIN_ALLOW_THREADS
+
+		result = libbfio_handle_free(
+		          &( pyexe_file->file_io_handle ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyexe_error_raise(
+			 error,
+			 PyExc_IOError,
+			 "%s: unable to free libbfio file IO handle.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+
+			return( NULL );
+		}
 	}
 	Py_IncRef(
 	 Py_None );

@@ -385,11 +385,11 @@ ssize_t libexe_section_read_buffer(
          size_t buffer_size,
          libexe_error_t **error );
 
-/* Reads (media) data at a specific offset
+/* Reads data at a specific offset into a buffer
  * Returns the number of bytes read or -1 on error
  */
 LIBEXE_EXTERN \
-ssize_t libexe_section_read_random(
+ssize_t libexe_section_read_buffer_at_offset(
          libexe_section_t *section,
          void *buffer,
          size_t buffer_size,
