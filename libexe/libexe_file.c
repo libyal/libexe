@@ -1167,7 +1167,6 @@ int libexe_file_get_section(
 	     internal_file->io_handle,
 	     internal_file->file_io_handle,
 	     section_descriptor,
-	     LIBEXE_SECTION_FLAGS_DEFAULT,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1313,7 +1312,6 @@ int libexe_file_get_section_by_name(
 				     internal_file->io_handle,
 				     internal_file->file_io_handle,
 				     section_descriptor,
-				     LIBEXE_SECTION_FLAGS_DEFAULT,
 				     error ) != 1 )
 				{
 					libcerror_error_set(

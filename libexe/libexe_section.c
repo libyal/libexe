@@ -41,7 +41,6 @@ int libexe_section_initialize(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      libexe_section_descriptor_t *section_descriptor,
-     uint8_t flags,
      libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
@@ -80,18 +79,6 @@ int libexe_section_initialize(
 
 		return( -1 );
 	}
-	if( ( flags & ~( LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) ) != 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported flags: 0x%02" PRIx8 ".",
-		 function,
-		 flags );
-
-		return( -1 );
-	}
 	internal_section = memory_allocate_structure(
 	                    libexe_internal_section_t );
 
@@ -123,44 +110,9 @@ int libexe_section_initialize(
 
 		return( -1 );
 	}
-	if( ( flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) == 0 )
-	{
-		internal_section->file_io_handle = file_io_handle;
-	}
-	else
-	{
-		if( libbfio_handle_clone(
-		     &( internal_section->file_io_handle ),
-		     file_io_handle,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy file IO handle.",
-			 function );
-
-			goto on_error;
-		}
-		if( libbfio_handle_set_open_on_demand(
-		     internal_section->file_io_handle,
-		     1,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to set open on demand in file IO handle.",
-			 function );
-
-			goto on_error;
-		}
-	}
+	internal_section->file_io_handle     = file_io_handle;
 	internal_section->io_handle          = io_handle;
 	internal_section->section_descriptor = section_descriptor;
-	internal_section->flags              = flags;
 
 	*section = (libexe_section_t *) internal_section;
 
@@ -169,15 +121,6 @@ int libexe_section_initialize(
 on_error:
 	if( internal_section != NULL )
 	{
-		if( ( flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) != 0 )
-		{
-			if( internal_section->file_io_handle != NULL )
-			{
-				libbfio_handle_free(
-				 &( internal_section->file_io_handle ),
-				 NULL );
-			}
-		}
 		memory_free(
 		 internal_section );
 	}
@@ -193,7 +136,6 @@ int libexe_section_free(
 {
 	libexe_internal_section_t *internal_section = NULL;
 	static char *function                       = "libexe_section_free";
-	int result                                  = 1;
 
 	if( section == NULL )
 	{
@@ -211,41 +153,12 @@ int libexe_section_free(
 		internal_section = (libexe_internal_section_t *) *section;
 		*section         = NULL;
 
-		/* The io_handle and section_descriptor references are freed elsewhere
+		/* The file_io_handle, io_handle and section_descriptor references are freed elsewhere
 		 */
-		if( ( internal_section->flags & LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE ) != 0 )
-		{
-			if( libbfio_handle_close(
-			     internal_section->file_io_handle,
-			     error ) != 0 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_IO,
-				 LIBCERROR_IO_ERROR_CLOSE_FAILED,
-				 "%s: unable to close file IO handle.",
-				 function );
-
-				result = -1;
-			}
-			if( libbfio_handle_free(
-			     &( internal_section->file_io_handle ),
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free file IO handle.",
-				 function );
-
-				result = -1;
-			}
-		}
 		memory_free(
 		 internal_section );
 	}
-	return( result );
+	return( 1 );
 }
 
 /* Retrieves the size of the ASCII formatted name

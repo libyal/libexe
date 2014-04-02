@@ -37,11 +37,11 @@
  * for local use of libexe
  */
 #else
-#define LIBEXE_VERSION						20140323
+#define LIBEXE_VERSION						20140402
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING					"20140323"
+#define LIBEXE_VERSION_STRING					"20140402"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access
@@ -156,8 +156,6 @@ enum LIBEXE_SECTION_FLAGS
 	LIBEXE_SECTION_FLAG_NON_MANAGED_FILE_IO_HANDLE		= 0x00,
 	LIBEXE_SECTION_FLAG_MANAGED_FILE_IO_HANDLE		= 0x01,
 };
-
-#define LIBEXE_SECTION_FLAGS_DEFAULT				LIBEXE_SECTION_FLAG_NON_MANAGED_FILE_IO_HANDLE
 
 #define LIBEXE_MAXIMUM_CACHE_ENTRIES_SECTION_DATA		64
 

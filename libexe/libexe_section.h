@@ -51,10 +51,6 @@ struct libexe_internal_section
 	/* The section descriptor
 	 */
 	libexe_section_descriptor_t *section_descriptor;
-
-	/* The flags
-	 */
-	uint8_t flags;
 };
 
 int libexe_section_initialize(
@@ -62,7 +58,6 @@ int libexe_section_initialize(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      libexe_section_descriptor_t *section_descriptor,
-     uint8_t flags,
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \
