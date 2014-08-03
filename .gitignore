@@ -102,13 +102,6 @@ stamp-h1
 /libexe/libexe.rc
 /libexe/libexe_definitions.h
 /exetools/exeinfo
-/macosx/Introduction.rtf
-/macosx/libexe.pmdoc/01bin.xml
-/macosx/libexe.pmdoc/02include.xml
-/macosx/libexe.pmdoc/03lib.xml
-/macosx/libexe.pmdoc/04share.xml
-/macosx/libexe.pmdoc/05python.xml
-/macosx/libexe.pmdoc/index.xml
 /pyexe/setup.py
 /tests/input
 /tests/tmp

@@ -32,6 +32,7 @@
 #include "libexe_libcerror.h"
 #include "libexe_libcdata.h"
 #include "libexe_libcnotify.h"
+#include "libexe_libcstring.h"
 #include "libexe_libfdatetime.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
@@ -2281,7 +2282,7 @@ int libexe_io_handle_read_section_table(
 	uint32_t section_data_offset                    = 0;
 	uint32_t section_data_size                      = 0;
 	uint16_t section_index                          = 0;
-	int section_entry_index                         = 0;
+	int entry_index                                 = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	uint32_t value_32bit                            = 0;
@@ -2493,6 +2494,9 @@ int libexe_io_handle_read_section_table(
 			 "\n" );
 		}
 #endif
+		section_table_data += sizeof( exe_section_table_entry_t );
+		section_table_size -= sizeof( exe_section_table_entry_t );
+
 		if( libexe_section_descriptor_set_data_range(
 		     section_descriptor,
 		     (off64_t) section_data_offset,
@@ -2510,7 +2514,7 @@ int libexe_io_handle_read_section_table(
 		}
 		if( libcdata_array_append_entry(
 		     sections_array,
-		     &section_entry_index,
+		     &entry_index,
 		     (intptr_t *) section_descriptor,
 		     error ) != 1 )
 		{
@@ -2524,9 +2528,6 @@ int libexe_io_handle_read_section_table(
 			goto on_error;
 		}
 		section_descriptor = NULL;
-
-		section_table_data += sizeof( exe_section_table_entry_t );
-		section_table_size -= sizeof( exe_section_table_entry_t );
 
 		section_index++;
 	}

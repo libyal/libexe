@@ -10,8 +10,16 @@ Package: libexe
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: libexe-dbg
 Description: Library to access the executable (EXE) format
  libexe is a library to access the executable (EXE) format.
+
+Package: libexe-dbg
+Architecture: any
+Section: debug
+Depends: libexe (= ${Source-Version}), ${misc:Depends}
+Description: Debugging symbols for libexe
+ Debugging symbols for libexe.
 
 Package: libexe-dev
 Section: libdevel
@@ -31,6 +39,14 @@ Package: libexe-python
 Section: python
 Architecture: any
 Depends: libexe (= ${Source-Version}), ${shlibs:Depends}, ${python:Depends}
+Suggests: libexe-python-dbg
 Description: Python bindings for libexe
  Python bindings for libexe.
+
+Package: libexe-python-dbg
+Section: debug
+Architecture: any
+Depends: libexe-python (= ${Source-Version})
+Description: Debugging symbols for libexe-python
+ Debugging symbols for libexe-python.
 

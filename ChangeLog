@@ -17,6 +17,15 @@ Format support:
 Deployment:
 * add macosx files
 
+20140803
+* bug fix in Python-bindings
+
+20140518
+* worked on rich signature support
+
+20140504
+* worked on format support
+
 20140402
 * code clean up
 

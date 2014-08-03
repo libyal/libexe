@@ -14,7 +14,7 @@ AM_CPPFLAGS = \
 	@LIBBFIO_CPPFLAGS@ \
 	@LIBFCACHE_CPPFLAGS@ \
 	@LIBFDATA_CPPFLAGS@ \
-	@LIBFDATETIME_CPPFLAGS@	\
+	@LIBFDATETIME_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@
 
 lib_LTLIBRARIES = libexe.la
@@ -29,8 +29,10 @@ libexe_la_SOURCES = \
 	libexe_debug_data.c libexe_debug_data.h \
 	libexe_definitions.h \
 	libexe_error.c libexe_error.h \
+	libexe_export_table.c libexe_export_table.h \
 	libexe_extern.h \
 	libexe_file.c libexe_file.h \
+	libexe_import_table.c libexe_import_table.h \
 	libexe_io_handle.c libexe_io_handle.h \
 	libexe_libbfio.h \
 	libexe_libcdata.h \

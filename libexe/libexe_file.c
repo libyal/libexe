@@ -24,10 +24,12 @@
 #include <types.h>
 
 #include "libexe_data_directory_descriptor.h"
-#include "libexe_debug_data.h"
 #include "libexe_codepage.h"
 #include "libexe_debug.h"
+#include "libexe_debug_data.h"
 #include "libexe_definitions.h"
+#include "libexe_export_table.h"
+#include "libexe_import_table.h"
 #include "libexe_io_handle.h"
 #include "libexe_file.h"
 #include "libexe_libbfio.h"
@@ -255,7 +257,7 @@ int libexe_file_signal_abort(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing IO handle.",
+		 "%s: invalid file - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -572,7 +574,7 @@ int libexe_file_open_file_io_handle(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: invalid internal file - file IO handle already set.",
+		 "%s: invalid file - file IO handle already set.",
 		 function );
 
 		return( -1 );
@@ -814,6 +816,8 @@ int libexe_file_open_read(
 {
 	libexe_data_directory_descriptor_t *data_directory_descriptor = NULL;
 	libexe_debug_data_t *debug_data                               = NULL;
+	libexe_export_table_t *export_table                           = NULL;
+	libexe_import_table_t *import_table                           = NULL;
 	static char *function                                         = "libexe_file_open_read";
 	uint16_t number_of_sections                                   = 0;
 
@@ -823,7 +827,7 @@ int libexe_file_open_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid internal file.",
+		 "%s: invalid file.",
 		 function );
 
 		return( -1 );
@@ -834,7 +838,7 @@ int libexe_file_open_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing IO handle.",
+		 "%s: invalid file - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -886,6 +890,100 @@ int libexe_file_open_read(
 			 LIBCERROR_ERROR_DOMAIN_IO,
 			 LIBCERROR_IO_ERROR_READ_FAILED,
 			 "%s: unable to read section table.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
+
+	if( data_directory_descriptor->size > 0 )
+	{
+		if( libexe_export_table_initialize(
+		     &export_table,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create export table.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_export_table_read(
+		     export_table,
+		     file_io_handle,
+		     data_directory_descriptor->virtual_address,
+		     data_directory_descriptor->size,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read export table.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_export_table_free(
+		     &export_table,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free export table.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
+
+	if( data_directory_descriptor->size > 0 )
+	{
+		if( libexe_import_table_initialize(
+		     &import_table,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to create import table.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_import_table_read(
+		     import_table,
+		     file_io_handle,
+		     data_directory_descriptor->virtual_address,
+		     data_directory_descriptor->size,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read import table.",
+			 function );
+
+			return( -1 );
+		}
+		if( libexe_import_table_free(
+		     &import_table,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free import table.",
 			 function );
 
 			return( -1 );
@@ -971,7 +1069,7 @@ int libexe_file_get_ascii_codepage(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing IO handle.",
+		 "%s: invalid file - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -1022,7 +1120,7 @@ int libexe_file_set_ascii_codepage(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal file - missing IO handle.",
+		 "%s: invalid file - missing IO handle.",
 		 function );
 
 		return( -1 );

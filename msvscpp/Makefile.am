@@ -11,7 +11,7 @@ MSVSCPP_FILES = \
 	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
-	libexe_dll/libexe_dll.vcproj \
+	libexe/libexe.vcproj \
 	libfcache/libfcache.vcproj \
 	libfdata/libfdata.vcproj \
 	libfdatetime/libfdatetime.vcproj \

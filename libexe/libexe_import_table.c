@@ -1,5 +1,5 @@
 /*
- * Debug data functions
+ * Import table functions
  *
  * Copyright (c) 2011-2014, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -23,140 +23,140 @@
 #include <memory.h>
 #include <types.h>
 
-#include "libexe_debug_data.h"
+#include "libexe_import_table.h"
 #include "libexe_libcerror.h"
 #include "libexe_libcnotify.h"
 #include "libexe_libfdata.h"
 
-/* Creates a debug data
- * Make sure the value debug_data is referencing, is set to NULL
+/* Creates an import table
+ * Make sure the value import_table is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
-int libexe_debug_data_initialize(
-     libexe_debug_data_t **debug_data,
+int libexe_import_table_initialize(
+     libexe_import_table_t **import_table,
      libcerror_error_t **error )
 {
-	static char *function = "libexe_debug_data_initialize";
+	static char *function = "libexe_import_table_initialize";
 
-	if( debug_data == NULL )
+	if( import_table == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid debug data.",
+		 "%s: invalid import table.",
 		 function );
 
 		return( -1 );
 	}
-	if( *debug_data != NULL )
+	if( *import_table != NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: invalid debug data value already set.",
+		 "%s: invalid import table value already set.",
 		 function );
 
 		return( -1 );
 	}
-	*debug_data = memory_allocate_structure(
-	               libexe_debug_data_t );
+	*import_table = memory_allocate_structure(
+	                 libexe_import_table_t );
 
-	if( *debug_data == NULL )
+	if( *import_table == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create debug data.",
+		 "%s: unable to create import table.",
 		 function );
 
 		goto on_error;
 	}
 	if( memory_set(
-	     *debug_data,
+	     *import_table,
 	     0,
-	     sizeof( libexe_debug_data_t ) ) == NULL )
+	     sizeof( libexe_import_table_t ) ) == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_SET_FAILED,
-		 "%s: unable to clear debug data.",
+		 "%s: unable to clear import table.",
 		 function );
 
 		memory_free(
-		 *debug_data );
+		 *import_table );
 
-		*debug_data = NULL;
+		*import_table = NULL;
 
 		return( -1 );
 	}
 	return( 1 );
 
 on_error:
-	if( *debug_data != NULL )
+	if( *import_table != NULL )
 	{
 		memory_free(
-		 *debug_data );
+		 *import_table );
 
-		*debug_data = NULL;
+		*import_table = NULL;
 	}
 	return( -1 );
 }
 
-/* Frees a debug data
+/* Frees an import table
  * Returns 1 if successful or -1 on error
  */
-int libexe_debug_data_free(
-     libexe_debug_data_t **debug_data,
+int libexe_import_table_free(
+     libexe_import_table_t **import_table,
      libcerror_error_t **error )
 {
-	static char *function = "libexe_debug_data_free";
+	static char *function = "libexe_import_table_free";
 
-	if( debug_data == NULL )
+	if( import_table == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid debug data.",
+		 "%s: invalid import table.",
 		 function );
 
 		return( -1 );
 	}
-	if( *debug_data != NULL )
+	if( *import_table != NULL )
 	{
 		memory_free(
-		 *debug_data );
+		 *import_table );
 
-		*debug_data = NULL;
+		*import_table = NULL;
 	}
 	return( 1 );
 }
 
-/* Reads the debug data
+/* Reads the import table
  * Returns 1 if successful or -1 on error
  */
-int libexe_debug_data_read(
-     libexe_debug_data_t *debug_data,
+int libexe_import_table_read(
+     libexe_import_table_t *import_table,
      libbfio_handle_t *file_io_handle,
      uint32_t file_offset,
      uint32_t size,
      libcerror_error_t **error )
 {
 	uint8_t *data         = NULL;
-	static char *function = "libexe_debug_data_read";
+	static char *function = "libexe_import_table_read";
 	size_t read_count     = 0;
 
-	if( debug_data == NULL )
+	if( import_table == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid debug data.",
+		 "%s: invalid import table.",
 		 function );
 
 		return( -1 );
@@ -178,7 +178,7 @@ int libexe_debug_data_read(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: reading debug data at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 "%s: reading import table at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
 		 function,
 		 file_offset,
 		 file_offset );
@@ -194,7 +194,7 @@ int libexe_debug_data_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek debug data offset: %" PRIx32 ".",
+		 "%s: unable to seek import table offset: %" PRIx32 ".",
 		 function,
 		 file_offset );
 
@@ -209,7 +209,7 @@ int libexe_debug_data_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_MEMORY,
 		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create debug data.",
+		 "%s: unable to create import table.",
 		 function );
 
 		goto on_error;
@@ -226,7 +226,7 @@ int libexe_debug_data_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read debug data.",
+		 "%s: unable to read import table.",
 		 function );
 
 		goto on_error;
@@ -235,7 +235,7 @@ int libexe_debug_data_read(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: debug data:\n",
+		 "%s: import table:\n",
 		 function );
 		libcnotify_print_data(
 		 data,

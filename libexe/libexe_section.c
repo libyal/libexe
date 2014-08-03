@@ -192,7 +192,7 @@ int libexe_section_get_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -245,7 +245,7 @@ int libexe_section_get_name(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -320,7 +320,7 @@ int libexe_section_get_utf8_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing IO handle.",
+		 "%s: invalid section - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -331,7 +331,7 @@ int libexe_section_get_utf8_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -387,7 +387,7 @@ int libexe_section_get_utf8_name(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing IO handle.",
+		 "%s: invalid section - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -398,7 +398,7 @@ int libexe_section_get_utf8_name(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -454,7 +454,7 @@ int libexe_section_get_utf16_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing IO handle.",
+		 "%s: invalid section - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -465,7 +465,7 @@ int libexe_section_get_utf16_name_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -521,7 +521,7 @@ int libexe_section_get_utf16_name(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing IO handle.",
+		 "%s: invalid section - missing IO handle.",
 		 function );
 
 		return( -1 );
@@ -532,7 +532,7 @@ int libexe_section_get_utf16_name(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -857,7 +857,7 @@ int libexe_section_get_start_offset(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );
@@ -913,7 +913,7 @@ int libexe_section_get_virtual_address(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid internal section - missing section descriptor.",
+		 "%s: invalid section - missing section descriptor.",
 		 function );
 
 		return( -1 );

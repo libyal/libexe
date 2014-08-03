@@ -24,7 +24,6 @@ SUBDIRS = \
 	po \
 	manuals \
 	tests \
-	macosx \
 	msvscpp
 
 DPKG_FILES = \
@@ -120,5 +119,6 @@ splint:
 	(cd $(srcdir)/libcsystem && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/exetools && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/pyexe && $(MAKE) splint $(AM_MAKEFLAGS))
+	(cd $(srcdir)/tests && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/po && $(MAKE) splint $(AM_MAKEFLAGS))
 
