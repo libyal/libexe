@@ -40,6 +40,7 @@ libexe_la_SOURCES = \
 	libexe_libclocale.h \
 	libexe_libcnotify.h \
 	libexe_libcstring.h \
+	libexe_libfcache.h \
 	libexe_libfdata.h \
 	libexe_libfdatetime.h \
 	libexe_libuna.h \

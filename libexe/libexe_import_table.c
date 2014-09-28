@@ -26,6 +26,7 @@
 #include "libexe_import_table.h"
 #include "libexe_libcerror.h"
 #include "libexe_libcnotify.h"
+#include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 
 /* Creates an import table

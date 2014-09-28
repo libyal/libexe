@@ -27,6 +27,7 @@
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
+#include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 #include "libexe_libuna.h"
 #include "libexe_section.h"

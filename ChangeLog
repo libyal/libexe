@@ -17,6 +17,12 @@ Format support:
 Deployment:
 * add macosx files
 
+20140928
+* removed README.macosx
+
+20140827
+* code clean up
+
 20140803
 * bug fix in Python-bindings
 

@@ -26,6 +26,7 @@
 #include <types.h>
 
 #include "libexe_libcerror.h"
+#include "libexe_libfcache.h"
 #include "libexe_libfdata.h"
 
 #if defined( __cplusplus )
