@@ -17,6 +17,9 @@ Format support:
 Deployment:
 * add macosx files
 
+20141004
+* update Python-bindings tests
+
 20140928
 * removed README.macosx
 * changes for project site move
