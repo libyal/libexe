@@ -3,6 +3,10 @@ libexe is a library to access the executable (EXE) format.
 At the moment the goal of this project is to provide functionality to parse EXE (PE/COFF) and the resources stored in them using libwrc.
 This functionality is used in libevt and libevx to parse EventLog messages from PE/COFF message files.
 
+Project information:
+* Status: experimental
+* Licence: LGPLv3+
+
 Planned:
 * Multi-threading support
 * Python 3 support
