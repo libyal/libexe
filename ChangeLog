@@ -1,7 +1,6 @@
 TODO:
 * add libexe_section_get_offset
 * add libexe_section_get_utf8_name and libexe_section_get_utf8_name_size
-* update msvscpp files (libfdata change)
 * update man pages
 * sanitize stream names with control characters
   - see olecf
@@ -14,8 +13,8 @@ Format support:
 * NE executable
 * LE executable
 
-Deployment:
-* add macosx files
+20141019
+* changes for deployment
 
 20141012
 * worked on utility scripts
