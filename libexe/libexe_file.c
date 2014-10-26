@@ -819,6 +819,7 @@ int libexe_file_open_read(
 	libexe_export_table_t *export_table                           = NULL;
 	libexe_import_table_t *import_table                           = NULL;
 	static char *function                                         = "libexe_file_open_read";
+	off64_t file_offset                                           = 0;
 	uint16_t number_of_sections                                   = 0;
 
 	if( internal_file == NULL )
@@ -867,7 +868,7 @@ int libexe_file_open_read(
 		 "%s: unable to read file header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( number_of_sections > 0 )
 	{
@@ -892,13 +893,29 @@ int libexe_file_open_read(
 			 "%s: unable to read section table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
 
 	if( data_directory_descriptor->size > 0 )
 	{
+		if( libexe_file_get_offset_by_relative_virtual_address(
+		     internal_file,
+		     data_directory_descriptor->virtual_address,
+		     &file_offset,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+			 function,
+			 data_directory_descriptor->virtual_address );
+
+			goto on_error;
+		}
 		if( libexe_export_table_initialize(
 		     &export_table,
 		     error ) != 1 )
@@ -910,12 +927,12 @@ int libexe_file_open_read(
 			 "%s: unable to create export table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_export_table_read(
 		     export_table,
 		     file_io_handle,
-		     data_directory_descriptor->virtual_address,
+		     file_offset,
 		     data_directory_descriptor->size,
 		     error ) != 1 )
 		{
@@ -926,7 +943,7 @@ int libexe_file_open_read(
 			 "%s: unable to read export table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_export_table_free(
 		     &export_table,
@@ -939,13 +956,29 @@ int libexe_file_open_read(
 			 "%s: unable to free export table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
 
 	if( data_directory_descriptor->size > 0 )
 	{
+		if( libexe_file_get_offset_by_relative_virtual_address(
+		     internal_file,
+		     data_directory_descriptor->virtual_address,
+		     &file_offset,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+			 function,
+			 data_directory_descriptor->virtual_address );
+
+			goto on_error;
+		}
 		if( libexe_import_table_initialize(
 		     &import_table,
 		     error ) != 1 )
@@ -957,12 +990,12 @@ int libexe_file_open_read(
 			 "%s: unable to create import table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_import_table_read(
 		     import_table,
 		     file_io_handle,
-		     data_directory_descriptor->virtual_address,
+		     file_offset,
 		     data_directory_descriptor->size,
 		     error ) != 1 )
 		{
@@ -973,7 +1006,7 @@ int libexe_file_open_read(
 			 "%s: unable to read import table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_import_table_free(
 		     &import_table,
@@ -986,13 +1019,29 @@ int libexe_file_open_read(
 			 "%s: unable to free import table.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
 
 	if( data_directory_descriptor->size > 0 )
 	{
+		if( libexe_file_get_offset_by_relative_virtual_address(
+		     internal_file,
+		     data_directory_descriptor->virtual_address,
+		     &file_offset,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+			 function,
+			 data_directory_descriptor->virtual_address );
+
+			goto on_error;
+		}
 		if( libexe_debug_data_initialize(
 		     &debug_data,
 		     error ) != 1 )
@@ -1004,12 +1053,12 @@ int libexe_file_open_read(
 			 "%s: unable to create debug data.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_debug_data_read(
 		     debug_data,
 		     file_io_handle,
-		     data_directory_descriptor->virtual_address,
+		     file_offset,
 		     data_directory_descriptor->size,
 		     error ) != 1 )
 		{
@@ -1020,7 +1069,7 @@ int libexe_file_open_read(
 			 "%s: unable to read debug data.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 		if( libexe_debug_data_free(
 		     &debug_data,
@@ -1033,10 +1082,31 @@ int libexe_file_open_read(
 			 "%s: unable to free debug data.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	return( 1 );
+
+on_error:
+	if( debug_data != NULL )
+	{
+		libexe_debug_data_free(
+		 &debug_data,
+		 NULL );
+	}
+	if( import_table != NULL )
+	{
+		libexe_import_table_free(
+		 &import_table,
+		 NULL );
+	}
+	if( export_table != NULL )
+	{
+		libexe_export_table_free(
+		 &export_table,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Retrieves the file ASCII codepage
@@ -1155,6 +1225,106 @@ int libexe_file_set_ascii_codepage(
 	return( 1 );
 }
 
+/* Retrieves offset of a relative virtual address
+ * Returns 1 if successful, 0 if no such section or -1 on error
+ */
+int libexe_file_get_offset_by_relative_virtual_address(
+     libexe_internal_file_t *internal_file,
+     uint32_t virtual_address,
+     off64_t *offset,
+     libcerror_error_t **error )
+{
+	libexe_section_descriptor_t *section_descriptor = NULL;
+	static char *function                           = "libexe_file_get_offset_by_relative_virtual_address";
+	size64_t section_size                           = 0;
+	int number_of_sections                          = 0;
+	int section_index                               = 0;
+
+	if( internal_file == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid file.",
+		 function );
+
+		return( -1 );
+	}
+	if( offset == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid offset.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_array_get_number_of_entries(
+	     internal_file->sections_array,
+	     &number_of_sections,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve number of sections.",
+		 function );
+
+		return( -1 );
+	}
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     internal_file->sections_array,
+		     section_index,
+		     (intptr_t **) &section_descriptor,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve section descriptor: %d.",
+			 function,
+			 section_index );
+
+			return( -1 );
+		}
+		if( libexe_section_descriptor_get_data_range(
+		     section_descriptor,
+		     offset,
+		     &section_size,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve section descriptor: %d data range.",
+			 function,
+			 section_index );
+
+			return( -1 );
+		}
+		if( ( virtual_address >= section_descriptor->virtual_address )
+		 && ( ( virtual_address - section_descriptor->virtual_address ) < section_size ) )
+		{
+			*offset += virtual_address - section_descriptor->virtual_address;
+
+			return( 1 );
+		}
+	}
+	*offset = 0;
+
+	return( 0 );
+}
+
 /* Retrieves the number of sections
  * Returns 1 if successful or -1 on error
  */
@@ -1254,7 +1424,7 @@ int libexe_file_get_section(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve event section descriptor: %d.",
+		 "%s: unable to retrieve section descriptor: %d.",
 		 function,
 		 section_index );
 
@@ -1380,7 +1550,7 @@ int libexe_file_get_section_by_name(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve event section descriptor: %d.",
+			 "%s: unable to retrieve section descriptor: %d.",
 			 function,
 			 section_index );
 

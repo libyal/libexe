@@ -121,6 +121,12 @@ int libexe_file_set_ascii_codepage(
      int ascii_codepage,
      libcerror_error_t **error );
 
+int libexe_file_get_offset_by_relative_virtual_address(
+     libexe_internal_file_t *internal_file,
+     uint32_t virtual_address,
+     off64_t *offset,
+     libcerror_error_t **error );
+
 LIBEXE_EXTERN \
 int libexe_file_get_number_of_sections(
      libexe_file_t *file,

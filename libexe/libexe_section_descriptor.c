@@ -192,6 +192,89 @@ int libexe_section_descriptor_free(
 	return( result );
 }
 
+/* Retrieves the data size
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_descriptor_get_data_size(
+     libexe_section_descriptor_t *section_descriptor,
+     size64_t *data_size,
+     libcerror_error_t **error )
+{
+	static char *function = "libexe_section_descriptor_get_data_size";
+
+	if( section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libfdata_stream_get_size(
+	     section_descriptor->data_stream,
+	     data_size,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve data stream size.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
+/* Retrieves the data range
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_section_descriptor_get_data_range(
+     libexe_section_descriptor_t *section_descriptor,
+     off64_t *data_offset,
+     size64_t *data_size,
+     libcerror_error_t **error )
+{
+	static char *function = "libexe_section_descriptor_get_data_range";
+	uint32_t segment_flags = 0;
+	int segment_file_index = 0;
+
+	if( section_descriptor == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section descriptor.",
+		 function );
+
+		return( -1 );
+	}
+	if( libfdata_stream_get_segment_by_index(
+	     section_descriptor->data_stream,
+	     0,
+	     &segment_file_index,
+	     data_offset,
+	     data_size,
+	     &segment_flags,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve segment from data stream.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Sets the data range
  * Returns 1 if successful or -1 on error
  */

@@ -62,6 +62,17 @@ int libexe_section_descriptor_free(
      libexe_section_descriptor_t **section_descriptor,
      libcerror_error_t **error );
 
+int libexe_section_descriptor_get_data_size(
+     libexe_section_descriptor_t *section_descriptor,
+     size64_t *data_size,
+     libcerror_error_t **error );
+
+int libexe_section_descriptor_get_data_range(
+     libexe_section_descriptor_t *section_descriptor,
+     off64_t *data_offset,
+     size64_t *data_size,
+     libcerror_error_t **error );
+
 int libexe_section_descriptor_set_data_range(
      libexe_section_descriptor_t *section_descriptor,
      off64_t data_offset,

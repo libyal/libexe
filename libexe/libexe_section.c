@@ -797,19 +797,8 @@ int libexe_section_get_size(
 	}
 	internal_section = (libexe_internal_section_t *) section;
 
-	if( internal_section->section_descriptor == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid section - missing section descriptor.",
-		 function );
-
-		return( -1 );
-	}
-	if( libfdata_stream_get_size(
-	     internal_section->section_descriptor->data_stream,
+	if( libexe_section_descriptor_get_data_size(
+	     internal_section->section_descriptor,
 	     size,
 	     error ) != 1 )
 	{
@@ -817,7 +806,7 @@ int libexe_section_get_size(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve section data stream size.",
+		 "%s: unable to retrieve section descriptor data size.",
 		 function );
 
 		return( -1 );
