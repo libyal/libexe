@@ -13,6 +13,9 @@ Format support:
 * NE executable
 * LE executable
 
+20141029
+* bug fix in Python-bindings
+
 20141026
 * changes for deployment
 * worked on data directory support
