@@ -24,13 +24,8 @@
 #include <memory.h>
 #include <types.h>
 
-#if defined( HAVE_LOCAL_LIBBFIO )
-#include <libbfio_definitions.h>
-#elif defined( HAVE_LIBBFIO_H )
-#include <libbfio.h>
-#endif
-
 #include "exeoutput.h"
+#include "exetools_libbfio.h"
 #include "exetools_libexe.h"
 #include "exetools_libuna.h"
 

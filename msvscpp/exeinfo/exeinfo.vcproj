@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\exetools\exetools_libbfio.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\exetools\exetools_libcerror.h"
 				>
 			</File>

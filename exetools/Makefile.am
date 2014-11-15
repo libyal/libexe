@@ -25,6 +25,7 @@ bin_PROGRAMS = \
 exeinfo_SOURCES = \
 	exeinfo.c \
 	exeoutput.c exeoutput.h \
+	exetools_libbfio.h \
 	exetools_libcerror.h \
 	exetools_libclocale.h \
 	exetools_libcnotify.h \
