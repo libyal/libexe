@@ -13,6 +13,9 @@ Format support:
 * NE executable
 * LE executable
 
+20141117
+* code clean up
+
 20141029
 * bug fix in Python-bindings
 
