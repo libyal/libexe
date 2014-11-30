@@ -73,7 +73,7 @@ int libexe_set_codepage(
      int codepage,
      libexe_error_t **error );
 
-/* Determines if a file is a Nickfile (check for the EXE file signature)
+/* Determines if a file contains an EXE file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBEXE_EXTERN \
@@ -82,24 +82,28 @@ int libexe_check_file_signature(
      libexe_error_t **error );
 
 #if defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE )
-/* Determines if a file is a Nickfile (check for the EXE file signature)
+
+/* Determines if a file contains an EXE file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBEXE_EXTERN \
 int libexe_check_file_signature_wide(
      const wchar_t *filename,
      libexe_error_t **error );
-#endif
+
+#endif /* defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBEXE_HAVE_BFIO )
-/* Determines if a file is a Nickfile (check for the EXE file signature) using a Basic File IO (bfio) handle
+
+/* Determines if a file contains an EXE file signature using a Basic File IO (bfio) handle
  * Returns 1 if true, 0 if not or -1 on error
  */
 LIBEXE_EXTERN \
 int libexe_check_file_signature_file_io_handle(
      libbfio_handle_t *file_io_handle,
      libexe_error_t **error );
-#endif
+
+#endif /* defined( LIBEXE_HAVE_BFIO ) */
 
 /* -------------------------------------------------------------------------
  * Notify functions
@@ -221,6 +225,7 @@ int libexe_file_open(
      libexe_error_t **error );
 
 #if defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE )
+
 /* Opens a file
  * Returns 1 if successful or -1 on error
  */
@@ -230,9 +235,11 @@ int libexe_file_open_wide(
      const wchar_t *filename,
      int access_flags,
      libexe_error_t **error );
-#endif
+
+#endif /* defined( LIBEXE_HAVE_WIDE_CHARACTER_TYPE ) */
 
 #if defined( LIBEXE_HAVE_BFIO )
+
 /* Opens a file using a Basic File IO (bfio) handle
  * Returns 1 if successful or -1 on error
  */
@@ -242,7 +249,8 @@ int libexe_file_open_file_io_handle(
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libexe_error_t **error );
-#endif
+
+#endif /* defined( LIBEXE_HAVE_BFIO ) */
 
 /* Closes a file
  * Returns 0 if successful or -1 on error
@@ -443,6 +451,7 @@ int libexe_section_get_virtual_address(
      libexe_error_t **error );
 
 #if defined( LIBEXE_HAVE_BFIO )
+
 /* Retrieves the section data file io handle
  * Returns 1 if successful or -1 on error
  */
@@ -451,7 +460,8 @@ int libexe_section_get_data_file_io_handle(
      libexe_section_t *section,
      libbfio_handle_t **file_io_handle,
      libexe_error_t **error );
-#endif
+
+#endif /* defined( LIBEXE_HAVE_BFIO ) */
 
 #if defined( __cplusplus )
 }

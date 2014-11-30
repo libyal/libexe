@@ -103,7 +103,7 @@ int libexe_set_codepage(
 
 #endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
-/* Determines if a file is a PPF file (check for the EXE file signature)
+/* Determines if a file contains an EXE file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libexe_check_file_signature(
@@ -210,7 +210,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Determines if a file is a EXE file (check for the EXE file signature)
+/* Determines if a file contains an EXE file signature
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libexe_check_file_signature_wide(
@@ -317,7 +317,7 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Determines if a file is a EXE file (check for the EXE file signature) using a Basic File IO (bfio) handle
+/* Determines if a file contains an EXE file signature using a Basic File IO (bfio) handle
  * Returns 1 if true, 0 if not or -1 on error
  */
 int libexe_check_file_signature_file_io_handle(
