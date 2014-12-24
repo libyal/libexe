@@ -157,10 +157,8 @@ PyGetSetDef pyexe_section_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyexe_section_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyexe.section",
 	/* tp_basicsize */
@@ -341,8 +339,9 @@ int pyexe_section_init(
 void pyexe_section_free(
       pyexe_section_t *pyexe_section )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_section_free";
+	libcerror_error_t *error    = NULL;
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyexe_section_free";
 
 	if( pyexe_section == NULL )
 	{
@@ -353,29 +352,32 @@ void pyexe_section_free(
 
 		return;
 	}
-	if( pyexe_section->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid section - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyexe_section->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_TypeError,
-		 "%s: invalid section - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyexe_section->section == NULL )
 	{
 		PyErr_Format(
 		 PyExc_TypeError,
 		 "%s: invalid section - missing libexe section.",
+		 function );
+
+		return;
+	}
+	ob_type = Py_TYPE(
+	           pyexe_section );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -398,7 +400,7 @@ void pyexe_section_free(
 		Py_DecRef(
 		 (PyObject *) pyexe_section->file_object );
 	}
-	pyexe_section->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyexe_section );
 }
 
@@ -414,6 +416,7 @@ PyObject *pyexe_section_read_buffer(
 	PyObject *string_object     = NULL;
 	static char *function       = "pyexe_section_read_buffer";
 	static char *keyword_list[] = { "size", NULL };
+	char *buffer                = NULL;
 	ssize_t read_count          = 0;
 	int read_size               = -1;
 
@@ -455,16 +458,26 @@ PyObject *pyexe_section_read_buffer(
 
 		return( NULL );
 	}
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromStringAndSize(
+	                 NULL,
+	                 read_size );
+
+	buffer = PyBytes_AsString(
+	          string_object );
+#else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
 
+	buffer = PyString_AsString(
+	          string_object );
+#endif
 	Py_BEGIN_ALLOW_THREADS
 
 	read_count = libexe_section_read_buffer(
 	              pyexe_section->section,
-	              PyString_AsString(
-	               string_object ),
+	              (uint8_t *) buffer,
 	              (size_t) read_size,
 	              &error );
 
@@ -488,9 +501,15 @@ PyObject *pyexe_section_read_buffer(
 	}
 	/* Need to resize the string here in case read_size was not fully read.
 	 */
+#if PY_MAJOR_VERSION >= 3
+	if( _PyBytes_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+#else
 	if( _PyString_Resize(
 	     &string_object,
 	     (Py_ssize_t) read_count ) != 0 )
+#endif
 	{
 		Py_DecRef(
 		 (PyObject *) string_object );
@@ -512,6 +531,7 @@ PyObject *pyexe_section_read_buffer_at_offset(
 	PyObject *string_object     = NULL;
 	static char *function       = "pyexe_section_read_buffer_at_offset";
 	static char *keyword_list[] = { "size", "offset", NULL };
+	char *buffer                = NULL;
 	off64_t read_offset         = 0;
 	ssize_t read_count          = 0;
 	int read_size               = 0;
@@ -566,16 +586,26 @@ PyObject *pyexe_section_read_buffer_at_offset(
 	}
 	/* Make sure the data fits into the memory buffer
 	 */
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromStringAndSize(
+	                 NULL,
+	                 read_size );
+
+	buffer = PyBytes_AsString(
+	          string_object );
+#else
 	string_object = PyString_FromStringAndSize(
 	                 NULL,
 	                 read_size );
 
+	buffer = PyString_AsString(
+	          string_object );
+#endif
 	Py_BEGIN_ALLOW_THREADS
 
 	read_count = libexe_section_read_buffer_at_offset(
 	              pyexe_section->section,
-	              PyString_AsString(
-	               string_object ),
+	              (uint8_t *) buffer,
 	              (size_t) read_size,
 	              (off64_t) read_offset,
 	              &error );
@@ -600,9 +630,15 @@ PyObject *pyexe_section_read_buffer_at_offset(
 	}
 	/* Need to resize the string here in case read_size was not fully read.
 	 */
+#if PY_MAJOR_VERSION >= 3
+	if( _PyBytes_Resize(
+	     &string_object,
+	     (Py_ssize_t) read_count ) != 0 )
+#else
 	if( _PyString_Resize(
 	     &string_object,
 	     (Py_ssize_t) read_count ) != 0 )
+#endif
 	{
 		Py_DecRef(
 		 (PyObject *) string_object );

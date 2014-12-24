@@ -57,10 +57,8 @@ PySequenceMethods pyexe_sections_sequence_methods = {
 };
 
 PyTypeObject pyexe_sections_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyexe._sections",
 	/* tp_basicsize */
@@ -259,7 +257,8 @@ int pyexe_sections_init(
 void pyexe_sections_free(
       pyexe_sections_t *pyexe_sections )
 {
-	static char *function = "pyexe_sections_free";
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyexe_sections_free";
 
 	if( pyexe_sections == NULL )
 	{
@@ -270,20 +269,23 @@ void pyexe_sections_free(
 
 		return;
 	}
-	if( pyexe_sections->ob_type == NULL )
+	ob_type = Py_TYPE(
+	           pyexe_sections );
+
+	if( ob_type == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections - missing ob_type.",
+		 "%s: missing ob_type.",
 		 function );
 
 		return;
 	}
-	if( pyexe_sections->ob_type->tp_free == NULL )
+	if( ob_type->tp_free == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections - invalid ob_type - missing tp_free.",
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -293,7 +295,7 @@ void pyexe_sections_free(
 		Py_DecRef(
 		 (PyObject *) pyexe_sections->file_object );
 	}
-	pyexe_sections->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyexe_sections );
 }
 

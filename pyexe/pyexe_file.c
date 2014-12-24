@@ -158,10 +158,8 @@ PyGetSetDef pyexe_file_object_get_set_definitions[] = {
 };
 
 PyTypeObject pyexe_file_type_object = {
-	PyObject_HEAD_INIT( NULL )
+	PyVarObject_HEAD_INIT( NULL, 0 )
 
-	/* ob_size */
-	0,
 	/* tp_name */
 	"pyexe.file",
 	/* tp_basicsize */
@@ -385,9 +383,10 @@ int pyexe_file_init(
 void pyexe_file_free(
       pyexe_file_t *pyexe_file )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "pyexe_file_free";
-	int result               = 0;
+	libcerror_error_t *error    = NULL;
+	struct _typeobject *ob_type = NULL;
+	static char *function       = "pyexe_file_free";
+	int result                  = 0;
 
 	if( pyexe_file == NULL )
 	{
@@ -398,29 +397,32 @@ void pyexe_file_free(
 
 		return;
 	}
-	if( pyexe_file->ob_type == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - missing ob_type.",
-		 function );
-
-		return;
-	}
-	if( pyexe_file->ob_type->tp_free == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - invalid ob_type - missing tp_free.",
-		 function );
-
-		return;
-	}
 	if( pyexe_file->file == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
 		 "%s: invalid file - missing libexe file.",
+		 function );
+
+		return;
+	}
+	ob_type = Py_TYPE(
+	           pyexe_file );
+
+	if( ob_type == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: missing ob_type.",
+		 function );
+
+		return;
+	}
+	if( ob_type->tp_free == NULL )
+	{
+		PyErr_Format(
+		 PyExc_ValueError,
+		 "%s: invalid ob_type - missing tp_free.",
 		 function );
 
 		return;
@@ -444,7 +446,7 @@ void pyexe_file_free(
 		libcerror_error_free(
 		 &error );
 	}
-	pyexe_file->ob_type->tp_free(
+	ob_type->tp_free(
 	 (PyObject*) pyexe_file );
 }
 
@@ -505,23 +507,18 @@ PyObject *pyexe_file_open(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *exception_string    = NULL;
-	PyObject *exception_traceback = NULL;
-	PyObject *exception_type      = NULL;
-	PyObject *exception_value     = NULL;
-	PyObject *string_object       = NULL;
-	libcerror_error_t *error      = NULL;
-	static char *function         = "pyexe_file_open";
-	static char *keyword_list[]   = { "filename", "mode", NULL };
-	const char *filename_narrow   = NULL;
-	char *error_string            = NULL;
-	char *mode                    = NULL;
-	int result                    = 0;
+	PyObject *string_object      = NULL;
+	libcerror_error_t *error     = NULL;
+	static char *function        = "pyexe_file_open";
+	static char *keyword_list[]  = { "filename", "mode", NULL };
+	const char *filename_narrow  = NULL;
+	char *mode                   = NULL;
+	int result                   = 0;
 
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	const wchar_t *filename_wide  = NULL;
+	const wchar_t *filename_wide = NULL;
 #else
-	PyObject *utf8_string_object  = NULL;
+	PyObject *utf8_string_object = NULL;
 #endif
 
 	if( pyexe_file == NULL )
@@ -567,34 +564,10 @@ PyObject *pyexe_file_open(
 
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-		                    exception_value );
-
-		error_string = PyString_AsString(
-		                exception_string );
-
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type unicode.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyexe_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type unicode.",
+		 function );
 
 		return( NULL );
 	}
@@ -620,40 +593,20 @@ PyObject *pyexe_file_open(
 
 		if( utf8_string_object == NULL )
 		{
-			PyErr_Fetch(
-			 &exception_type,
-			 &exception_value,
-			 &exception_traceback );
-
-			exception_string = PyObject_Repr(
-					    exception_value );
-
-			error_string = PyString_AsString(
-					exception_string );
-
-			if( error_string != NULL )
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8 with error: %s.",
-				 function,
-				 error_string );
-			}
-			else
-			{
-				PyErr_Format(
-				 PyExc_RuntimeError,
-				 "%s: unable to convert unicode string to UTF-8.",
-				 function );
-			}
-			Py_DecRef(
-			 exception_string );
+			pyexe_error_fetch_and_raise(
+			 PyExc_RuntimeError,
+			 "%s: unable to convert unicode string to UTF-8.",
+			 function );
 
 			return( NULL );
 		}
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   utf8_string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   utf8_string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libexe_file_open(
@@ -687,40 +640,21 @@ PyObject *pyexe_file_open(
 	}
 	PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+	result = PyObject_IsInstance(
+		  string_object,
+		  (PyObject *) &PyBytes_Type );
+#else
 	result = PyObject_IsInstance(
 		  string_object,
 		  (PyObject *) &PyString_Type );
-
+#endif
 	if( result == -1 )
 	{
-		PyErr_Fetch(
-		 &exception_type,
-		 &exception_value,
-		 &exception_traceback );
-
-		exception_string = PyObject_Repr(
-				    exception_value );
-
-		error_string = PyString_AsString(
-				exception_string );
-
-		if( error_string != NULL )
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string with error: %s.",
-			 function,
-			 error_string );
-		}
-		else
-		{
-			PyErr_Format(
-		         PyExc_RuntimeError,
-			 "%s: unable to determine if string object is of type string.",
-			 function );
-		}
-		Py_DecRef(
-		 exception_string );
+		pyexe_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type string.",
+		 function );
 
 		return( NULL );
 	}
@@ -728,9 +662,13 @@ PyObject *pyexe_file_open(
 	{
 		PyErr_Clear();
 
+#if PY_MAJOR_VERSION >= 3
+		filename_narrow = PyBytes_AsString(
+				   string_object );
+#else
 		filename_narrow = PyString_AsString(
 				   string_object );
-
+#endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libexe_file_open(
@@ -999,9 +937,13 @@ PyObject *pyexe_file_get_ascii_codepage(
 
 		return( NULL );
 	}
+#if PY_MAJOR_VERSION >= 3
+	string_object = PyBytes_FromString(
+	                 codepage_string );
+#else
 	string_object = PyString_FromString(
 	                 codepage_string );
-
+#endif
 	if( string_object == NULL )
 	{
 		PyErr_Format(
@@ -1134,30 +1076,117 @@ PyObject *pyexe_file_set_ascii_codepage(
  */
 int pyexe_file_set_ascii_codepage_setter(
      pyexe_file_t *pyexe_file,
-     PyObject *value_object,
+     PyObject *string_object,
      void *closure PYEXE_ATTRIBUTE_UNUSED )
 {
-	char *codepage_string = NULL;
-	int result            = 0;
+	PyObject *utf8_string_object = NULL;
+	static char *function        = "pyexe_file_set_ascii_codepage_setter";
+	char *codepage_string        = NULL;
+	int result                   = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( closure )
 
-	codepage_string = PyString_AsString(
-	                   value_object );
+	PyErr_Clear();
 
-	if( codepage_string == NULL )
+	result = PyObject_IsInstance(
+	          string_object,
+	          (PyObject *) &PyUnicode_Type );
+
+	if( result == -1 )
 	{
+		pyexe_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type unicode.",
+		 function );
+
 		return( -1 );
 	}
-	result = pyexe_file_set_ascii_codepage_from_string(
-	          pyexe_file,
-	          codepage_string );
-
-	if( result != 1 )
+	else if( result != 0 )
 	{
+		/* The codepage string should only contain ASCII characters.
+		 */
+		utf8_string_object = PyUnicode_AsUTF8String(
+		                      string_object );
+
+		if( utf8_string_object == NULL )
+		{
+			pyexe_error_fetch_and_raise(
+			 PyExc_RuntimeError,
+			 "%s: unable to convert unicode string to UTF-8.",
+			 function );
+
+			return( -1 );
+		}
+#if PY_MAJOR_VERSION >= 3
+		codepage_string = PyBytes_AsString(
+				   utf8_string_object );
+#else
+		codepage_string = PyString_AsString(
+				   utf8_string_object );
+#endif
+		if( codepage_string == NULL )
+		{
+			return( -1 );
+		}
+		result = pyexe_file_set_ascii_codepage_from_string(
+		          pyexe_file,
+		          codepage_string );
+
+		if( result != 1 )
+		{
+			return( -1 );
+		}
+		return( 0 );
+	}
+	PyErr_Clear();
+
+#if PY_MAJOR_VERSION >= 3
+	result = PyObject_IsInstance(
+		  string_object,
+		  (PyObject *) &PyBytes_Type );
+#else
+	result = PyObject_IsInstance(
+		  string_object,
+		  (PyObject *) &PyString_Type );
+#endif
+	if( result == -1 )
+	{
+		pyexe_error_fetch_and_raise(
+	         PyExc_RuntimeError,
+		 "%s: unable to determine if string object is of type string.",
+		 function );
+
 		return( -1 );
 	}
-	return( 0 );
+	else if( result != 0 )
+	{
+#if PY_MAJOR_VERSION >= 3
+		codepage_string = PyBytes_AsString(
+		                   string_object );
+#else
+		codepage_string = PyString_AsString(
+		                   string_object );
+#endif
+		if( codepage_string == NULL )
+		{
+			return( -1 );
+		}
+		result = pyexe_file_set_ascii_codepage_from_string(
+			  pyexe_file,
+			  codepage_string );
+
+		if( result != 1 )
+		{
+			return( -1 );
+		}
+		return( 0 );
+	}
+	PyErr_Format(
+	 PyExc_TypeError,
+	 "%s: unsupported string object type.",
+	 function );
+
+	return( -1 );
 }
 
 /* Retrieves the number of sections
@@ -1168,6 +1197,7 @@ PyObject *pyexe_file_get_number_of_sections(
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
+	PyObject *integer_object = NULL;
 	static char *function    = "pyexe_file_get_number_of_sections";
 	int number_of_sections   = 0;
 	int result               = 0;
@@ -1205,8 +1235,14 @@ PyObject *pyexe_file_get_number_of_sections(
 
 		return( NULL );
 	}
-	return( PyInt_FromLong(
-	         (long) number_of_sections ) );
+#if PY_MAJOR_VERSION >= 3
+	integer_object = PyLong_FromLong(
+	                  (long) number_of_sections );
+#else
+	integer_object = PyInt_FromLong(
+	                  (long) number_of_sections );
+#endif
+	return( integer_object );
 }
 
 /* Retrieves a specific section by index

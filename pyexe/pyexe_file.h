@@ -105,7 +105,7 @@ PyObject *pyexe_file_set_ascii_codepage(
 
 int pyexe_file_set_ascii_codepage_setter(
      pyexe_file_t *pyexe_file,
-     PyObject *value_object,
+     PyObject *string_object,
      void *closure );
 
 PyObject *pyexe_file_get_number_of_sections(
