@@ -284,7 +284,8 @@ The COFF header is 20 bytes in size and consists of:
 | 2 | 2 | | Number of sections
 | 4 | 4 | | Creation date and time +
 Contains a POSIX time
-| 8 | 4 | | Symbol table offset | Offset relative to the start of the file or 0 if table is not present
+| 8 | 4 | | Symbol table offset +
+Offset relative to the start of the file or 0 if table is not present
 | 12 | 4 | | Number of symbols
 | 16 | 2 | | Optional header size
 | 18 | 2 | | File characteristic flags
