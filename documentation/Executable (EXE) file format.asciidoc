@@ -483,7 +483,7 @@ See section: <<dll_characteristic_flags,DLL characteristic flags>>
 | 84 | 4 | | Number of data-dictionary entries
 |===
 
-====== [windows_subsystem]Windows Subsystem
+====== [[windows_subsystem]]Windows Subsystem
 
 [cols="1,1,5",options="header"]
 |===
@@ -502,7 +502,7 @@ Device drivers or native Windows NT process
 | 12 | IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER | EFI driver that provides runtime services
 |===
 
-====== [dll_characteristic_flags]DLL characteristic flags
+====== [[dll_characteristic_flags]]DLL characteristic flags
 
 [cols="1,1,5",options="header"]
 |===
@@ -566,7 +566,7 @@ consists of:
 | 120 | 8 | | [yellow-background]*Unknown (Reserved)*
 |===
 
-====== [coff_data_directory_descriptor]The COFF data directory descriptor
+====== [[coff_data_directory_descriptor]]The COFF data directory descriptor
 The data directory descriptor is 8 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -665,7 +665,7 @@ performance. When a section contains only uninitialized data, this field should
 be 0.
 ....
 
-=== [section_characteristic_flags]Section characteristic flags
+=== [[section_characteristic_flags]]Section characteristic flags
 
 [cols="1,1,5",options="header"]
 |===
@@ -718,7 +718,7 @@ Common corresponding section name: .bss or BSS
 | 0x80000000 | IMAGE_SCN_MEM_WRITE | Can be written
 |===
 
-== [data_directories]Data directories
+== [[data_directories]]Data directories
 To calculate the data directory offset from the RVA first find the section that 
 contains the corresponding virtual address (VA) and then apply:
 ....
