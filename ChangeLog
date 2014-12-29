@@ -13,6 +13,13 @@ Format support:
 * NE executable
 * LE executable
 
+20141229
+* updated dependencies
+* updated dpkg files
+* updated gitignore
+* worked on format support
+* worked on documentation
+
 20141224
 * worked on Python 3 support
 * worked on tests

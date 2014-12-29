@@ -30,6 +30,225 @@
 
 #if defined( HAVE_DEBUG_OUTPUT )
 
+/* Prints the section characteristic flags
+ */
+void libexe_debug_print_section_characteristic_flags(
+      uint32_t section_characteristic_flag )
+{
+	if( section_characteristic_flag == 0x00000000UL )
+	{
+		libcnotify_printf(
+		 "\t0x00000000 (IMAGE_SCN_TYPE_REG)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000001UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000001 (IMAGE_SCN_TYPE_DSECT)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000002UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000002 (IMAGE_SCN_TYPE_NOLOAD)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000004UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000004 (IMAGE_SCN_TYPE_GROUP)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000008UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000008 (IMAGE_SCN_TYPE_NO_PAD)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000010UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000010 (IMAGE_SCN_TYPE_COPY)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000020UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000020 (IMAGE_SCN_CNT_CODE)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000040UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000040 (IMAGE_SCN_CNT_INITIALIZED_DATA)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000080UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000080 (IMAGE_SCN_CNT_UNINITIALIZED_DATA)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000100UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000100 (IMAGE_SCN_LNK_OTHER)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000200UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000200 (IMAGE_SCN_LNK_INFO)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000400UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000400 (IMAGE_SCN_TYPE_OVER)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00000800UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00000800 (IMAGE_SCN_LNK_REMOVE)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00001000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00001000 (IMAGE_SCN_LNK_COMDAT)\n" );
+	}
+
+	if( ( section_characteristic_flag & 0x00008000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00008000 (IMAGE_SCN_MEM_FARDATA)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00010000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00010000 (IMAGE_SCN_MEM_PURGEABLE)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00020000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00020000 (IMAGE_SCN_MEM_16BIT)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00040000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00040000 (IMAGE_SCN_MEM_LOCKED)\n" );
+	}
+	if( ( section_characteristic_flag & 0x00080000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x00080000 (IMAGE_SCN_MEM_PRELOAD)\n" );
+	}
+	switch( section_characteristic_flag & 0x00f00000UL )
+	{
+		case 0x00100000UL:
+			libcnotify_printf(
+			 "\t0x00100000 (IMAGE_SCN_ALIGN_1BYTES)\n" );
+			break;
+
+		case 0x00200000UL:
+			libcnotify_printf(
+			 "\t0x00200000 (IMAGE_SCN_ALIGN_2BYTES)\n" );
+			break;
+
+		case 0x00300000UL:
+			libcnotify_printf(
+			 "\t0x00300000 (IMAGE_SCN_ALIGN_4BYTES)\n" );
+			break;
+
+		case 0x00400000UL:
+			libcnotify_printf(
+			 "\t0x00400000 (IMAGE_SCN_ALIGN_8BYTES)\n" );
+			break;
+
+		case 0x00500000UL:
+			libcnotify_printf(
+			 "\t0x00500000 (IMAGE_SCN_ALIGN_16BYTES)\n" );
+			break;
+
+		case 0x00600000UL:
+			libcnotify_printf(
+			 "\t0x00600000 (IMAGE_SCN_ALIGN_32BYTES)\n" );
+			break;
+
+		case 0x00700000UL:
+			libcnotify_printf(
+			 "\t0x00700000 (IMAGE_SCN_ALIGN_64BYTES)\n" );
+			break;
+
+		case 0x00800000UL:
+			libcnotify_printf(
+			 "\t0x00800000 (IMAGE_SCN_ALIGN_128BYTES)\n" );
+			break;
+
+		case 0x00900000UL:
+			libcnotify_printf(
+			 "\t0x00900000 (IMAGE_SCN_ALIGN_256BYTES)\n" );
+			break;
+
+		case 0x00a00000UL:
+			libcnotify_printf(
+			 "\t0x00a00000 (IMAGE_SCN_ALIGN_512BYTES)\n" );
+			break;
+
+		case 0x00b00000UL:
+			libcnotify_printf(
+			 "\t0x00b00000 (IMAGE_SCN_ALIGN_1024BYTES)\n" );
+			break;
+
+		case 0x00c00000UL:
+			libcnotify_printf(
+			 "\t0x00c00000 (IMAGE_SCN_ALIGN_2048BYTES)\n" );
+			break;
+
+		case 0x00d00000UL:
+			libcnotify_printf(
+			 "\t0x00d00000 (IMAGE_SCN_ALIGN_4096BYTES)\n" );
+			break;
+
+		case 0x00e00000UL:
+			libcnotify_printf(
+			 "\t0x00e00000 (IMAGE_SCN_ALIGN_8192BYTES)\n" );
+			break;
+
+		default:
+			break;
+	}
+
+	if( ( section_characteristic_flag & 0x01000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x01000000 (IMAGE_SCN_LNK_NRELOC_OVFL)\n" );
+	}
+	if( ( section_characteristic_flag & 0x02000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x02000000 (IMAGE_SCN_MEM_DISCARDABLE)\n" );
+	}
+	if( ( section_characteristic_flag & 0x04000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x04000000 (IMAGE_SCN_MEM_NOT_CACHED)\n" );
+	}
+	if( ( section_characteristic_flag & 0x08000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x08000000 (IMAGE_SCN_MEM_NOT_PAGED)\n" );
+	}
+	if( ( section_characteristic_flag & 0x10000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x10000000 (IMAGE_SCN_MEM_SHARED)\n" );
+	}
+	if( ( section_characteristic_flag & 0x20000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x20000000 (IMAGE_SCN_MEM_EXECUTE)\n" );
+	}
+	if( ( section_characteristic_flag & 0x40000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x40000000 (IMAGE_SCN_MEM_READ)\n" );
+	}
+	if( ( section_characteristic_flag & 0x80000000UL ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x80000000 (IMAGE_SCN_MEM_WRITE)\n" );
+	}
+}
+
 /* Prints the read offsets
  * Returns 1 if successful or -1 on error
  */

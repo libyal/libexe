@@ -15,7 +15,7 @@ AM_CPPFLAGS = \
 	@LIBEXE_DLL_IMPORT@
 
 if HAVE_PYTHON
-TESTS_PYEXE  = \
+TESTS_PYEXE = \
 	test_pyexe_set_ascii_codepage.sh \
 	test_pyexe_open_close.sh
 endif

@@ -2489,6 +2489,10 @@ int libexe_io_handle_read_section_table(
 			 function,
 			 section_index,
 			 value_32bit );
+			libexe_debug_print_section_characteristic_flags(
+			 value_32bit );
+			libcnotify_printf(
+			 "\n" );
 
 			libcnotify_printf(
 			 "\n" );

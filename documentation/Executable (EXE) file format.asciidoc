@@ -1,0 +1,1420 @@
+= MZ, PE-COFF executable file format (EXE)
+Analysis of EXE
+
+:numbered!:
+[abstract]
+== Summary
+The Executable (EXE) format is collection of different formats supported used 
+by various operating systems like DOS, Windows, OS/2 and emulator like Wine. 
+The Executable (EXE) format began with MZ format and was later extended with 
+formats like PE/COFF.
+
+This document is intended as a working document for the Executable (EXE) 
+specification in particular the Windows Resource format with respect to 
+EventLog messages. Which should allow existing Open Source forensic tooling to 
+be able to process this file type.
+
+Special thanks to A. Schuster for his excellent work on the WEVT_TEMPLATE 
+resource format.
+
+[preface]
+== Document information
+[cols="1,5"]
+|===
+| Author(s): | Joachim Metz <joachim.metz@gmail.com>
+| Abstract: | This document contains information about the MZ, PE-COFF executable format
+| Classification: | Public
+| Keywords: | Executable, EXE, MZ, PE-COFF
+|===
+
+[preface]
+== License
+....
+Copyright (c) 2011-2014, Joachim Metz <joachim.metz@gmail.com>.
+Permission is granted to copy, distribute and/or modify this document under the 
+terms of the GNU Free Documentation License, Version 1.3 or any later version 
+published by the Free Software Foundation; with no Invariant Sections, no 
+Front-Cover Texts, and no Back-Cover Texts. A copy of the license is included 
+in the section entitled "GNU Free Documentation License".
+....
+
+[preface]
+== Revision history
+[cols="1,1,1,5",options="header"]
+|===
+| Version | Author | Date | Comments
+| 0.0.1 | J.B. Metz | October 2011 | Initial version.
+| 0.0.2 | J.B. Metz | February 2012 | Additional information.
+| 0.0.3 | J.B. Metz | March 2012 | Added information about string resources.
+| 0.0.4 | J.B. Metz | September 2012 | Additional information.
+| 0.0.5 | J.B. Metz | October 2012 | Additional information regarding MUI resource.
+| 0.0.6 | J.B. Metz | October 2012 | Additional information regarding WEVT_TEMPLATE resource.
+| 0.0.7 | J.B. Metz | November 2012 | Additional information regarding WEVT_TEMPLATE resource.
+| 0.0.8 | J.B. Metz | December 2012 | Additional information regarding WEVT_TEMPLATE resource.
+| 0.0.9 | J.B. Metz | February 2013 | Additional information, with thanks to W. Harris.
+| 0.0.10 | J.B. Metz | May 2013 | Additional information about VERSION resource.
+| 0.0.11 | J.B. Metz | February 2014 | Additional information about PDB information in PE/COFF.
+| 0.0.12 | J.B. Metz | May 2014 | Additional information about rich signature header.
+| 0.0.13 | J.B. Metz | December 2014 | Switched to asccidoc format.
+|===
+
+:numbered:
+== Overview
+The Executable (EXE) format is collection of different formats supported used 
+by various operating systems like DOS, Windows, OS/2 and emulator like Wine. 
+The Executable (EXE) format began with MZ format and was later extended with 
+formats like PE/COFF.
+
+A PE/COFF file consists of:
+
+* MZ file header
+* COFF header
+* COFF optional header
+** the standard part
+** the Windows NT part
+** the data directories part
+* section table
+* data
+** section data
+** data directories
+
+[cols="1,5",options="header"]
+|===
+| Characteristics | Description
+| Byte order | little-endian
+| Date and time values | POSIX timestamp in UTC
+| Character strings | ASCII strings are Single Byte Character (SBC) or Multi Byte Character (MBC) string stored with a codepage. Sometimes referred to as ANSI string representation. +
+Though technically maybe incorrect, this document will use term (extended) ASCII string. +
+Unicode strings are stored in UTF-16 little-endian without the byte order mark (BOM).
+|===
+
+On a Windows system "dumpbin" be used to determine more about the metadata of 
+an executable. E.g.
+....
+dumpbin.exe /HEADERS file.exe
+....
+
+This tool is part of the Windows SDK.
+
+== File header
+=== The MZ file header
+The MZ file header is 28 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | "MZ" | Signature
+| 2 | 2 | | Number of bytes in last 512-byte page of executable
+| 4 | 2 | | Total number of 512-byte pages in executable
+| 6 | 2 | | Number of relocation entries
+| 8 | 2 | | Number of header paragraphs
+| 10 | 2 | | Minimum allocated paragraphs +
+The minimum amount of memory allocated in addition to the code size
+| 12 | 2 | | Maximum allocated paragraphs +
+The maximum amount of memory allocated in addition to the code size
+| 14 | 2 | | Initial stack segment +
+This value is relative to start of the file and is added to the SS register on execution
+| 16 | 2 | | Initial stack pointer +
+This value is loaded in the SP register on execution
+| 18 | 2 | | Checksum +
+[yellow-background]*TODO*
+| 20 | 4 | | Entry point +
+This value is relative to start of the file and is added to the CS:IP registers
+| 24 | 2 | | Relocation table offset +
+The offset value is relative to the start of the file
+| 26 | 2 | | Overlay number
+|===
+
+[yellow-background]*If relocation table offset >= 64*
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 28 | 32 | | [yellow-background]*Unknown* +
+[yellow-background]*Used for the relocation entries in MZ executables*
+| 60 | 4 | | Offset to extended header +
+0 if there is no extended header
+| 64 | 112 | | MS DOS stub executable code
+|===
+
+[yellow-background]*Relocation entry is 16-bit?*
+
+=== LE extended header
+The mixed 16/32-bit Linear Executable was introduced in OS/2 2.0. It can be 
+identifier by the "LE" signature in the extended header.
+
+The LE extended header is X bytes of size and consists of:
+
+[yellow-background]*TODO add text*
+
+=== LX extended header
+The 32-bit Linear Executable was introduced in OS/2 2.0. It can be identifier 
+by the "LX" signature in the extended header.
+
+The LX extended header is X bytes of size and consists of:
+
+[yellow-background]*TODO add text*
+
+=== NE extended header
+The 16-bit New Executable was introduced in MS-DOS 4.0. It can be identifier by 
+the "NE" signature in the extended header.
+
+The NE (extended) header is 64 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | "NE" | Signature
+| 2 | 1 | | Linker major version
+| 3 | 1 | | Linker minor version
+| 4 | 2 | | Entry table offset
+| 6 | 2 | | Entry table size
+| 8 | 4 | | [yellow-background]*File load CRC* +
+[yellow-background]*0 in Borland's TPW*
+| 12 | 1 | | Program flags (bitvalues)
+| 13 | 1 | | Application flags (bitvalues)
+| 14 | 1 | | Auto data segment index
+| 15 | 1 | | [yellow-background]*Unknown*
+| 16 | 2 | | Initial local heap size
+| 18 | 2 | | Initial stack size
+| 20 | 4 | | Entry point (CS:IP) +
+CS is index into segment table
+| 24 | 4 | | Initial stack pointer (SS:SP) +
+SS is index into segment table
+| 28 | 2 | | Segment count
+| 30 | 2 | | Module reference count
+| 32 | 2 | | Size of nonresident names table in bytes
+| 34 | 2 | | Offset of segment table
+| 36 | 2 | | Offset of resource table
+| 38 | 2 | | Offset of resident names table
+| 40 | 2 | | Offset of module reference table
+| 42 | 2 | | Offset of imported names table +
+Contains an array of counted strings, terminated with a string of length 0
+| 44 | 4 | | Offset from start of file to nonresident names table
+| 48 | 2 | | Count of movable entry point listed in entry table
+| 50 | 2 | | File alignment size shift count +
+0 is equivalent to 9 (default 512-byte pages)
+| 52 | 2 | | Number of resource table entries
+| 54 | 1 | | Target operating system +
+0 => Unknown +
+1 => OS/2 +
+2 => Windows +
+3 => European MS-DOS 4.x +
+4 => Windows 386 +
+5 => BOSS (Borland Operating System Services)
+| 55 | 1 | | Other OS/2 EXE flags (bitmap)
+| 56 | 2 | | Offset to return thunks or start of [yellow-background]*gangload area*?
+| 58 | 2 | | Offset to segment reference thunks or length of gangload area
+| 50 | 2 | | Minimum code swap area size
+| 62 | 1 | | Expected Windows minor version
+| 63 | 1 | | Expected Windows major version
+|===
+
+==== Program flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x03 | | Dgroup type +
+0 => None +
+1 => Single shared +
+2 => multiple +
+3 => null
+| 0x04 | | Global initialization
+| 0x08 | | Protected mode only
+| 0x10 | | 8086 instructions
+| 0x20 | | 80286 instructions
+| 0x40 | | 80386 instructions
+| 0x80 | | 80x87 instructions
+|===
+
+==== Application flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x07 | | Application type +
+1 => Full screen (not aware of Windows/P.M. API) +
+2 => Compatible with Windows/P.M. API +
+3 => Uses Windows/P.M. API
+| 0x08 | | OS/2 family application
+| 0x10 | | [yellow-background]*Unknown (Reserved?)*
+| 0x20 | | Errors in image/executable
+| 0x40 | | [yellow-background]*Unknown (non-conforming program)*
+| 0x80 | | DLL or driver +
+(SS:SP info invalid, CS:IP points at FAR init routine called with AX=module handle which returns AX=0000h on failure, AX nonzero on successful initialization)
+|===
+
+==== Other OS/2 EXE flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x01 | | Long filename support
+| 0x02 | | 2.x protected mode
+| 0x04 | | 2.x proportional fonts
+| 0x08 | | Executable has gangload area
+| 0xf0 | | [yellow-background]*Unknown*
+|===
+
+=== PE/COFF extended header
+The 32-bit Portable Executable (PE) was introduced in Windows NT. In later 
+versions of Windows a 64-bit extension (PE32+) was added. PE is based on the 
+Unix Common Object File Format (COFF) and therefore often referred to as 
+PE/COFF.
+
+The PE/COFF extended header consist of a PE signature followed by a COFF header.
+
+==== The PE signature
+The PE signature is 4 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "PE\x0\x0" | Signature
+|===
+
+==== COFF header
+The COFF header is 20 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Target architecture type
+| 2 | 2 | | Number of sections
+| 4 | 4 | | Creation date and time +
+Contains a POSIX time
+| 8 | 4 | | Symbol table offset | Offset relative to the start of the file or 0 if table is not present
+| 12 | 4 | | Number of symbols
+| 16 | 2 | | Optional header size
+| 18 | 2 | | File characteristic flags
+|===
+
+==== Target architecture type
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0000 | IMAGE_FILE_MACHINE_UNKNOWN | Unknown or any machine type
+| | | 
+| 0x014c | IMAGE_FILE_MACHINE_I386 | Intel 386 (or compatible) or later
+| | | 
+| 0x0162 | IMAGE_FILE_MACHINE_R3000 | 
+| | | 
+| 0x0166 | IMAGE_FILE_MACHINE_R4000 | MIPS little-endian
+| | | 
+| 0x0168 | IMAGE_FILE_MACHINE_R10000 | 
+| | | 
+| 0x0184 | IMAGE_FILE_MACHINE_ALPHA | Alpha AXP
+| | | 
+| 0x01a2 | IMAGE_FILE_MACHINE_SH3 | Hitachi SH3
+| | | 
+| 0x01a6 | IMAGE_FILE_MACHINE_SH4 | Hitachi SH4
+| | | 
+| 0x01c0 | IMAGE_FILE_MACHINE_ARM | Arm
+| | | 
+| 0x01c2 | IMAGE_FILE_MACHINE_THUMB | 
+| | | 
+| 0x01f0 | IMAGE_FILE_MACHINE_POWERPC | Power PC little-endian
+| | | 
+| 0x0200 | IMAGE_FILE_MACHINE_IA64 | Intel IA64
+| | | 
+| 0x0266 | IMAGE_FILE_MACHINE_MIPS16 | 
+| | | 
+| 0x0268 | IMAGE_FILE_MACHINE_M68K | Motorola 68000 series.
+| | | 
+| 0x0284 | IMAGE_FILE_MACHINE_ALPHA64 | 64-bit Alpha AXP
+| | | 
+| 0x0366 | IMAGE_FILE_MACHINE_MIPSFPU | MIPS with FPU
+| | | 
+| 0x0466 | IMAGE_FILE_MACHINE_MIPSFPU16 | MIPS16 with FPU
+|===
+
+==== File characteristic flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | IMAGE_FILE_RELOCS_STRIPPED | Does not contain base relocations
+| 0x0002 | IMAGE_FILE_EXECUTABLE_IMAGE | Is an executable (image file)
+| 0x0004 | IMAGE_FILE_LINE_NUMS_STRIPPED | Line numbers have been removed
+| 0x0008 | IMAGE_FILE_LOCAL_SYMS_STRIPPED | Symbol table entries for local symbols have been removed
+| 0x0010 | IMAGE_FILE_AGGRESSIVE_WS_TRIM | Aggressively trim working set
+| 0x0020 | IMAGE_FILE_LARGE_ADDRESS_AWARE | Application can handle > 2 GiB addresses
+| 0x0040 | IMAGE_FILE_16BIT_MACHINE | [yellow-background]*Unknown (reserved for future use)*
+| 0x0080 | IMAGE_FILE_BYTES_REVERSED_LO | [yellow-background]*Little-endian*
+| 0x0100 | IMAGE_FILE_32BIT_MACHINE | [yellow-background]*32-bit architecture*
+| 0x0200 | IMAGE_FILE_DEBUG_STRIPPED | Debugging information removed from file
+| 0x0400 | IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP | If the file is on removable media, copy and run from swap file
+| 0x1000 | IMAGE_FILE_SYSTEM | Is a system [yellow-background]*file*, not a user program
+| 0x2000 | IMAGE_FILE_DLL | Is a dynamic-link library (DLL)
+| 0x4000 | IMAGE_FILE_UP_SYSTEM_ONLY | [yellow-background]*File should be run only on a UP machine*
+| 0x8000 | IMAGE_FILE_BYTES_REVERSED_HI | [yellow-background]*Big-endian*
+|===
+
+==== The COFF optional (PE) header
+The COFF optional header or PE header is variable of size and consists of:
+
+* the standard part
+* the Windows NT part
+* the data directories part
+
+===== The COFF optional header - standard part
+The COFF optional header - standard part is 24 or 28 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Signature +
+0x0107 => ROM image +
+0x010b => PE32 executable file +
+0x020b => PE32+ executable file
+| 2 | 1 | | Major linker version
+| 3 | 1 | | Minor linker version
+| 4 | 4 | | Text sections size +
+Size of the code +
+[yellow-background]*MSB contains flags? 0xd0000000*
+| 8 | 4 | | Initialized data sections size +
+Size of the initialized data size
+| 12 | 4 | | Uninitialized data sections size +
+Size of the uninitialized data size (BSS)
+| 16 | 4 | | Entry point offset +
+The offset is relative to the start of the file or 0 if none
+| 20 | 4 | | Code base offset +
+Contains the offset is relative to the start of the file of the start of the text section (code)
+4+| _If the signature is PE32_
+| 24 | 4 | | Data base offset +
+Contains the offset is relative to the start of the file of the start of the initialized data section (data)
+|===
+
+===== The PE32 COFF optional header - Windows NT part
+The PE32 COFF optional header - Windows NT part is 68 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Image base offset
+| 4 | 4 | | Section alignment size
+| 8 | 4 | | File alignment size
+| 12 | 2 | | Major operating system version
+| 14 | 2 | | Minor operating system version
+| 16 | 2 | | Major image version
+| 18 | 2 | | Minor image version
+| 20 | 2 | | Major subsystem version
+| 22 | 2 | | Minor subsystem version
+| 24 | 4 | | [yellow-background]*Unknown (Win32VersionValue)* +
+[yellow-background]*Must be 0*
+| 28 | 4 | | Image size
+| 32 | 4 | | Headers size
+| 36 | 4 | | Checksum
+| 40 | 2 | | Subsystem +
+See section: <<windows_subsystem,Windows Subsystem>>
+| 42 | 2 | | DLL characteristic flags +
+See section: <<dll_characteristic_flags,DLL characteristic flags>>
+| 44 | 4 | | Stack reservation size
+| 48 | 4 | | Stack commit size
+| 52 | 4 | | Heap reservation size
+| 56 | 4 | | Heap commit size
+| 60 | 4 | | [yellow-background]*Unknown (Loader flags)* +
+Obsolete must be 0
+| 64 | 4 | | Number of data-dictionary entries
+|===
+
+[yellow-background]*TODO: integrate notes in text*
+....
+ImageBase
+Preferred address of first byte of image when loaded into memory; must be a 
+multiple of 64K. The default for DLLs is 0x10000000. The default for Windows CE 
+EXEs is 0x00010000. The default for Windows NT, Windows 95, and Windows 98 is 
+0x00400000.
+
+SectionAlignment
+Alignment (in bytes) of sections when loaded into memory. Must greater or equal 
+to File Alignment. Default is the page size for the architecture.
+
+FileAlignment
+Alignment factor (in bytes) used to align the raw data of sections in the image 
+file. The value should be a power of 2 between 512 and 64K inclusive. The 
+default is 512. If the SectionAlignment is less than the architecture’s page 
+size than this must match the SectionAlignment.
+
+SizeOfImage
+Size, in bytes, of image, including all headers; must be a multiple of Section 
+Alignment.
+
+SizeOfHeaders
+Combined size of MS-DOS stub, PE Header, and section headers rounded up to a 
+multiple of FileAlignment.
+
+The algorithm for computing is incorporated into IMAGHELP.DLL.
+....
+
+===== The PE32+ COFF optional header - Windows NT part
+The PE32+ COFF optional header - Windows NT part is 88 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Image base offset
+| 8 | 4 | | Section alignment size
+| 12 | 4 | | File alignment size
+| 16 | 2 | | Major operating system version
+| 18 | 2 | | Minor operating system version
+| 20 | 2 | | Major image version
+| 22 | 2 | | Minor image version
+| 24 | 2 | | Major subsystem version
+| 26 | 2 | | Minor subsystem version
+| 28 | 4 | | [yellow-background]*Unknown (Win32VersionValue)* +
+[yellow-background]*Must be 0*
+| 32 | 4 | | Image size
+| 36 | 4 | | Headers size
+| 40 | 4 | | Checksum
+| 44 | 2 | | Subsystem +
+See section: <<windows_subsystem,Windows Subsystem>>
+| 46 | 2 | | DLL characteristic flags +
+See section: <<dll_characteristic_flags,DLL characteristic flags>>
+| 48 | 8 | | Stack reservation size
+| 56 | 8 | | Stack commit size
+| 64 | 8 | | Heap reservation size
+| 72 | 8 | | Heap commit size
+| 80 | 4 | | [yellow-background]*Unknown (Loader flags)* +
+[yellow-background]*Obsolete must be 0*
+| 84 | 4 | | Number of data-dictionary entries
+|===
+
+====== [windows_subsystem]Windows Subsystem
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0 | IMAGE_SUBSYSTEM_UNKNOWN | Unknown subsystem
+| 1 | IMAGE_SUBSYSTEM_NATIVE | Native subsystem +
+Device drivers or native Windows NT process
+| 2 | IMAGE_SUBSYSTEM_WINDOWS_GUI | Windows GUI subsystem
+| 3 | IMAGE_SUBSYSTEM_WINDOWS_CUI | Windows character subsystem
+| | | 
+| 7 | IMAGE_SUBSYSTEM_POSIX_CUI | POSIX character subsystem
+| | | 
+| 9 | IMAGE_SUBSYSTEM_WINDOWS_CE_GUI | Windows CE GUI subsystem
+| 10 | IMAGE_SUBSYSTEM_EFI_APPLICATION | EFI application
+| 11 | IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER | EFI driver that provides boot service
+| 12 | IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER | EFI driver that provides runtime services
+|===
+
+====== [dll_characteristic_flags]DLL characteristic flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x0001 | | [yellow-background]*Unknown (Reserved)*
+| 0x0002 | | [yellow-background]*Unknown (Reserved)*
+| 0x0004 | | [yellow-background]*Unknown (Reserved)*
+| 0x0008 | | [yellow-background]*Unknown (Reserved)*
+| | | 
+| 0x0800 | IMAGE_DLLCHARACTERISTICS_NO_BIND | Do not bind
+| | | 
+| 0x2000 | IMAGE_DLLCHARACTERISTICS_WDM_DRIVER | Is a WDM Driver
+| | | 
+| 0x8000 | IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE | Is Terminal Server aware
+|===
+
+===== The COFF optional header - the data directories part
+Most entries in the data directories consists of a data directory descriptor. 
+Each data directory descriptor contains a Relative virtual address (RVA) and a 
+size. The RVA is a Virtual address relative to the image base. Also see 
+section: <<coff_data_directory_descriptor,The COFF data directory descriptor>>
+and <<data_directories,Data directories>>.
+
+The COFF optional header - the data directories part is variable in size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Export Table RVA
+| 4 | 4 | | Export Table size
+| 8 | 4 | | Import Table RVA
+| 12 | 4 | | Import Table size
+| 16 | 4 | | Resource Table RVA
+| 20 | 4 | | Resource Table size
+| 24 | 4 | | Exception Table RVA
+| 28 | 4 | | Exception Table size
+| 32 | 4 | | (Attribute) Certificate Table RVA
+| 36 | 4 | | (Attribute) Certificate Table size
+| 40 | 4 | | Base Relocation Table RVA
+| 44 | 4 | | Base Relocation Table size
+| 48 | 4 | | Debug data RVA
+| 52 | 4 | | Debug data size
+| 56 | 4 | | Architecture-specific data RVA
+| 60 | 4 | | Architecture-specific data size
+| 64 | 4 | | Global pointer register
+| 68 | 4 | | [yellow-background]*Unknown (Reserved)* +
+[yellow-background]*Should be 0*
+| 72 | 4 | | Thread Local Storage (TLS) Table RVA
+| 76 | 4 | | Thread Local Storage (TLS) Table size
+| 80 | 4 | | Load Configuration Table RVA
+| 84 | 4 | | Load Configuration Table size
+| 88 | 4 | | Bound Import Table RVA
+| 92 | 4 | | Bound Import Table size
+| 96 | 4 | | Import Address Table RVA
+| 100 | 4 | | Import Address Table size
+| 104 | 4 | | Delay Import Descriptor RVA
+| 108 | 4 | | Delay Import Descriptor size
+| 112 | 4 | | COM+ Runtime Header RVA
+| 116 | 4 | | COM+ Runtime Header size
+| 120 | 8 | | [yellow-background]*Unknown (Reserved)*
+|===
+
+====== [coff_data_directory_descriptor]The COFF data directory descriptor
+The data directory descriptor is 8 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Relative virtual address (RVA) +
+Virtual address relative to the image base
+| 4 | 4 | | Size
+|===
+
+=== Rich signature header
+
+[yellow-background]*TODO: integrate notes in text*
+
+Obfuscated data:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | ... | | Obfuscated data
+| ... | 4 | "Rich" | Signature
+| ... | 4 | | XOR key
+| ... | ... | | [yellow-background]*Unknown (Padding)*
+|===
+
+Deobfuscated data:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "DanS" | Signature
+| 4 | 12 | | [yellow-background]*Unknown (Empty values)*
+| 16 | 8 x ... | | Visual Studio C++ linker tool information
+|===
+
+Visual Studio C++ linker tool information
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Version
+| 2 | 2 | | Identifier
+| 4 | 4 | | Number of times used
+|===
+
+== PE/COFF section table
+=== Section header
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Name +
+ASCII string not terminated by an end-of-string character, unused bytes are set to 0. +
+Can be empty.
+| 8 | 4 | | [yellow-background]*Virtual size*
+| 12 | 4 | | [yellow-background]*Virtual address*
+| 16 | 4 | | Data size
+| 20 | 4 | | Data offset
+| 24 | 4 | | Relocations offset +
+0 if no relocations
+| 28 | 4 | | (COFF) line numbers offset +
+0 if no line numbers
+| 32 | 2 | | Number of relocations entries
+| 34 | 2 | | Number of line numbers entries
+| 36 | 4 | | Section characteristic flags +
+See section: <<section_characteristic_flags,Section characteristic flags>>
+|===
+
+[yellow-background]*TODO: integrate notes in text*
+....
+VirtualSize
+Total size of the section when loaded into memory. If this value is greater 
+than Size of Raw Data, the section is zero-padded. This field is valid only for 
+executable images and should be set to 0 for object files.
+
+VirtualAddress
+For executable images this is the address of the first byte of the section, 
+when loaded into memory, relative to the image base. For object files, this 
+field is the address of the first byte before relocation is applied; for 
+simplicity, compilers should set this to zero. Otherwise, it is an arbitrary 
+value that is subtracted from offsets during relocation.
+
+SizeOfRawData
+Size of the section (object file) or size of the initialized data on disk 
+(image files). For executable image, this must be a multiple of FileAlignment 
+from the optional header. If this is less than VirtualSize the remainder of the 
+section is zero filled. Because this field is rounded while the VirtualSize 
+field is not it is possible for this to be greater than VirtualSize as well. 
+When a section contains only uninitialized data, this field should be 0.
+
+PointerToRawData
+File pointer to section’s first page within the COFF file. For executable 
+images, this must be a multiple of FileAlignment from the optional header. For 
+object files, the value should be aligned on a four-byte boundary for best 
+performance. When a section contains only uninitialized data, this field should 
+be 0.
+....
+
+=== [section_characteristic_flags]Section characteristic flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | IMAGE_SCN_TYPE_REG | [yellow-background]*Unknown (Reserved)* +
+[yellow-background]*REG => regular?*
+| 0x00000001 | IMAGE_SCN_TYPE_DSECT | [yellow-background]*Unknown (Reserved)*
+| 0x00000002 | IMAGE_SCN_TYPE_NOLOAD | [yellow-background]*Unknown (Reserved)*
+| 0x00000004 | IMAGE_SCN_TYPE_GROUP | [yellow-background]*Unknown (Reserved)*
+| 0x00000008 | IMAGE_SCN_TYPE_NO_PAD | No padding +
+Obsolete replaced by IMAGE_SCN_ALIGN_1BYTES
+| 0x00000010 | IMAGE_SCN_TYPE_COPY | [yellow-background]*Unknown (Reserved)*
+| 0x00000020 | IMAGE_SCN_CNT_CODE | Contains executable code +
+Common corresponding section name: .text, TEXT, .code or CODE
+| 0x00000040 | IMAGE_SCN_CNT_INITIALIZED_DATA | Contains initialized data +
+Common corresponding section name: .data, DATA, .idata or IDATA
+| 0x00000080 | IMAGE_SCN_CNT_UNINITIALIZED_DATA | Contains uninitialized data +
+Common corresponding section name: .bss or BSS
+| 0x00000100 | IMAGE_SCN_LNK_OTHER | [yellow-background]*Unknown (Reserved)*
+| 0x00000200 | IMAGE_SCN_LNK_INFO | Contains comments or other information
+| 0x00000400 | IMAGE_SCN_TYPE_OVER | [yellow-background]*Unknown (Reserved)*
+| 0x00000800 | IMAGE_SCN_LNK_REMOVE | Will be removed after linking
+| 0x00001000 | IMAGE_SCN_LNK_COMDAT | Contains COMDAT data
+| 0x00008000 | IMAGE_SCN_MEM_FARDATA | [yellow-background]*Unknown (Reserved)*
+| [yellow-background]*0x00010000* | IMAGE_SCN_MEM_PURGEABLE | [yellow-background]*Unknown (Reserved)*
+| 0x00020000 | IMAGE_SCN_MEM_16BIT | [yellow-background]*Unknown (Reserved)*
+| 0x00040000 | IMAGE_SCN_MEM_LOCKED | [yellow-background]*Unknown (Reserved)*
+| 0x00080000 | IMAGE_SCN_MEM_PRELOAD | [yellow-background]*Unknown (Reserved)*
+| 0x00100000 | IMAGE_SCN_ALIGN_1BYTES | Align data on a 1-byte boundary
+| 0x00200000 | IMAGE_SCN_ALIGN_2BYTES | Align data on a 2-byte boundary
+| 0x00300000 | IMAGE_SCN_ALIGN_4BYTES | Align data on a 4-byte boundary
+| 0x00400000 | IMAGE_SCN_ALIGN_8BYTES | Align data on a 8-byte boundary
+| 0x00500000 | IMAGE_SCN_ALIGN_16BYTES | Align data on a 16-byte boundary
+| 0x00600000 | IMAGE_SCN_ALIGN_32BYTES | Align data on a 32-byte boundary
+| 0x00700000 | IMAGE_SCN_ALIGN_64BYTES | Align data on a 64-byte boundary
+| 0x00800000 | IMAGE_SCN_ALIGN_128BYTES | Align data on a 128-byte boundary
+| 0x00900000 | IMAGE_SCN_ALIGN_256BYTES | Align data on a 256-byte boundary
+| 0x00a00000 | IMAGE_SCN_ALIGN_512BYTES | Align data on a 512-byte boundary
+| 0x00b00000 | IMAGE_SCN_ALIGN_1024BYTES | Align data on a 1024-byte boundary
+| 0x00c00000 | IMAGE_SCN_ALIGN_2048BYTES | Align data on a 2048-byte boundary
+| 0x00d00000 | IMAGE_SCN_ALIGN_4096BYTES | Align data on a 4096-byte boundary
+| 0x00e00000 | IMAGE_SCN_ALIGN_8192BYTES | Align data on a 8192-byte boundary
+| 0x01000000 | IMAGE_SCN_LNK_NRELOC_OVFL | Contains extended relocations
+| 0x02000000 | IMAGE_SCN_MEM_DISCARDABLE | Discarded if needed
+| 0x04000000 | IMAGE_SCN_MEM_NOT_CACHED | Do not cache
+| 0x08000000 | IMAGE_SCN_MEM_NOT_PAGED | Do not page
+| 0x10000000 | IMAGE_SCN_MEM_SHARED | Can be in shared memory
+| 0x20000000 | IMAGE_SCN_MEM_EXECUTE | Can be executed
+| 0x40000000 | IMAGE_SCN_MEM_READ | Can be read
+| 0x80000000 | IMAGE_SCN_MEM_WRITE | Can be written
+|===
+
+== [data_directories]Data directories
+To calculate the data directory offset from the RVA first find the section that 
+contains the corresponding virtual address (VA) and then apply:
+....
+data directory offset = ( RVA – section start VA ) + section start offset
+....
+
+=== Export table directory
+The export table directory consists of:
+
+* Export directory table
+* Export address table
+
+==== Export directory table
+
+[yellow-background]*TODO check values below*
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | 0 | [yellow-background]*Unknown (reserved)* +
+Export flags
+| 4 | 4 | | Creation time +
+Contains a POSIX timestamp
+| 8 | 2 | | Major format version
+| 10 | 2 | | Minor format version
+| 12 | 4 | | Name RVA
+| 16 | 4 | | Ordinal base
+| 20 | 4 | | Number of address table entries
+| 24 | 4 | | Number of name pointers
+| 28 | 4 | | Export address table RVA
+| 32 | 4 | | Name pointer table RVA
+| 36 | 4 | | Ordinal table RVA
+|===
+
+==== Export address table
+
+[yellow-background]*TODO add text and check values below*
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | Export RVA | The address of the exported symbol when loaded into memory, relative to the image base. For example, the address of an exported function.
+| 0 | 4 | Forwarder RVA | The pointer to a null-terminated ASCII string in the export section. This string must be within the range that is given by the export table data directory entry. See section 3.4.3, "Optional Header Data Directories (Image Only)." This string gives the DLL name and the name of the export (for example, "MYDLL.expfunc") or the DLL name and the ordinal number of the export (for example, "MYDLL.#27").
+|===
+
+==== Export Name Pointer Table
+
+[yellow-background]*TODO add text*
+
+==== Export Ordinal Table
+
+[yellow-background]*TODO add text*
+
+=== Import table directory
+
+[yellow-background]*TODO add text*
+
+=== Debug data directory
+The debug data directory consists of:
+
+* one or more debug data directory entries
+* debug type data
+
+==== Debug data directory entry
+The debug data directory entry is 28 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Characteristics +
+Reserved, must be zero.
+| 4 | 4 | | Creation time +
+[yellow-background]*Contains a POSIX timestamp?*
+| 8 | 2 | | Format major version
+| 10 | 2 | | Format minor version
+| 12 | 4 | | Debug type
+| 16 | 4 | | Debug type data size
+| 20 | 4 | | Raw debug data RVA +
+Virtual address relative to the image base
+| 24 | 4 | | Raw debug data offset
+|===
+
+[yellow-background]*TODO: Migrate the rest of the documentation*
+
+== Resource section data
+The resources are stored in the resource section (.rsrc) of a PE/COFF 
+executable. The resources consists of a tree of resource nodes. The identifiers 
+of the first level of sub nodes contain the resource data types.
+
+[yellow-background]*TODO: Migrate the rest of the documentation*
+
+== Resource type data
+==== String resource data
+The string resource data consists of 16 string descriptors per section. Strings 
+whose identifiers differ only in the bottom 4 bits are placed in the same 
+section.
+
+==== String descriptor
+
+[yellow-background]*TODO: Migrate the rest of the documentation*
+
+== Notes
+=== Export directory table
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | Export Flags | Reserved, must be 0.
+| 4 | 4 | Time/Date Stamp | The time and date that the export data was created.
+| 8 | 2 | Major Version | The major version number. The major and minor version numbers can be set by the user.
+| 10 | 2 | Minor Version | The minor version number.
+| 12 | 4 | Name RVA | The address of the ASCII string that contains the name of the DLL. This address is relative to the image base.
+| 16 | 4 | Ordinal Base | The starting ordinal number for exports in this image. This field specifies the starting ordinal number for the export address table. It is usually set to 1.
+| 20 | 4 | Address Table Entries | The number of entries in the export address table.
+| 24 | 4 | Number of Name Pointers | The number of entries in the name pointer table. This is also the number of entries in the ordinal table.
+| 28 | 4 | Export Address Table RVA | The address of the export address table, relative to the image base.
+| 32 | 4 | Name Pointer RVA | The address of the export name pointer table, relative to the image base. The table size is given by the Number of Name Pointers field.
+| 36 | 4 | Ordinal Table RVA | The address of the ordinal table, relative to the image base.
+|===
+
+=== Export address table
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | Export RVA | The address of the exported symbol when loaded into memory, relative to the image base. For example, the address of an exported function.
+| 0 | 4 | Forwarder RVA | The pointer to a null-terminated ASCII string in the export section. +
+This string must be within the range that is given by the export table data directory entry. +
+See section 3.4.3, "Optional Header Data Directories (Image Only)." +
+This string gives the DLL name and the name of the export (for example, "MYDLL.expfunc") or the DLL name and the ordinal number of the export (for example, "MYDLL.#27").
+|===
+
+=== Import directory table
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | Import Lookup Table RVA (Characteristics) | The RVA of the import lookup table. This table contains a name or ordinal for each import. +
+(The name "Characteristics" is used in Winnt.h, but no longer describes this field.)
+| 4 | 4 | Time/Date Stamp | The stamp that is set to zero until the image is bound. After the image is bound, this field is set to the time/data stamp of the DLL.
+| 8 | 4 | Forwarder Chain | The index of the first forwarder reference.
+| 12 | 4 | Name RVA | The address of an ASCII string that contains the name of the DLL. This address is relative to the image base.
+| 16 | 4 | Import Address Table RVA (Thunk Table) | The RVA of the import address table. +
+The contents of this table are identical to the contents of the import lookup table until the image is bound.
+|===
+
+=== Import lookup table
+
+[cols="1,1,1,5",options="header"]
+|===
+| Bit(s) | Size | Bit field | Description
+| 31/63 | 1 | Ordinal/Name Flag | If this bit is set, import by ordinal. Otherwise, import by name. Bit is masked as 0x80000000 for PE32, 0x8000000000000000 for PE32+.
+| 15-0 | 16 | Ordinal Number | A 16-bit ordinal number. This field is used only if the Ordinal/Name Flag bit field is 1 (import by ordinal). Bits 30-15 or 62-15 must be 0.
+| 30-0 | 31 | Hint/Name Table RVA | A 31-bit RVA of a hint/name table entry. This field is used only if the Ordinal/Name Flag bit field is 0 (import by name). For PE32+ bits 62-31 must be zero.
+|===
+
+=== Hint/Name table
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | Hint | An index into the export name pointer table. A match is attempted first with this value. If it fails, a binary search is performed on the DLL’s export name pointer table.
+| 2 | variable | Name | An ASCII string that contains the name to import. This is the string that must be matched to the public name in the DLL. This string is case sensitive and terminated by a null byte.
+| * | 0 or 1 | Pad | A trailing zero-pad byte that appears after the trailing null byte, if necessary, to align the next entry on an even boundary.
+|===
+
+=== FPO debug information
+....
+#define FRAME_FPO   0
+#define FRAME_TRAP  1
+#define FRAME_TSS   2
+
+typedef struct _FPO_DATA {
+    DWORD       ulOffStart;          // offset 1st byte of function code
+    DWORD       cbProcSize;          // # bytes in function
+    DWORD       cdwLocals;           // # bytes in locals/4
+    WORD        cdwParams;           // # bytes in params/4
+
+    WORD        cbProlog : 8;        // # bytes in prolog
+    WORD        cbRegs   : 3;        // # regs saved
+    WORD        fHasSEH  : 1;        // TRUE if SEH in func
+    WORD        fUseBP   : 1;        // TRUE if EBP has been allocated
+    WORD        reserved : 1;        // reserved for future use
+    WORD        cbFrame  : 2;        // frame type
+} FPO_DATA;
+....
+
+:numbered!:
+[appendix]
+== References
+
+`[CORION]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | The EXE File Formats
+| Author(s): | Max Maischein
+| URL: | http://www.corion.net/fileformats/index.html +
+http://www.fileformat.info/format/exe/corion-mz.htm
+http://www.fileformat.info/format/exe/corion-ne.htm
+|===
+
+`[DJGPP]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | EXE Format
+| URL: | http://www.delorie.com/djgpp/doc/exe/
+|===
+
+`[KUHR06]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Enumerating Message Table Contents
+| Author(s): | Stefan Kuhr
+| Date: | 14 Jun 2006
+| URL: | http://www.codeproject.com/KB/system/msgdump.aspx
+|===
+
+`[MSDN]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | MSDN articles about executable format
+| URL: | http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx +
+http://download.microsoft.com/download/e/b/a/eba1050f-a31d-436b-9281-92cdfeae4b45/pecoff.doc
+|===
+
+`[MSDN_RC]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | MSDN articles about Resource types
+| URL: | http://msdn.microsoft.com/en-us/library/ms648009(v=VS.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/aa381058(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms647001(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646997(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646989(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646995(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646992(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646987(v=VS.85).aspx +
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms646994(v=VS.85).aspx
+|===
+
+`[MSDN_FORMATMESSAGE]`
+
+[cols="1,5",options="header"]
+|===
+| URL: | http://msdn.microsoft.com/en-us/library/windows/desktop/ms679351(v=vs.85).aspx +
+http://msdn.microsoft.com/en-us/library/56e442dc.aspx
+|===
+
+`[NTCORE]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Microsoft's Rich Signature (undocumented)
+| Author(s): | Daniel Pistelli
+| URL: | http://www.ntcore.com/files/richsign.htm
+|===
+
+`[NTLCID]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Locale identifier (LCID) definitions
+| URL: | https://downloads.sourceforge.net/project/libpff/documentation/MAPI%20definitions/
+|===
+
+`[REVLABS]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Undocumented PECOFF
+| URL: | http://www.reversinglabs.com/blackhat/PECOFF_BlackHat-USA-11-Whitepaper.pdf
+|===
+
+`[SCHUSTER10]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Linking Event Messages and Resource DLLs
+| Author(s): | A. Schuster
+| Date: | October 5, 2010
+| URL: | http://computer.forensikblog.de/en/2010/10/linking-event-messages-and-resource-dlls.html
+|===
+
+`[SCHUSTER11]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | Microsoft Windows Event Logging - Dokumentation der Binärformate
+| Author(s): | A. Schuster
+| Version: | 148
+| Date: | February 6, 2011
+|===
+
+`[TRIPOD]`
+
+[cols="1,5",options="header"]
+|===
+| Title: | LINEAR-EXECUTABLE File Header Layout
+| URL: | http://faydoc.tripod.com/formats/exe-LE.htm
+|===
+
+`[WIKI]`
+
+[cols="1,5",options="header"]
+|===
+| URL: | http://en.wikipedia.org/wiki/DOS_MZ_executable +
+http://en.wikipedia.org/wiki/COFF +
+http://en.wikipedia.org/wiki/New_Executable +
+http://en.wikipedia.org/wiki/Portable_Executable
+|===
+
+`[WIKIBOOKS]`
+
+[cols="1,5",options="header"]
+|===
+| URL: | http://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files
+|===
+
+[appendix]
+== GNU Free Documentation License
+Version 1.3, 3 November 2008
+Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc. 
+<http://fsf.org/>
+
+Everyone is permitted to copy and distribute verbatim copies of this license 
+document, but changing it is not allowed.
+
+=== 0. PREAMBLE
+The purpose of this License is to make a manual, textbook, or other functional 
+and useful document "free" in the sense of freedom: to assure everyone the 
+effective freedom to copy and redistribute it, with or without modifying it, 
+either commercially or noncommercially. Secondarily, this License preserves for 
+the author and publisher a way to get credit for their work, while not being 
+considered responsible for modifications made by others.
+
+This License is a kind of "copyleft", which means that derivative works of the 
+document must themselves be free in the same sense. It complements the GNU 
+General Public License, which is a copyleft license designed for free software.
+
+We have designed this License in order to use it for manuals for free software, 
+because free software needs free documentation: a free program should come with 
+manuals providing the same freedoms that the software does. But this License is 
+not limited to software manuals; it can be used for any textual work, 
+regardless of subject matter or whether it is published as a printed book. We 
+recommend this License principally for works whose purpose is instruction or 
+reference.
+
+=== 1. APPLICABILITY AND DEFINITIONS
+This License applies to any manual or other work, in any medium, that contains 
+a notice placed by the copyright holder saying it can be distributed under the 
+terms of this License. Such a notice grants a world-wide, royalty-free license, 
+unlimited in duration, to use that work under the conditions stated herein. The 
+"Document", below, refers to any such manual or work. Any member of the public 
+is a licensee, and is addressed as "you". You accept the license if you copy, 
+modify or distribute the work in a way requiring permission under copyright law.
+
+A "Modified Version" of the Document means any work containing the Document or 
+a portion of it, either copied verbatim, or with modifications and/or 
+translated into another language.
+
+A "Secondary Section" is a named appendix or a front-matter section of the 
+Document that deals exclusively with the relationship of the publishers or 
+authors of the Document to the Document's overall subject (or to related 
+matters) and contains nothing that could fall directly within that overall 
+subject. (Thus, if the Document is in part a textbook of mathematics, a 
+Secondary Section may not explain any mathematics.) The relationship could be a 
+matter of historical connection with the subject or with related matters, or of 
+legal, commercial, philosophical, ethical or political position regarding them.
+
+The "Invariant Sections" are certain Secondary Sections whose titles are 
+designated, as being those of Invariant Sections, in the notice that says that 
+the Document is released under this License. If a section does not fit the 
+above definition of Secondary then it is not allowed to be designated as 
+Invariant. The Document may contain zero Invariant Sections. If the Document 
+does not identify any Invariant Sections then there are none.
+
+The "Cover Texts" are certain short passages of text that are listed, as 
+Front-Cover Texts or Back-Cover Texts, in the notice that says that the 
+Document is released under this License. A Front-Cover Text may be at most 5 
+words, and a Back-Cover Text may be at most 25 words.
+
+A "Transparent" copy of the Document means a machine-readable copy, represented 
+in a format whose specification is available to the general public, that is 
+suitable for revising the document straightforwardly with generic text editors 
+or (for images composed of pixels) generic paint programs or (for drawings) 
+some widely available drawing editor, and that is suitable for input to text 
+formatters or for automatic translation to a variety of formats suitable for 
+input to text formatters. A copy made in an otherwise Transparent file format 
+whose markup, or absence of markup, has been arranged to thwart or discourage 
+subsequent modification by readers is not Transparent. An image format is not 
+Transparent if used for any substantial amount of text. A copy that is not 
+"Transparent" is called "Opaque".
+
+Examples of suitable formats for Transparent copies include plain ASCII without 
+markup, Texinfo input format, LaTeX input format, SGML or XML using a publicly 
+available DTD, and standard-conforming simple HTML, PostScript or PDF designed 
+for human modification. Examples of transparent image formats include PNG, XCF 
+and JPG. Opaque formats include proprietary formats that can be read and edited 
+only by proprietary word processors, SGML or XML for which the DTD and/or 
+processing tools are not generally available, and the machine-generated HTML, 
+PostScript or PDF produced by some word processors for output purposes only.
+
+The "Title Page" means, for a printed book, the title page itself, plus such 
+following pages as are needed to hold, legibly, the material this License 
+requires to appear in the title page. For works in formats which do not have 
+any title page as such, "Title Page" means the text near the most prominent 
+appearance of the work's title, preceding the beginning of the body of the text.
+
+The "publisher" means any person or entity that distributes copies of the 
+Document to the public.
+
+A section "Entitled XYZ" means a named subunit of the Document whose title 
+either is precisely XYZ or contains XYZ in parentheses following text that 
+translates XYZ in another language. (Here XYZ stands for a specific section 
+name mentioned below, such as "Acknowledgements", "Dedications", 
+"Endorsements", or "History".) To "Preserve the Title" of such a section when 
+you modify the Document means that it remains a section "Entitled XYZ" 
+according to this definition.
+
+The Document may include Warranty Disclaimers next to the notice which states 
+that this License applies to the Document. These Warranty Disclaimers are 
+considered to be included by reference in this License, but only as regards 
+disclaiming warranties: any other implication that these Warranty Disclaimers 
+may have is void and has no effect on the meaning of this License.
+
+=== 2. VERBATIM COPYING
+You may copy and distribute the Document in any medium, either commercially or 
+noncommercially, provided that this License, the copyright notices, and the 
+license notice saying this License applies to the Document are reproduced in 
+all copies, and that you add no other conditions whatsoever to those of this 
+License. You may not use technical measures to obstruct or control the reading 
+or further copying of the copies you make or distribute. However, you may 
+accept compensation in exchange for copies. If you distribute a large enough 
+number of copies you must also follow the conditions in section 3.
+
+You may also lend copies, under the same conditions stated above, and you may 
+publicly display copies.
+
+=== 3. COPYING IN QUANTITY
+If you publish printed copies (or copies in media that commonly have printed 
+covers) of the Document, numbering more than 100, and the Document's license 
+notice requires Cover Texts, you must enclose the copies in covers that carry, 
+clearly and legibly, all these Cover Texts: Front-Cover Texts on the front 
+cover, and Back-Cover Texts on the back cover. Both covers must also clearly 
+and legibly identify you as the publisher of these copies. The front cover must 
+present the full title with all words of the title equally prominent and 
+visible. You may add other material on the covers in addition. Copying with 
+changes limited to the covers, as long as they preserve the title of the 
+Document and satisfy these conditions, can be treated as verbatim copying in 
+other respects.
+
+If the required texts for either cover are too voluminous to fit legibly, you 
+should put the first ones listed (as many as fit reasonably) on the actual 
+cover, and continue the rest onto adjacent pages.
+
+If you publish or distribute Opaque copies of the Document numbering more than 
+100, you must either include a machine-readable Transparent copy along with 
+each Opaque copy, or state in or with each Opaque copy a computer-network 
+location from which the general network-using public has access to download 
+using public-standard network protocols a complete Transparent copy of the 
+Document, free of added material. If you use the latter option, you must take 
+reasonably prudent steps, when you begin distribution of Opaque copies in 
+quantity, to ensure that this Transparent copy will remain thus accessible at 
+the stated location until at least one year after the last time you distribute 
+an Opaque copy (directly or through your agents or retailers) of that edition 
+to the public.
+
+It is requested, but not required, that you contact the authors of the Document 
+well before redistributing any large number of copies, to give them a chance to 
+provide you with an updated version of the Document.
+
+=== 4. MODIFICATIONS
+You may copy and distribute a Modified Version of the Document under the 
+conditions of sections 2 and 3 above, provided that you release the Modified 
+Version under precisely this License, with the Modified Version filling the 
+role of the Document, thus licensing distribution and modification of the 
+Modified Version to whoever possesses a copy of it. In addition, you must do 
+these things in the Modified Version:
+
+A. Use in the Title Page (and on the covers, if any) a title distinct from that 
+of the Document, and from those of previous versions (which should, if there 
+were any, be listed in the History section of the Document). You may use the 
+same title as a previous version if the original publisher of that version 
+gives permission. 
+
+B. List on the Title Page, as authors, one or more persons or entities 
+responsible for authorship of the modifications in the Modified Version, 
+together with at least five of the principal authors of the Document (all of 
+its principal authors, if it has fewer than five), unless they release you from 
+this requirement. 
+
+C. State on the Title page the name of the publisher of the Modified Version, 
+as the publisher. 
+
+D. Preserve all the copyright notices of the Document. 
+
+E. Add an appropriate copyright notice for your modifications adjacent to the 
+other copyright notices. 
+
+F. Include, immediately after the copyright notices, a license notice giving 
+the public permission to use the Modified Version under the terms of this 
+License, in the form shown in the Addendum below. 
+
+G. Preserve in that license notice the full lists of Invariant Sections and 
+required Cover Texts given in the Document's license notice. 
+
+H. Include an unaltered copy of this License. 
+
+I. Preserve the section Entitled "History", Preserve its Title, and add to it 
+an item stating at least the title, year, new authors, and publisher of the 
+Modified Version as given on the Title Page. If there is no section Entitled 
+"History" in the Document, create one stating the title, year, authors, and 
+publisher of the Document as given on its Title Page, then add an item 
+describing the Modified Version as stated in the previous sentence. 
+
+J. Preserve the network location, if any, given in the Document for public 
+access to a Transparent copy of the Document, and likewise the network 
+locations given in the Document for previous versions it was based on. These 
+may be placed in the "History" section. You may omit a network location for a 
+work that was published at least four years before the Document itself, or if 
+the original publisher of the version it refers to gives permission. 
+
+K. For any section Entitled "Acknowledgements" or "Dedications", Preserve the 
+Title of the section, and preserve in the section all the substance and tone of 
+each of the contributor acknowledgements and/or dedications given therein. 
+
+L. Preserve all the Invariant Sections of the Document, unaltered in their text 
+and in their titles. Section numbers or the equivalent are not considered part 
+of the section titles. 
+
+M. Delete any section Entitled "Endorsements". Such a section may not be 
+included in the Modified Version. 
+
+N. Do not retitle any existing section to be Entitled "Endorsements" or to 
+conflict in title with any Invariant Section. 
+
+O. Preserve any Warranty Disclaimers. 
+
+If the Modified Version includes new front-matter sections or appendices that 
+qualify as Secondary Sections and contain no material copied from the Document, 
+you may at your option designate some or all of these sections as invariant. To 
+do this, add their titles to the list of Invariant Sections in the Modified 
+Version's license notice. These titles must be distinct from any other section 
+titles.
+
+You may add a section Entitled "Endorsements", provided it contains nothing but 
+endorsements of your Modified Version by various parties—for example, 
+statements of peer review or that the text has been approved by an organization 
+as the authoritative definition of a standard.
+
+You may add a passage of up to five words as a Front-Cover Text, and a passage 
+of up to 25 words as a Back-Cover Text, to the end of the list of Cover Texts 
+in the Modified Version. Only one passage of Front-Cover Text and one of 
+Back-Cover Text may be added by (or through arrangements made by) any one 
+entity. If the Document already includes a cover text for the same cover, 
+previously added by you or by arrangement made by the same entity you are 
+acting on behalf of, you may not add another; but you may replace the old one, 
+on explicit permission from the previous publisher that added the old one.
+
+The author(s) and publisher(s) of the Document do not by this License give 
+permission to use their names for publicity for or to assert or imply 
+endorsement of any Modified Version.
+
+=== 5. COMBINING DOCUMENTS
+You may combine the Document with other documents released under this License, 
+under the terms defined in section 4 above for modified versions, provided that 
+you include in the combination all of the Invariant Sections of all of the 
+original documents, unmodified, and list them all as Invariant Sections of your 
+combined work in its license notice, and that you preserve all their Warranty 
+Disclaimers.
+
+The combined work need only contain one copy of this License, and multiple 
+identical Invariant Sections may be replaced with a single copy. If there are 
+multiple Invariant Sections with the same name but different contents, make the 
+title of each such section unique by adding at the end of it, in parentheses, 
+the name of the original author or publisher of that section if known, or else 
+a unique number. Make the same adjustment to the section titles in the list of 
+Invariant Sections in the license notice of the combined work.
+
+In the combination, you must combine any sections Entitled "History" in the 
+various original documents, forming one section Entitled "History"; likewise 
+combine any sections Entitled "Acknowledgements", and any sections Entitled 
+"Dedications". You must delete all sections Entitled "Endorsements".
+
+=== 6. COLLECTIONS OF DOCUMENTS
+You may make a collection consisting of the Document and other documents 
+released under this License, and replace the individual copies of this License 
+in the various documents with a single copy that is included in the collection, 
+provided that you follow the rules of this License for verbatim copying of each 
+of the documents in all other respects.
+
+You may extract a single document from such a collection, and distribute it 
+individually under this License, provided you insert a copy of this License 
+into the extracted document, and follow this License in all other respects 
+regarding verbatim copying of that document.
+
+=== 7. AGGREGATION WITH INDEPENDENT WORKS
+A compilation of the Document or its derivatives with other separate and 
+independent documents or works, in or on a volume of a storage or distribution 
+medium, is called an "aggregate" if the copyright resulting from the 
+compilation is not used to limit the legal rights of the compilation's users 
+beyond what the individual works permit. When the Document is included in an 
+aggregate, this License does not apply to the other works in the aggregate 
+which are not themselves derivative works of the Document.
+
+If the Cover Text requirement of section 3 is applicable to these copies of the 
+Document, then if the Document is less than one half of the entire aggregate, 
+the Document's Cover Texts may be placed on covers that bracket the Document 
+within the aggregate, or the electronic equivalent of covers if the Document is 
+in electronic form. Otherwise they must appear on printed covers that bracket 
+the whole aggregate.
+
+=== 8. TRANSLATION
+Translation is considered a kind of modification, so you may distribute 
+translations of the Document under the terms of section 4. Replacing Invariant 
+Sections with translations requires special permission from their copyright 
+holders, but you may include translations of some or all Invariant Sections in 
+addition to the original versions of these Invariant Sections. You may include 
+a translation of this License, and all the license notices in the Document, and 
+any Warranty Disclaimers, provided that you also include the original English 
+version of this License and the original versions of those notices and 
+disclaimers. In case of a disagreement between the translation and the original 
+version of this License or a notice or disclaimer, the original version will 
+prevail.
+
+If a section in the Document is Entitled "Acknowledgements", "Dedications", or 
+"History", the requirement (section 4) to Preserve its Title (section 1) will 
+typically require changing the actual title.
+
+=== 9. TERMINATION
+You may not copy, modify, sublicense, or distribute the Document except as 
+expressly provided under this License. Any attempt otherwise to copy, modify, 
+sublicense, or distribute it is void, and will automatically terminate your 
+rights under this License.
+
+However, if you cease all violation of this License, then your license from a 
+particular copyright holder is reinstated (a) provisionally, unless and until 
+the copyright holder explicitly and finally terminates your license, and (b) 
+permanently, if the copyright holder fails to notify you of the violation by 
+some reasonable means prior to 60 days after the cessation.
+
+Moreover, your license from a particular copyright holder is reinstated 
+permanently if the copyright holder notifies you of the violation by some 
+reasonable means, this is the first time you have received notice of violation 
+of this License (for any work) from that copyright holder, and you cure the 
+violation prior to 30 days after your receipt of the notice.
+
+Termination of your rights under this section does not terminate the licenses 
+of parties who have received copies or rights from you under this License. If 
+your rights have been terminated and not permanently reinstated, receipt of a 
+copy of some or all of the same material does not give you any rights to use it.
+
+=== 10. FUTURE REVISIONS OF THIS LICENSE
+The Free Software Foundation may publish new, revised versions of the GNU Free 
+Documentation License from time to time. Such new versions will be similar in 
+spirit to the present version, but may differ in detail to address new problems 
+or concerns. See http://www.gnu.org/copyleft/.
+
+Each version of the License is given a distinguishing version number. If the 
+Document specifies that a particular numbered version of this License "or any 
+later version" applies to it, you have the option of following the terms and 
+conditions either of that specified version or of any later version that has 
+been published (not as a draft) by the Free Software Foundation. If the 
+Document does not specify a version number of this License, you may choose any 
+version ever published (not as a draft) by the Free Software Foundation. If the 
+Document specifies that a proxy can decide which future versions of this 
+License can be used, that proxy's public statement of acceptance of a version 
+permanently authorizes you to choose that version for the Document.
+
+=== 11. RELICENSING
+"Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide 
+Web server that publishes copyrightable works and also provides prominent 
+facilities for anybody to edit those works. A public wiki that anybody can edit 
+is an example of such a server. A "Massive Multiauthor Collaboration" (or 
+"MMC") contained in the site means any set of copyrightable works thus 
+published on the MMC site.
+
+"CC-BY-SA" means the Creative Commons Attribution-Share Alike 3.0 license 
+published by Creative Commons Corporation, a not-for-profit corporation with a 
+principal place of business in San Francisco, California, as well as future 
+copyleft versions of that license published by that same organization.
+
+"Incorporate" means to publish or republish a Document, in whole or in part, as 
+part of another Document.
+
+An MMC is "eligible for relicensing" if it is licensed under this License, and 
+if all works that were first published under this License somewhere other than 
+this MMC, and subsequently incorporated in whole or in part into the MMC, (1) 
+had no cover texts or invariant sections, and (2) were thus incorporated prior 
+to November 1, 2008.
+
+The operator of an MMC Site may republish an MMC contained in the site under 
+CC-BY-SA on the same site at any time before August 1, 2009, provided the MMC 
+is eligible for relicensing.
+

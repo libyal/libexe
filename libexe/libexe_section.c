@@ -262,7 +262,8 @@ int libexe_section_get_name(
 
 		return( -1 );
 	}
-	if( name_size < internal_section->section_descriptor->name_size )
+	if( ( name_size < 1 )
+	 || ( name_size < internal_section->section_descriptor->name_size ) )
 	{
 		libcerror_error_set(
 		 error,
@@ -273,19 +274,26 @@ int libexe_section_get_name(
 
 		return( -1 );
 	}
-	if( memory_copy(
-	     name,
-	     internal_section->section_descriptor->name,
-	     internal_section->section_descriptor->name_size ) == NULL )
+	if( internal_section->section_descriptor->name_size == 0 )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_MEMORY,
-		 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
-		 "%s: unable to copy name.",
-		 function );
+		name[ 0 ] = 0;
+	}
+	else
+	{
+		if( memory_copy(
+		     name,
+		     internal_section->section_descriptor->name,
+		     internal_section->section_descriptor->name_size ) == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_MEMORY,
+			 LIBCERROR_MEMORY_ERROR_COPY_FAILED,
+			 "%s: unable to copy name.",
+			 function );
 
-		return( -1 );
+			return( -1 );
+		}
 	}
 	return( 1 );
 }

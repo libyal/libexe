@@ -34,6 +34,9 @@ extern "C" {
 
 #if defined( HAVE_DEBUG_OUTPUT )
 
+void libexe_debug_print_section_characteristic_flags(
+      uint32_t section_characteristic_flag );
+
 int libexe_debug_print_read_offsets(
      libbfio_handle_t *file_io_handle,
      libcerror_error_t **error );
