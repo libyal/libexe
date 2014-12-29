@@ -722,7 +722,7 @@ Common corresponding section name: .bss or BSS
 To calculate the data directory offset from the RVA first find the section that 
 contains the corresponding virtual address (VA) and then apply:
 ....
-data directory offset = ( RVA – section start VA ) + section start offset
+data directory offset = ( RVA - section start VA ) + section start offset
 ....
 
 === Export table directory
@@ -801,14 +801,214 @@ Virtual address relative to the image base
 | 24 | 4 | | Raw debug data offset
 |===
 
-[yellow-background]*TODO: Migrate the rest of the documentation*
+==== Debug type
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0 | IMAGE_DEBUG_TYPE_UNKNOWN | Unknown +
+Should be ignored by all tools
+| 1 | IMAGE_DEBUG_TYPE_COFF | COFF debug information
+| 2 | IMAGE_DEBUG_TYPE_CODEVIEW | Codeview (or Visual C++) debug information +
+See section: <<codeview_debug_information,Codeview debug information>>
+| 3 | IMAGE_DEBUG_TYPE_FPO | The frame pointer omission (FPO) debug information
+| 4 | IMAGE_DEBUG_TYPE_MISC | The location of DBG file
+| 5 | IMAGE_DEBUG_TYPE_EXCEPTION | [yellow-background]*A copy of .pdata section*
+| 6 | IMAGE_DEBUG_TYPE_FIXUP | [yellow-background]*Unknown (Reserved)*
+| 7 | IMAGE_DEBUG_TYPE_OMAP_TO_SRC | [yellow-background]*The mapping from an RVA in image to an RVA in source image*
+| 8 | IMAGE_DEBUG_TYPE_OMAP_FROM_SRC | [yellow-background]*The mapping from an RVA in image to an RVA in source image*
+| 9 | IMAGE_DEBUG_TYPE_BORLAND | [yellow-background]*Unknown (Reserved for Borland)*
+| 10 | IMAGE_DEBUG_TYPE_RESERVED10 | [yellow-background]*Unknown (Reserved)*
+| 11 | IMAGE_DEBUG_TYPE_CLSID | [yellow-background]*Unknown (Reserved)*
+|===
+
+==== Debug type data
+===== [[codeview_debug_information]]Codeview debug information
+The codeview debug information is variable in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "RDRS" | Signature
+| 4 | 16 | | GUID
+| 20 | 4 | | [yellow-background]*PDB format version*
+| 24 | ... | | PDB filename +
+[yellow-background]*(extended?)* ASCII string with end-of-string character
+|===
+
+===== IMAGE_DEBUG_TYPE_RESERVED10 data
+The IMAGE_DEBUG_TYPE_RESERVED10 debug information is 4 bytes in size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | [yellow-background]*Unknown (a checksum of some kind?)*
+|===
 
 == Resource section data
 The resources are stored in the resource section (.rsrc) of a PE/COFF 
 executable. The resources consists of a tree of resource nodes. The identifiers 
 of the first level of sub nodes contain the resource data types.
 
-[yellow-background]*TODO: Migrate the rest of the documentation*
+=== Resource node header
+The resource node header is 16 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | 0 | Flags +
+[yellow-background]*Unknown*
+| 4 | 4 | | Creation date and time +
+Contains a POSIX timestamp or 0 if not set
+| 8 | 2 | | Major version
+| 10 | 2 | | Minor version
+| 12 | 2 | | Number of named node entries
+| 14 | 2 | | Number of unnamed node entries
+|===
+
+The resource node header is followed by an array of (named and unnamed) 
+resource node entries.
+
+=== Resource node flags
+
+[yellow-background]*TODO: integrate notes in text*
+....
+Suspected to be:
+http://msdn.microsoft.com/en-us/library/windows/desktop/ms648027(v=vs.85).aspx
+
+MOVEABLE (0x0010)
+FIXED (~MOVEABLE)
+PURE (0x0020)
+IMPURE (~PURE)
+PRELOAD (0x0040)
+LOADONCALL (~PRELOAD)
+DISCARDABLE (0x1000)
+....
+
+=== Resource node entry
+The resource node entry is 8 bytes of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier +
+Flag 0x80000000 => has name
+| 4 | 4 | | Offset +
+Flag 0x80000000 => is branch node
+|===
+
+If the offset of the resource node entry does not have the is branch node flag 
+the offset points to a resource data descriptor. 
+
+If the identifier of the resource node entry has name flag set the value points 
+to a name string.
+
+==== Resource node name string
+The resource node name string is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Number of characters
+| 2 | ... | | Name string +
+UTF-16 little-endian without end-of-string character.
+|===
+
+==== Branch resource node entry identifier
+The branch resource node entry identifier of the string resource contain the 
+string group identifier, which is ( string identifier / 16 ) + 1. The 
+corresponding string identifier can be determined by:
+....
+( ( string group identifier - 1 ) x 16 ) + string index in group
+....
+
+==== Leaf resource node entry identifier
+The leaf resource node entry identifier of the following resources contains the 
+LCID of the language stored in the resource data.
+
+* Manifest resource
+* Message-table resource
+* Multilingual User Interface (MUI) resource
+* String resource
+* Version resource
+* Windows Event Template resource
+
+It is possible for the LCID to be 0 (not set).
+
+For more information see `[NTLCID]`.
+
+=== Resource data descriptor
+The resource data descriptor is 8 bytes of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Virtual address
+| 4 | 4 | | Size
+|===
+
+[NOTE]
+The virtual address can be outside the resource section, this behavior was seen 
+with an UPX packed executable. It is currently assumed that UPX also compresses 
+some of the resources and only provides them at run-time. The version resource 
+does not seems to be packed by UPX.
+
+=== Resource data types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 1 | RT_CURSOR | Hardware-dependent cursor resource
+| 2 | RT_BITMAP | Bitmap resource
+| 3 | RT_ICON | Hardware-dependent icon resource
+| 4 | RT_MENU | Menu resource
+| 5 | RT_DIALOG | Dialog box
+| 6 | RT_STRING | String-table entry
+| 7 | RT_FONTDIR | Font directory resource
+| 8 | RT_FONT | Font resource
+| 9 | RT_ACCELERATOR | Accelerator table
+| 10 | RT_RCDATA | Application-defined resource (raw data)
+| 11 | RT_MESSAGETABLE | Message-table entry
+| 12 | RT_GROUP_CURSOR | Hardware-independent cursor resource
+| | | 
+| 14 | RT_GROUP_ICON | Hardware-independent icon resource
+| | | 
+| 16 | RT_VERSION | Version resource
+| 17 | RT_DLGINCLUDE | Dialog include
+| | | 
+| 19 | RT_PLUGPLAY | Plug and Play resource
+| 20 | RT_VXD | [yellow-background]*Virtual driver (VXD)*
+| 21 | RT_ANICURSOR | Animated cursor
+| 22 | RT_ANIICON | Animated icon
+| 23 | RT_HTML | HTML resource
+| 24 | RT_MANIFEST | Side-by-Side Assembly Manifest
+| | | 
+| 2110 | | [yellow-background]*Unknown*
+|===
+
+[yellow-background]*TODO: integrate notes in text*
+....
+#define RT_DLGINIT MAKEINTRESOURCE(240);
+#define RT_TOOLBAR MAKEINTRESOURCE(241);
+....
+
+=== Named resources
+The following information is a list of common named resources found in samples.
+
+[cols="1,5",options="header"]
+|===
+| Value | Description
+| AVI | [yellow-background]*Unknown (AVI)*
+| CODEPAGE | [yellow-background]*Unknown (codepage)* +
+Seen in Windows 98 kernel32.dll
+| MUI | Multilingual User Interface (MUI) resource data
+| MOFDATA | [yellow-background]*Unknown (MOF data)*
+| REGINST | [yellow-background]*Unknown*
+| TYPELIB | [yellow-background]*Unknown (typelib data)*
+| UIFILE | [yellow-background]*Unknown (UI file)*
+| WEVT_TEMPLATE | Windows Event template resource data
+| XMLFILE | [yellow-background]*Unknown (XML file)*
+|===
 
 == Resource type data
 ==== String resource data
@@ -817,6 +1017,141 @@ whose identifiers differ only in the bottom 4 bits are placed in the same
 section.
 
 ==== String descriptor
+The string descriptor is variable of size and consist of.
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Number of characters
+| 2 | ... | | UTF-16 string without end-of-string character
+|===
+
+==== String conversion specifiers
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| %d | | Signed integer
+| %p | | [yellow-background]*Unknown (Pointer ?)* +
+[yellow-background]*Access violation at address %p. %s of address %p*
+| %ws | | Wide character string
+| %x | | Hexadecimal representation of integer +
+[yellow-background]*External exception %x*
+|===
+
+=== Message-table resource data
+The message-table resource data contains several structures that make up a 
+message-table. A message-table consists of:
+
+* a message-table header
+* message-table entry descriptors
+* message-table strings
+
+==== Message-table header
+The message-table header (MESSAGE_RESOURCE_DATA) is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Number of message-table entry descriptors
+| 4 | ... | | Array of message-table entry descriptors
+|===
+
+===== Message-table entry descriptor
+The message-table entry descriptor (MESSAGE_RESOURCE_BLOCK) is 12 bytes of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | First message identifier
+| 4 | 4 | | Last message identifier
+| 8 | 4 | | Offset of the first message
+|===
+
+A single message-table entry descriptor can refer to multiple message-table 
+strings.
+
+==== Message-table string
+The message-table string entry (MESSAGE_RESOURCE_ENTRY) is variable of size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size
+| 2 | 2 | | Flags +
+0x00 => extended ASCII string with codepage +
+0x01 => UTF-16 string
+| 4 | ... | | String without end-of-string character +
+Note that the string can contain trailing 0-byte values.
+| ... | ... | | Alignment padding +
+32-bit alignment
+|===
+
+==== Message string conversion specifiers
+The message string conversion specifiers seem to be related to those of the 
+WINAPI FormatMessage function.
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| %0 | | [yellow-background]*Unknown 0-byte?*
+| %_ | | Space ( ) +
+Where _ in %_ represents a space
+| %.  | | Dot (.)
+| %!  | | Exclamation mark (!)
+| %% | | Percentage character (%)
+| %b | | [yellow-background]*Unknown* +
+[yellow-background]*Is replaced by white space in EventViewer*
+| %n | | New line
+| %r | | Carriage return
+| %t | | Tab
+| %# | | Argument place holder +
+Where # is a numeric value from 1 up-to 99
+| %#!s!  | | Argument place holder +
+Where # is a numeric value from 1 up-to 99 and +
+!s! is the format specifier surrounded by exclamation marks.
+|===
+
+===== Format specifier
+The format specifier (or format string) must be surrounded by exclamation 
+marks. The format specifier is optional and will default to string (!s!).
+....
+%[flags] [width] [.precision] [type prefix] type
+....
+
+The format specifier can include:
+
+* a width and precision specifier for strings
+* a width specifier for integers
+* the type prefixes: h, l, ll, w, I, I32, I64
+
+[NOTE]
+Unsure if the flags are supported the MSDN FormatMessage documentation is 
+unclear about this.
+
+The asterisk (*) is used to specify the width and precision. E.g.
+....
+%1!*.*s!
+%1!*u!
+....
+
+If a width and precision specifier is used then the insert numbers (%#) do no 
+longer directly correspond to the input arguments. Since the width and 
+precision themselves are arguments, e.g. The arguments:
+....
+4 2 TEST
+....
+
+Would result in the string:
+....
+  TE
+....
+
+Restrictions:
+
+* Floating-point format specifiers—e, E, f, and g—are not supported
+* Inserts that use the I64 type prefix are treated as two 32-bit arguments
 
 [yellow-background]*TODO: Migrate the rest of the documentation*
 
