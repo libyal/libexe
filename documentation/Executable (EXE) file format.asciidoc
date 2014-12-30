@@ -1098,8 +1098,8 @@ WINAPI FormatMessage function.
 | %0 | | [yellow-background]*Unknown 0-byte?*
 | %_ | | Space ( ) +
 Where _ in %_ represents a space
-| %.  | | Dot (.)
-| %!  | | Exclamation mark (!)
+| %. | | Dot (.)
+| %! | | Exclamation mark (!)
 | %% | | Percentage character (%)
 | %b | | [yellow-background]*Unknown* +
 [yellow-background]*Is replaced by white space in EventViewer*
@@ -1108,7 +1108,7 @@ Where _ in %_ represents a space
 | %t | | Tab
 | %# | | Argument place holder +
 Where # is a numeric value from 1 up-to 99
-| %#!s!  | | Argument place holder +
+| %#!s! | | Argument place holder +
 Where # is a numeric value from 1 up-to 99 and +
 !s! is the format specifier surrounded by exclamation marks.
 |===
@@ -1152,6 +1152,464 @@ Restrictions:
 
 * Floating-point format specifiers—e, E, f, and g—are not supported
 * Inserts that use the I64 type prefix are treated as two 32-bit arguments
+
+=== Version resource data
+The version resource data contains several structures that contain the version 
+information values. The version resource data consists of:
+
+* Version information
+* Version fixed file information
+* Version sub values
+** Optional version file information variables
+** Version file information strings
+
+==== Version information
+The version information (VS_VERSIONINFO) is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size
+| 2 | 2 | 52 | Value data size
+| 4 | 2 | 0 | Value type
+| 6 | 32 | "VS_VERSION_INFO" | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character
+| ... | 2 | | Alignment padding +
+32-bit alignment
+| ... | ... | | Version fixed file information (Value data) +
+See section: <<version_fixed_file_information,Version fixed file information>>
+| ... | 2 | | Alignment padding +
+32-bit alignment
+| ... | ... | | Version sub values +
+See section: <<version_sub_values,Version sub values>>
+|===
+
+==== [[version_fixed_file_information]]Version fixed file information
+The version fixed file information (VS_FIXEDFILEINFO) is 52 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | 0xfeef04bd | Signature
+| 4 | 4 | 0x00010000 | Version +
+Stored as 2 x 16-bit values, e.g. +
+"00 00 01 00" => 1.0
+| 8 | 4 | | File version (upper 32-bit) +
+Stored as 2 x 16-bit values, e.g. +
+"00 00 06 00" => 6.0
+| 12 | 4 | | File version (lower 32-bit) +
+Stored as 2 x 16-bit values, e.g. +
+"02 40 70 17" => 6000.16386
+| 16 | 4 | | Product version (upper 32-bit) +
+Stored as 2 x 16-bit values, e.g. +
+"00 00 06 00" => 6.0
+| 20 | 4 | | Product version (lower 32-bit) +
+Stored as 2 x 16-bit values, e.g. +
+"02 40 70 17" => 6000.16386
+| 24 | 4 | 0x0000003f | File flags bitmask
+| 28 | 4 | | File flags
+| 32 | 4 | | File operating system
+| 36 | 4 | | File type
+| 40 | 4 | | File sub type
+| 44 | 4 | | File creation date and time (upper 32-bit) +
+[yellow-background]*Unknown format assumed FILETIME*
+| 48 | 4 | | File creation date and time (lower 32-bit) +
+[yellow-background]*Unknown format assumed FILETIME*
+|===
+
+===== Version file flags
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000001 | VS_FF_DEBUG | File contains debugging information or with debugging features enabled.
+| 0x00000002 | VS_FF_PRERELEASE | File is a development version, not a commercially released product.
+| 0x00000004 | VS_FF_PATCHED | File has been modified and is not identical to the original shipping file of the same version number.
+| 0x00000008 | VS_FF_PRIVATEBUILD | File was not built using standard release procedures. If this value is given, the StringFileInfo block must contain a PrivateBuild string.
+| 0x00000010 | VS_FF_INFOINFERRED | The file's version structure was created dynamically; therefore, some of the members in this structure may be empty or incorrect. This flag should never be set in a file's VS_VERSIONINFO data.
+| 0x00000020 | VS_FF_SPECIALBUILD | File was built by the original company using standard release procedures but is a variation of the standard file of the same version number. If this value is given, the StringFileInfo block block must contain a SpecialBuild string.
+| | | 
+| 0x0000003f | VS_FFI_FILEFLAGSMASK | The file flags bitmask
+|===
+
+===== Version file operating system
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | VOS_UNKNOWN +
+VOS__BASE | The operating system for which the file was designed is unknown to the system.
+| 0x00000001 | VOS__WINDOWS16 | The file was designed for 16-bit Windows.
+| 0x00000002 | VOS__PM16 | The file was designed for 16-bit Presentation Manager.
+| 0x00000003 | VOS__PM32 | The file was designed for 32-bit Presentation Manager.
+| 0x00000004 | VOS__WINDOWS32 | The file was designed for 32-bit Windows.
+| | | 
+| 0x00010000 | VOS_DOS | The file was designed for MS-DOS.
+| 0x00020000 | VOS_OS216 | The file was designed for 16-bit OS/2.
+| 0x00030000 | VOS_OS232 | The file was designed for 32-bit OS/2.
+| 0x00040000 | VOS_NT | The file was designed for Windows NT.
+|===
+
+[yellow-background]*What about 64-bit?*
+
+Note that these values can be combined, e.g.:
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00010001 | VOS_DOS_WINDOWS16 | The file was designed for 16-bit Windows running on MS-DOS.
+| 0x00010004 | VOS_DOS_WINDOWS32 | The file was designed for 32-bit Windows running on MS-DOS.
+| | | 
+| 0x00020002 | VOS_OS216_PM16 | The file was designed for 16-bit Presentation Manager running on 16-bit OS/2.
+| 0x00030003 | VOS_OS232_PM32 | The file was designed for 32-bit Presentation Manager running on 32-bit OS/2.
+| | | 
+| 0x00040004 | VOS_NT_WINDOWS32 | The file was designed for Windows NT.
+|===
+
+===== Version file type
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | VFT_UNKNOWN | The file type is unknown to the system.
+| 0x00000001 | VFT_APP | The file contains an application.
+| 0x00000002 | VFT_DLL | The file contains a DLL.
+| 0x00000003 | VFT_DRV | The file contains a device driver. +
+The file sub type contains a more specific description of the driver.
+| 0x00000004 | VFT_FONT | The file contains a font. +
+The file sub type contains a more specific description of the driver.
+| 0x00000005 | VFT_VXD | The file contains a virtual device.
+| | | 
+| 0x00000007 | VFT_STATIC_LIB | The file contains a static-link library.
+|===
+
+===== Version file sub type
+According to `[MSDN_RC]` all non-listed version file sub types are are reserved.
+
+====== Driver
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | VFT2_UNKNOWN | The driver type is unknown by the system.
+| 0x00000001 | VFT2_DRV_PRINTER | The file contains a printer driver.
+| 0x00000002 | VFT2_DRV_KEYBOARD | The file contains a keyboard driver.
+| 0x00000003 | VFT2_DRV_LANGUAGE | The file contains a language driver.
+| 0x00000004 | VFT2_DRV_DISPLAY | The file contains a display driver.
+| 0x00000005 | VFT2_DRV_MOUSE | The file contains a mouse driver.
+| 0x00000006 | VFT2_DRV_NETWORK | The file contains a network driver.
+| 0x00000007 | VFT2_DRV_SYSTEM | The file contains a system driver.
+| 0x00000008 | VFT2_DRV_INSTALLABLE | The file contains an installable driver.
+| 0x00000009 | VFT2_DRV_SOUND | The file contains a sound driver.
+| 0x0000000a | VFT2_DRV_COMM | The file contains a communications driver.
+| | | 
+| 0x0000000c | VFT2_DRV_VERSIONED_PRINTER | The file contains a versioned printer driver.
+|===
+
+====== Font
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000000 | VFT2_UNKNOWN | The font type is unknown by the system.
+| 0x00000001 | VFT2_FONT_RASTER | The file contains a raster font.
+| 0x00000002 | VFT2_FONT_VECTOR | The file contains a vector font.
+| 0x00000003 | VFT2_FONT_TRUETYPE | The file contains a TrueType font.
+|===
+
+====== Virtual device
+The sub file type contains the virtual device identifier included in the 
+virtual device control block.
+
+==== [[version_sub_values]]Version sub values
+The sub values are stored as  version file information values and consist of:
+
+* Version file information strings (zero or one)
+* Version file information variables (zero or one)
+
+===== Version file information variables
+The version file information variables consists of:
+
+* version file information variables header
+* array of variables
+
+====== Version file information variables header (VarFileInfo)
+The version file information variables header (VarFileInfo) is variable of size 
+and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size +
+The size of the file information variables data which includes the size itself
+| 2 | 2 | 0 | Value data size
+| 4 | 2 | 1 | Value type +
+0 => Binary string +
+1 => Text string
+| 6 | ... | "VarFileInfo" | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character
+| ... | 2 | | Alignment padding +
+32-bit alignment
+|===
+
+====== Version file information value variable (Var)
+The version file information value variables (Var) is variable of size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size +
+The size of the variable data which includes the size itself
+| 2 | 2 | | Value data size +
+If value type is 0 this values contains the number of bytes of the binary data [yellow-background]*if the value type is 1 this value contains the number of characters of sting including the end-of-string character.*
+| 4 | 2 | | Value type +
+0 => Binary string +
+1 => Text string
+| 6 | | | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character
+| ... | 2 | | [yellow-background]*Unknown (Alignment padding)* +
+[yellow-background]*32-bit alignment*
+| ... | ... | | Value data
+|===
+
+====== Version file information value variable identifiers
+[yellow-background]*TODO*
+
+[cols="1,5",options="header"]
+|===
+| Value | Description
+| Translation
+| [yellow-background]*TODO* +
+4 bytes of value data +
+[yellow-background]*This looks a binary representation of the StringTable value identifier string in the StringFileInfo e.g. 0x040904e0 which look like 2 LCIDs. The first LCID seemt to correspond with the language of the file.*
+|===
+
+===== Version file information strings
+The version file information strings consists of:
+
+* version file information strings header
+* string table
+* array of value strings
+
+====== Version file information strings header (StringFileInfo)
+The version file information strings header (StringFileInfo) is variable of 
+size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size +
+The size of the file information strings data which includes the size itself
+| 2 | 2 | 0 | Value data size
+| 4 | 2 | 1 | Value type +
+0 => Binary string +
+1 => Text string
+| 6 | ... | "StringFileInfo" | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character
+| ... | 2 | | Alignment padding +
+32-bit alignment
+|===
+
+====== Version file information string table header (StringTable)
+The version file information string table header (StringTable) is variable of 
+size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size +
+The size of the string table data which includes the size itself
+| 2 | 2 | 0 | Value data size
+| 4 | 2 | 1 | Value type +
+0 => Binary string +
+1 => Text string
+| 6 | | | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character +
+E.g. 040904E0 which look like 2 LCIDs
+| ... | 2 | | Alignment padding +
+32-bit alignment
+|===
+
+====== Version file information value string (String)
+The version file information value string (String) is variable of size and 
+consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Size +
+The size of the string data which includes the size itself
+| 2 | | | Value data size +
+This value contains the number of characters of sting including the end-of-string character.
+| 4 | 2 | 1 | Value type +
+0 => Binary string +
+1 => Text string
+| 6 | | | Value identifier string +
+Contains an UTF-16 little-endian string with an end-of-string character
+| ... | 2 | | Alignment padding +
+32-bit alignment
+| ... | ... | | Value string (Value data) +
+Contains an UTF-16 little-endian string with an end-of-string character
+|===
+
+====== Version file information value string identifiers
+[yellow-background]*TODO: integrate notes in text*
+
+[cols="1,5",options="header"]
+|===
+| Value | Description
+| Comments | The Value member contains any additional information that should be displayed for diagnostic purposes. This string can be an arbitrary length.
+| CompanyName | The Value member identifies the company that produced the file. For example, "Microsoft Corporation" or "Standard Microsystems Corporation, Inc."
+| FileDescription | The Value member describes the file in such a way that it can be presented to users. This string may be presented in a list box when the user is choosing files to install. For example, "Keyboard driver for AT-style keyboards" or "Microsoft Word for Windows".
+| FileVersion | The Value member identifies the version of this file. For example, Value could be "3.00A" or "5.00.RC2".
+| InternalName | The Value member identifies the file's internal name, if one exists. For example, this string could contain the module name for a DLL, a virtual device name for a Windows virtual device, or a device name for a MS-DOS device driver.
+| LegalCopyright | The Value member describes all copyright notices, trademarks, and registered trademarks that apply to the file. This should include the full text of all notices, legal symbols, copyright dates, trademark numbers, and so on. In English, this string should be in the format "Copyright Microsoft Corp. 1990 - 1994".
+| LegalTrademarks | The Value member describes all trademarks and registered trademarks that apply to the file. This should include the full text of all notices, legal symbols, trademark numbers, and so on. In English, this string should be in the format "Windows is a trademark of Microsoft Corporation".
+| OriginalFilename | The Value member identifies the original name of the file, not including a path. This enables an application to determine whether a file has been renamed by a user. This name may not be MS-DOS 8.3-format if the file is specific to a non-FAT file system.
+| PrivateBuild | The Value member describes by whom, where, and why this private version of the file was built. This string should only be present if the VS_FF_PRIVATEBUILD flag is set in the dwFileFlags member of the VS_FIXEDFILEINFO structure. For example, Value could be "Built by OSCAR on \OSCAR2".
+| ProductName | The Value member identifies the name of the product with which this file is distributed. For example, this string could be "Microsoft Windows".
+| ProductVersion | The Value member identifies the version of the product with which this file is distributed. For example, Value could be "3.00A" or "5.00.RC2".
+| SpecialBuild | The Value member describes how this version of the file differs from the normal version. This entry should only be present if the VS_FF_SPECIALBUILD flag is set in the dwFileFlags member of the VS_FIXEDFILEINFO structure. For example, Value could be "Private build for Olivetti solving mouse problems on M250 and M250E computers".
+|===
+
+=== Manifest resource data
+The manifest resource data is variable of size and consist of.
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | ...  | | Data containing XML string
+|===
+
+[yellow-background]*TODO is this always UTF8 or are other values possible?*
+....
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+....
+
+=== Multilingual User Interface (MUI) resource data
+The Multilingual User Interface (MUI) resource data was introduce in Windows 
+Vista. It has the name "MUI".
+
+On a Windows system "muirct" be used to determine more about the MUI resource 
+of an executable. E.g.
+....
+muirct.exe -d file.exe
+....
+
+This tool is part of the Windows SDK as of Vista.
+
+The MUI resource data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | 0xfecdfecd | Signature
+| 4 | 4 | | Size
+| 8 | 4 | 0x00010000 | Version (RC config version) +
+Assumed to be stored as 2 x 16-bit values, e.g. +
+"00 00 01 00" => 1.0
+| 12 | 4 | | [yellow-background]*Unknown (Empty values)*
+| 16 | 4 | | File type +
+[yellow-background]*0x11 = > "normal" file* +
+[yellow-background]*0x12 => ".mui" file*
+| 20 | 4 | | System attributes
+| 24 | 4 | | [yellow-background]*Ultimate fallback location* +
+[yellow-background]*0x01 => internal* +
+[yellow-background]*0x02 => external*
+| 28 | 16 | | Service checksum +
+[yellow-background]*TODO: checksum algorithm*
+| 44 | 16 | | Checksum +
+[yellow-background]*TODO: checksum algorithm*
+| 60 | 24 | | [yellow-background]*Unknown (Empty values)*
+4+| _Value descriptors_
+| 84 | 4 | | Main name type data offset
+| 88 | 4 | | Main name type data size
+| 92 | 4 | | Main ID types data offset
+| 96 | 4 | | Main ID types data size
+| 100 | 4 | | MUI name type data offset
+| 104 | 4 | | MUI name type data size
+| 108 | 4 | | MUI ID types data offset
+| 112 | 4 | | MUI ID types data size
+| 116 | 4 | | [yellow-background]*Language data offset*
+| 120 | 4 | | [yellow-background]*Language data size*
+| 124 | 4 | | Ultimate fallback language data offset
+| 128 | 4 | | Ultimate fallback language data size
+4+| _Value data_
+| 132 | ...  | | Data +
+64-bit aligned
+|===
+
+Because the value data is 64-bit aligned is can contain alignment padding.
+
+Most of the type values are stored as UTF-16 little-endian string with an 
+end-of-string character. Except for the Main and MUI ID types which are stored 
+as 32-bit little-endian integer values. The name and ID types correspond with 
+the root resource nodes in the file.
+
+[yellow-background]*If file type is 0x11 fallback language is set, if file type is 0x12 language is set.*
+
+==== File type
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| 0x00000011 | | [yellow-background]*Executable*
+|===
+
+==== System attributes
+[yellow-background]*TODO: add text*
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+|===
+
+==== MUI name type
+[yellow-background]*TODO: add text*
+
+[cols="1,5",options="header"]
+|===
+| Value | Description
+| MOFTYPE | 
+| MUI | 
+| WEVT_TEMPLATE |
+|===
+
+=== Windows Event template resource data
+The Windows Event template resource data was introduce in Windows Vista. It has 
+the name "WEVT_TEMPLATE".
+
+==== Instrumentation manifest
+The instrumentation manifest is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "CRIM" | Signature
+| 4 | 4 | | Size +
+Including the compiled resource instrumentation manifest header
+| 8 | 2 | 3 | Major version
+| 10 | 2 | 1 | Minor version
+| 12 | 4 | | Number of event providers
+| 16 | 20 x number | | Array of event provider descriptors
+|===
+
+Assumed is that CRIM stands for "Compiled resource instrumentation manifest", 
+but it could also be short for Crimson, which was the codename for the event 
+logging service in Windows Longhorn.
+
+===== Event provider descriptor
+The event provider is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 16 | | Provider identifier +
+Contains a GUID
+| 16 | 4 | | Event provider data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
 
 [yellow-background]*TODO: Migrate the rest of the documentation*
 
