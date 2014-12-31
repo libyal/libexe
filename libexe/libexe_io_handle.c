@@ -1270,7 +1270,8 @@ int libexe_io_handle_read_coff_header(
 		 "%s: characteristic flags\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
-
+		libexe_debug_print_file_characteristic_flags(
+		 value_16bit );
 		libcnotify_printf(
 		 "\n" );
 	}
@@ -1601,6 +1602,10 @@ int libexe_io_handle_read_coff_optional_header(
 			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
+			libexe_debug_print_dll_characteristic_flags(
+			 value_16bit );
+			libcnotify_printf(
+			 "\n" );
 
 			byte_stream_copy_to_uint32_little_endian(
 			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_reservation_size,
@@ -1778,6 +1783,10 @@ int libexe_io_handle_read_coff_optional_header(
 			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
+			libexe_debug_print_dll_characteristic_flags(
+			 value_16bit );
+			libcnotify_printf(
+			 "\n" );
 
 			byte_stream_copy_to_uint64_little_endian(
 			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_reservation_size,
@@ -2491,9 +2500,6 @@ int libexe_io_handle_read_section_table(
 			 value_32bit );
 			libexe_debug_print_section_characteristic_flags(
 			 value_32bit );
-			libcnotify_printf(
-			 "\n" );
-
 			libcnotify_printf(
 			 "\n" );
 		}

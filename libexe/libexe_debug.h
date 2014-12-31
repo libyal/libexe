@@ -34,8 +34,14 @@ extern "C" {
 
 #if defined( HAVE_DEBUG_OUTPUT )
 
+void libexe_debug_print_file_characteristic_flags(
+      uint16_t characteristic_flags );
+
+void libexe_debug_print_dll_characteristic_flags(
+      uint16_t characteristic_flags );
+
 void libexe_debug_print_section_characteristic_flags(
-      uint32_t section_characteristic_flag );
+      uint32_t characteristic_flags );
 
 int libexe_debug_print_read_offsets(
      libbfio_handle_t *file_io_handle,

@@ -288,7 +288,8 @@ Contains a POSIX time
 Offset relative to the start of the file or 0 if table is not present
 | 12 | 4 | | Number of symbols
 | 16 | 2 | | Optional header size
-| 18 | 2 | | File characteristic flags
+| 18 | 2 | | File characteristic flags +
+See section: <<file_characteristic_flags,File characteristic flags>>
 |===
 
 ==== Target architecture type
@@ -331,7 +332,7 @@ Offset relative to the start of the file or 0 if table is not present
 | 0x0466 | IMAGE_FILE_MACHINE_MIPSFPU16 | MIPS16 with FPU
 |===
 
-==== File characteristic flags
+==== [[file_characteristic_flags]]File characteristic flags
 
 [cols="1,1,5",options="header"]
 |===
@@ -347,6 +348,7 @@ Offset relative to the start of the file or 0 if table is not present
 | 0x0100 | IMAGE_FILE_32BIT_MACHINE | [yellow-background]*32-bit architecture*
 | 0x0200 | IMAGE_FILE_DEBUG_STRIPPED | Debugging information removed from file
 | 0x0400 | IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP | If the file is on removable media, copy and run from swap file
+| | |
 | 0x1000 | IMAGE_FILE_SYSTEM | Is a system [yellow-background]*file*, not a user program
 | 0x2000 | IMAGE_FILE_DLL | Is a dynamic-link library (DLL)
 | 0x4000 | IMAGE_FILE_UP_SYSTEM_ONLY | [yellow-background]*File should be run only on a UP machine*
@@ -1479,7 +1481,7 @@ The manifest resource data is variable of size and consist of.
 [cols="1,1,1,5",options="header"]
 |===
 | Offset | Size | Value | Description
-| 0 | ...  | | Data containing XML string
+| 0 | ... | | Data containing XML string
 |===
 
 [yellow-background]*TODO is this always UTF8 or are other values possible?*
@@ -1536,7 +1538,7 @@ Assumed to be stored as 2 x 16-bit values, e.g. +
 | 124 | 4 | | Ultimate fallback language data offset
 | 128 | 4 | | Ultimate fallback language data size
 4+| _Value data_
-| 132 | ...  | | Data +
+| 132 | ... | | Data +
 64-bit aligned
 |===
 
@@ -1611,7 +1613,476 @@ Contains a GUID
 The offset is relative to the start of the instrumentation manifest
 |===
 
-[yellow-background]*TODO: Migrate the rest of the documentation*
+==== Event provider
+The event provider is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "WEVT" | Signature
+| 4 | 4 | | Size +
+Including the Windows Event Template header
+| 8 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 12 | 4 | | Number of provider element descriptors
+| 16 | 4 | | Number of [yellow-background]*Unknown 32-bit values*
+| 20 | ... | | Provider element descriptors
+| ... | ... | | [yellow-background]*Unknown 32-bit values (Empty value)*
+|===
+
+===== Provider element descriptor
+The provider element descriptor is 8 bytes is size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Provider element offset +
+The offset is relative to the start of the instrumentation manifest
+| 4 | 4 | | [yellow-background]*Unknown*
+|===
+
+[yellow-background]*The provider element type is determined by its signature?*
+
+==== Keyword definitions
+The keyword definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "KEYW" | Signature
+| 4 | 4 | | Size +
+Including the keyword definitions header
+| 8 | 4 | | Number of keyword definitions
+| 12 | ... | | Array of keyword definitions
+| ... | ... | | Keyword data
+|===
+
+===== Keyword definition
+A keyword definition is 16 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Identifier (Bitmask)
+| 8 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 12 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Keyword data
+The keyword data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned
+|===
+
+==== Level definitions
+The level definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "LEVL" | Signature
+| 4 | 4 | | Size +
+The value includes the size of the header or is 0 if empty
+| 8 | 4 | | Number of level definitions
+| 12 | ... | | Array of level definitions
+| ... | ... | | Level data
+|===
+
+===== Level definition
+A level definition is 12 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier
+| 4 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 8 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Level data
+The level data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned
+|===
+
+==== Maps definitions
+The maps definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "MAPS" | Signature
+| 4 | 4 | | Size +
+Including the map definitions header
+| 8 | 4 | | Number of map definitions
+| 12 | 4 x (number - 1) | | Array of map definition data offsets +
+The offset is relative to the start of the instrumentation manifest +
+[yellow-background]*This array contains one entry less than the number of maps. The first map definition is implied to be stored directly after this array.*
+| ... | ... | | Array of map definitions
+| ... | ... | | Array of map stings
+|===
+
+===== Bitmap definition
+A bitmap definition is [yellow-background]*Unknown* bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "BMAP" | Signature
+|===
+
+[yellow-background]*TODO: BMAPS are used to define flags*
+
+===== Value map definition
+Value maps are used to define enumeration types. 
+
+A value map definition is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "VMAP" | Signature
+| 4 | 4 | | Size +
+Including including the signature
+| 8 | 4 | | Map string data offset +
+The offset is relative to the start of the instrumentation manifest
+| 12 | 4 | | Number of value map entries
+| 16 | ... | | Array of value map entries
+|===
+
+====== Value map entry
+A value map entry is 8 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier
+| 4 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+|===
+
+===== Map string
+The map string data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+|===
+
+==== Channel definitions
+The channel definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "CHAN" | Signature
+| 4 | 4 | | Size +
+Including the channel definitions header
+| 8 | 4 | | Number of channel definitions
+| 12 | ... | | Array of channel definitions
+| ... | ... | | Channel data
+|===
+
+===== Channel definition
+A channel definition is 16 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier
+| 4 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+| 8 | 4 | | [yellow-background]*Unknown (Value)*
+| 12 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+|===
+
+===== Channel data
+The channel data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned
+|===
+
+==== Event definitions
+The event definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "EVTN" | Signature
+| 4 | 4 | | Size +
+Including the event definitions header
+| 8 | 4 | | Number of event definitions
+| 12 | 4 | | [yellow-background]*Unknown (Empty values)*
+| 12 | ... | | Array of event definitions
+| ... | [yellow-background]*28& | | [yellow-background]*Unknown*
+|===
+
+===== Event definition
+An event definition is 48 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 2 | | Identifier +
+The event identifier without Customer flags and Severity. +
+4+| _If flag 0x00000080 is not set_ ([yellow-background]*does this hold?*)
+| 2 | 2 | | [yellow-background]*Unknown*
+| 4 | 2 | | Qualifiers
+| 6 | 2 | | [yellow-background]*Unknown*
+4+| _If flag 0x00000080 is set_ ([yellow-background]*does this hold?*)
+| 2 | 1 | | Version
+| 3 | 1 | | Channel
+| 4 | 1 | | Level
+| 5 | 1 | | Opcode
+| 6 | 2 | | Task
+4+| _Common_
+| 8 | 8 | | Keywords
+| 16 | 4 | | Message identifier
+| 20 | 4 | | Template definition offset +
+The offset is relative to the start of the instrumentation manifest or 0 if not set
+| 24 | 4 | | Opcode definition offset +
+The offset is relative to the start of the instrumentation manifest or 0 if not set
+| 28 | 4 | | Level definition offset +
+The offset is relative to the start of the instrumentation manifest or 0 if not set
+| 32 | 4 | | Task definition offset +
+The offset is relative to the start of the instrumentation manifest or 0 if not set
+| 36 | 4 | | [yellow-background]*Unknown (number of 4 byte values?)*
+| 40 | 4 | | [yellow-background]*Unknown (Offset to a 4 byte value?)*
+| 44 | 4 | | [yellow-background]*Unknown (Flags)*
+|===
+
+==== Keyword definitions
+The keyword definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "KEYW" | Signature
+| 4 | 4 | | Size +
+Including the keyword definitions header
+| 8 | 4 | | Number of keyword definitions
+| 12 | ... | | Array of keyword definitions
+| ... | ... | | Keyword data
+|===
+
+===== Keyword definition
+A keyword definition is 16 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 8 | | Identifier (Bitmask)
+| 8 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 12 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Keyword data
+The keyword data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding
+The data is 8-byte aligned
+
+==== Opcode definitions
+The opcode definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "OPCO" | Signature
+| 4 | 4 | | Size +
+The value includes the size of the header or is 0 if empty
+| 8 | 4 | | Number of opcode definitions
+| 12 | ... | | Array of opcode definitions
+|===
+
+===== Opcode definition
+A opcode definition is 12 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier
+| 4 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 8 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Opcode data
+The opcode data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned
+|===
+
+==== Task
+The task definitions are variable of size and consist of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "TASK" | Signature
+| 4 | 4 | | Size +
+Including the task definitions header
+| 8 | 4 | | Number of task definitions
+| 12 | ... | | Array of task definitions
+| ... | ... | | Task data
+|===
+
+===== Task definition
+A task definition is 28 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Identifier
+| 4 | 4 | | Message-table identifier +
+or 0xffffffff (-1) if not set
+| 8 | 16 | | [yellow-background]*Unknown (MUI identifier)* +
+Contains a GUID
+| 24 | 4 | | Data offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Task data
+The task data is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned
+|===
+
+==== Template table
+The template table is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "TTBL" | Signature
+| 4 | 4 | | Size +
+Including the template table header
+| 8 | 4 | | Number of templates
+| 12 | ... | | Array of templates
+| ... | ... | | Template data
+|===
+
+===== Template definition
+A template definition is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | "TEMP" | Signature
+| 4 | 4 | | Size +
+Including the template header
+| 8 | 4 | | Number of variable descriptors
+| 12 | 4 | | Number of variable names
+| 16 | 4 | | Instance variables offset +
+The offset is relative to the start of the instrumentation manifest
+| 20 | 4 | [yellow-background]*1* | [yellow-background]*Unknown (number of BinXML fragments?)*
+| 24 | 16 | | Identifier +
+Contains a GUID
+| 40 | ... | | Binary XML fragment
+| ... | ... | | Template variables descriptors
+| ... | ... | | Template variables names
+|===
+
+[NOTE]
+If the number of variable descriptors (and number of variable names) the 
+instance variables offset is either 0 or contains the template size.
+
+===== Template binary XML fragment
+The binary XML is slightly different to that of EVTX.
+
+* the name offset is not used
+* the name does not contain the additional unknown 4 byte value
+* the template instance variables are stored outside the template
+
+===== Template instance variable descriptor
+The template instance variable descriptor is 20 bytes of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | [yellow-background]*Unknown (empty value)*
+| 4 | 1 | | Value type
+| 5 | 1 | | [yellow-background]*Unknown (Value type)*
+| 6 | 2 | | [yellow-background]*Unknown (empty value)*
+| 8 | 4 | | [yellow-background]*Unknown (empty value)*
+| 12 | 4 | | [yellow-background]*Unknown (empty value)*
+| 16 | 4 | | Template instance variable name offset +
+The offset is relative to the start of the instrumentation manifest
+|===
+
+===== Template instance variable name
+The template instance variable name is variable of size and consists of:
+
+[cols="1,1,1,5",options="header"]
+|===
+| Offset | Size | Value | Description
+| 0 | 4 | | Size +
+Includes the size itself
+| 4 | ... | | String +
+The string is formatted as UTF-16 little-endian with an end-of-string character
+| ... | ... | | Alignment padding +
+The data is 8-byte aligned +
+[yellow-background]*Last name only?*
+|===
 
 == Notes
 === Export directory table

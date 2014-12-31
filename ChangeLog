@@ -13,6 +13,10 @@ Format support:
 * NE executable
 * LE executable
 
+20141231
+* worked on format support
+* worked on documentation
+
 20141229
 * updated dependencies
 * updated dpkg files

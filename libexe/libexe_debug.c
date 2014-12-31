@@ -30,108 +30,215 @@
 
 #if defined( HAVE_DEBUG_OUTPUT )
 
+/* Prints the COFF header characteristic flags
+ */
+void libexe_debug_print_file_characteristic_flags(
+      uint32_t characteristic_flags )
+{
+	if( ( characteristic_flags & 0x0001 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0001 (IMAGE_FILE_RELOCS_STRIPPEDD)\n" );
+	}
+	if( ( characteristic_flags & 0x0002 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0002 (IMAGE_FILE_EXECUTABLE_IMAGED)\n" );
+	}
+	if( ( characteristic_flags & 0x0004 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0004 (IMAGE_FILE_LINE_NUMS_STRIPPEDD)\n" );
+	}
+	if( ( characteristic_flags & 0x0008 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0008 (IMAGE_FILE_LOCAL_SYMS_STRIPPEDD)\n" );
+	}
+	if( ( characteristic_flags & 0x0010 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0010 (IMAGE_FILE_AGGRESSIVE_WS_TRIMD)\n" );
+	}
+	if( ( characteristic_flags & 0x0020 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0020 (IMAGE_FILE_LARGE_ADDRESS_AWARED)\n" );
+	}
+	if( ( characteristic_flags & 0x0040 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0040 (IMAGE_FILE_16BIT_MACHINED)\n" );
+	}
+	if( ( characteristic_flags & 0x0080 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0080 (IMAGE_FILE_BYTES_REVERSED_LOD)\n" );
+	}
+	if( ( characteristic_flags & 0x0100 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0100 (IMAGE_FILE_32BIT_MACHINED)\n" );
+	}
+	if( ( characteristic_flags & 0x0200 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0200 (IMAGE_FILE_DEBUG_STRIPPEDD)\n" );
+	}
+	if( ( characteristic_flags & 0x0400 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0400 (IMAGE_FILE_REMOVABLE_RUN_FROM_SWAPD)\n" );
+	}
+
+	if( ( characteristic_flags & 0x1000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x1000 (IMAGE_FILE_SYSTEMD)\n" );
+	}
+	if( ( characteristic_flags & 0x2000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x2000 (IMAGE_FILE_DLLD)\n" );
+	}
+	if( ( characteristic_flags & 0x4000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x4000 (IMAGE_FILE_UP_SYSTEM_ONLYD)\n" );
+	}
+	if( ( characteristic_flags & 0x8000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x8000 (IMAGE_FILE_BYTES_REVERSED_HID)\n" );
+	}
+}
+
+/* Prints the SLL characteristic flags
+ */
+void libexe_debug_print_dll_characteristic_flags(
+      uint32_t characteristic_flags )
+{
+	if( ( characteristic_flags & 0x0800 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x0800 (IMAGE_DLLCHARACTERISTICS_NO_BIND)\n" );
+	}
+
+	if( ( characteristic_flags & 0x2000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x2000 (IMAGE_DLLCHARACTERISTICS_WDM_DRIVER)\n" );
+	}
+
+	if( ( characteristic_flags & 0x8000 ) != 0 )
+	{
+		libcnotify_printf(
+		 "\t0x8000 (IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE)\n" );
+	}
+}
+
 /* Prints the section characteristic flags
  */
 void libexe_debug_print_section_characteristic_flags(
-      uint32_t section_characteristic_flag )
+      uint32_t characteristic_flags )
 {
-	if( section_characteristic_flag == 0x00000000UL )
+	if( characteristic_flags == 0x00000000UL )
 	{
 		libcnotify_printf(
 		 "\t0x00000000 (IMAGE_SCN_TYPE_REG)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000001UL ) != 0 )
+	if( ( characteristic_flags & 0x00000001UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000001 (IMAGE_SCN_TYPE_DSECT)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000002UL ) != 0 )
+	if( ( characteristic_flags & 0x00000002UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000002 (IMAGE_SCN_TYPE_NOLOAD)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000004UL ) != 0 )
+	if( ( characteristic_flags & 0x00000004UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000004 (IMAGE_SCN_TYPE_GROUP)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000008UL ) != 0 )
+	if( ( characteristic_flags & 0x00000008UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000008 (IMAGE_SCN_TYPE_NO_PAD)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000010UL ) != 0 )
+	if( ( characteristic_flags & 0x00000010UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000010 (IMAGE_SCN_TYPE_COPY)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000020UL ) != 0 )
+	if( ( characteristic_flags & 0x00000020UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000020 (IMAGE_SCN_CNT_CODE)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000040UL ) != 0 )
+	if( ( characteristic_flags & 0x00000040UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000040 (IMAGE_SCN_CNT_INITIALIZED_DATA)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000080UL ) != 0 )
+	if( ( characteristic_flags & 0x00000080UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000080 (IMAGE_SCN_CNT_UNINITIALIZED_DATA)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000100UL ) != 0 )
+	if( ( characteristic_flags & 0x00000100UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000100 (IMAGE_SCN_LNK_OTHER)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000200UL ) != 0 )
+	if( ( characteristic_flags & 0x00000200UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000200 (IMAGE_SCN_LNK_INFO)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000400UL ) != 0 )
+	if( ( characteristic_flags & 0x00000400UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000400 (IMAGE_SCN_TYPE_OVER)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00000800UL ) != 0 )
+	if( ( characteristic_flags & 0x00000800UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00000800 (IMAGE_SCN_LNK_REMOVE)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00001000UL ) != 0 )
+	if( ( characteristic_flags & 0x00001000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00001000 (IMAGE_SCN_LNK_COMDAT)\n" );
 	}
 
-	if( ( section_characteristic_flag & 0x00008000UL ) != 0 )
+	if( ( characteristic_flags & 0x00008000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00008000 (IMAGE_SCN_MEM_FARDATA)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00010000UL ) != 0 )
+	if( ( characteristic_flags & 0x00010000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00010000 (IMAGE_SCN_MEM_PURGEABLE)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00020000UL ) != 0 )
+	if( ( characteristic_flags & 0x00020000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00020000 (IMAGE_SCN_MEM_16BIT)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00040000UL ) != 0 )
+	if( ( characteristic_flags & 0x00040000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00040000 (IMAGE_SCN_MEM_LOCKED)\n" );
 	}
-	if( ( section_characteristic_flag & 0x00080000UL ) != 0 )
+	if( ( characteristic_flags & 0x00080000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x00080000 (IMAGE_SCN_MEM_PRELOAD)\n" );
 	}
-	switch( section_characteristic_flag & 0x00f00000UL )
+	switch( characteristic_flags & 0x00f00000UL )
 	{
 		case 0x00100000UL:
 			libcnotify_printf(
@@ -207,42 +314,42 @@ void libexe_debug_print_section_characteristic_flags(
 			break;
 	}
 
-	if( ( section_characteristic_flag & 0x01000000UL ) != 0 )
+	if( ( characteristic_flags & 0x01000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x01000000 (IMAGE_SCN_LNK_NRELOC_OVFL)\n" );
 	}
-	if( ( section_characteristic_flag & 0x02000000UL ) != 0 )
+	if( ( characteristic_flags & 0x02000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x02000000 (IMAGE_SCN_MEM_DISCARDABLE)\n" );
 	}
-	if( ( section_characteristic_flag & 0x04000000UL ) != 0 )
+	if( ( characteristic_flags & 0x04000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x04000000 (IMAGE_SCN_MEM_NOT_CACHED)\n" );
 	}
-	if( ( section_characteristic_flag & 0x08000000UL ) != 0 )
+	if( ( characteristic_flags & 0x08000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x08000000 (IMAGE_SCN_MEM_NOT_PAGED)\n" );
 	}
-	if( ( section_characteristic_flag & 0x10000000UL ) != 0 )
+	if( ( characteristic_flags & 0x10000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x10000000 (IMAGE_SCN_MEM_SHARED)\n" );
 	}
-	if( ( section_characteristic_flag & 0x20000000UL ) != 0 )
+	if( ( characteristic_flags & 0x20000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x20000000 (IMAGE_SCN_MEM_EXECUTE)\n" );
 	}
-	if( ( section_characteristic_flag & 0x40000000UL ) != 0 )
+	if( ( characteristic_flags & 0x40000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x40000000 (IMAGE_SCN_MEM_READ)\n" );
 	}
-	if( ( section_characteristic_flag & 0x80000000UL ) != 0 )
+	if( ( characteristic_flags & 0x80000000UL ) != 0 )
 	{
 		libcnotify_printf(
 		 "\t0x80000000 (IMAGE_SCN_MEM_WRITE)\n" );
