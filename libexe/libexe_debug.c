@@ -33,7 +33,7 @@
 /* Prints the COFF header characteristic flags
  */
 void libexe_debug_print_file_characteristic_flags(
-      uint32_t characteristic_flags )
+      uint16_t characteristic_flags )
 {
 	if( ( characteristic_flags & 0x0001 ) != 0 )
 	{
@@ -113,10 +113,10 @@ void libexe_debug_print_file_characteristic_flags(
 	}
 }
 
-/* Prints the SLL characteristic flags
+/* Prints the DLL characteristic flags
  */
 void libexe_debug_print_dll_characteristic_flags(
-      uint32_t characteristic_flags )
+      uint16_t characteristic_flags )
 {
 	if( ( characteristic_flags & 0x0800 ) != 0 )
 	{
