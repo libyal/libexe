@@ -26,6 +26,7 @@
 
 #include "libexe_codepage.h"
 #include "libexe_data_directory_descriptor.h"
+#include "libexe_debug.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
