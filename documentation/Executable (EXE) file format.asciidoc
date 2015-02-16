@@ -1923,6 +1923,7 @@ Includes the size itself
 The string is formatted as UTF-16 little-endian with an end-of-string character
 | ... | ... | | Alignment padding
 The data is 8-byte aligned
+|===
 
 ==== Opcode definitions
 The opcode definitions are variable of size and consist of:
