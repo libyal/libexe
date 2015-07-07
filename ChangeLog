@@ -13,6 +13,10 @@ Format support:
 * NE executable
 * LE executable
 
+20150707
+* worked on check signature
+* updated dependencies
+
 20150118
 * code clean up
 
