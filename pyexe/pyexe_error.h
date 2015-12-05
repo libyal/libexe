@@ -28,7 +28,7 @@
 #include "pyexe_libcerror.h"
 #include "pyexe_python.h"
 
-#define PYEXE_ERROR_STRING_SIZE		768
+#define PYEXE_ERROR_STRING_SIZE		2048
 
 #if defined( __cplusplus )
 extern "C" {
