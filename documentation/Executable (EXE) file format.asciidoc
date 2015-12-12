@@ -1,6 +1,9 @@
 = MZ, PE-COFF executable file format (EXE)
 Analysis of EXE
 
+:toc:
+:toclevels: 4
+
 :numbered!:
 [abstract]
 == Summary
