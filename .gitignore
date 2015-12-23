@@ -114,7 +114,6 @@ stamp-h[1-9]
 /libexe/libexe.rc
 /libexe/libexe_definitions.h
 /exetools/exeinfo
-/pyexe/setup.py
 /tests/exe_test_open_close
 /tests/exe_test_set_ascii_codepage
 /tests/input
