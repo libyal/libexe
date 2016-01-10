@@ -113,7 +113,7 @@ stamp-h[1-9]
 /include/libexe/types.h
 /libexe/libexe.rc
 /libexe/libexe_definitions.h
-/pyexe[23]/*.[ch]
+/pyexe-python[23]/*.[ch]
 /exetools/exeinfo
 /tests/exe_test_open_close
 /tests/exe_test_set_ascii_codepage
