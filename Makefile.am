@@ -21,6 +21,8 @@ SUBDIRS = \
 	libcsystem \
 	exetools \
 	pyexe \
+	pyexe2 \
+	pyexe3 \
 	po \
 	manuals \
 	tests \
@@ -34,8 +36,10 @@ DPKG_FILES = \
 	dpkg/copyright \
 	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libexe-dev.docs \
 	dpkg/libexe.docs \
+	dpkg/libexe-dev.docs \
+	dpkg/libexe-python.docs \
+	dpkg/libexe-python3.docs \
 	dpkg/libexe-tools.docs \
 	dpkg/source/format
 

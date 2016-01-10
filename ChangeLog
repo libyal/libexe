@@ -13,6 +13,9 @@ Format support:
 * NE executable
 * LE executable
 
+20160110
+* worked on Python 3 support
+
 20160107
 * 2016 update
 
