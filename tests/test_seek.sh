@@ -1,5 +1,5 @@
 #!/bin/bash
-# Info tool testing script
+# Library seek testing script
 #
 # Version: 20160126
 
@@ -11,6 +11,7 @@ TEST_PREFIX=`pwd`;
 TEST_PREFIX=`dirname ${TEST_PREFIX}`;
 TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib//'`;
 
+TEST_EXECUTABLE="${TEST_PREFIX}_test_seek";
 OPTION_SETS="";
 INPUT_GLOB="*";
 
@@ -57,50 +58,29 @@ run_test()
 	if test -z "${OPTION_SET}";
 	then
 		OPTIONS="";
-		TEST_OUTPUT="${INPUT_NAME}";
 	else
 		OPTIONS=`cat "${TEST_SET_DIR}/${INPUT_NAME}.${OPTION_SET}" | head -n 1 | sed 's/[\r\n]*$//'`;
-		TEST_OUTPUT="${INPUT_NAME}-${OPTION_SET}";
 	fi
 	TMPDIR="tmp$$";
 
 	rm -rf ${TMPDIR};
 	mkdir ${TMPDIR};
 
-	STORED_TEST_RESULTS="${TEST_SET_DIR}/${TEST_OUTPUT}.log.gz";
-	TEST_RESULTS="${TMPDIR}/${TEST_OUTPUT}.log";
+	if test -z "${OPTION_SET}";
+	then
+		echo "Testing ${TEST_DESCRIPTION} with input: ${INPUT_FILE}";
+	else
+		echo "Testing ${TEST_DESCRIPTION} with option: ${OPTION_SET} and input: ${INPUT_FILE}";
+	fi
 
-	# Note that options should not contain spaces otherwise the test_runner
-	# will fail parsing the arguments.
-	${TEST_RUNNER} ${TMPDIR} ${TEST_EXECUTABLE} ${OPTIONS} ${INPUT_FILE} | sed '1,2d' > ${TEST_RESULTS};
+	${TEST_RUNNER} ${TMPDIR} ${TEST_EXECUTABLE} ${OPTIONS} ${INPUT_FILE};
 
 	RESULT=$?;
 
-	if test -f "${STORED_TEST_RESULTS}";
-	then
-		zdiff ${STORED_TEST_RESULTS} ${TEST_RESULTS};
-
-		RESULT=$?;
-	else
-		gzip ${TEST_RESULTS};
-
-		mv "${TEST_RESULTS}.gz" ${TEST_SET_DIR};
-	fi
 	rm -rf ${TMPDIR};
 
-	if test -z "${OPTION_SET}";
-	then
-		echo -n "Testing ${TEST_DESCRIPTION} with input: ${INPUT_FILE}";
-	else
-		echo -n "Testing ${TEST_DESCRIPTION} with option: ${OPTION_SET} and input: ${INPUT_FILE}";
-	fi
+	echo "";
 
-	if test ${RESULT} -ne ${EXIT_SUCCESS};
-	then
-		echo " (FAIL)";
-	else
-		echo " (PASS)";
-	fi
 	return ${RESULT};
 }
 
@@ -198,21 +178,21 @@ run_tests()
 	return ${EXIT_SUCCESS};
 }
 
-if ! test -z ${SKIP_TOOLS_TESTS};
+if ! test -z ${SKIP_LIBRARY_TESTS};
 then
 	exit ${EXIT_IGNORE};
 fi
 
-INFO_TOOL="../${TEST_PREFIX}tools/${TEST_PREFIX}info";
+TEST_SEEK="./${TEST_EXECUTABLE}";
 
-if ! test -x "${INFO_TOOL}";
+if ! test -x "${TEST_SEEK}";
 then
-	INFO_TOOL="../${TEST_PREFIX}tools/${TEST_PREFIX}info";
+	TEST_SEEK="${TEST_EXECUTABLE}.exe";
 fi
 
-if ! test -x "${INFO_TOOL}";
+if ! test -x "${TEST_SEEK}";
 then
-	echo "Missing executable: ${INFO_TOOL}";
+	echo "Missing executable: ${TEST_SEEK}";
 
 	exit ${EXIT_FAILURE};
 fi
@@ -221,7 +201,7 @@ OLDIFS=${IFS};
 IFS="
 ";
 
-run_tests "${TEST_PREFIX}info" "${TEST_PREFIX}info" "${INFO_TOOL}";
+run_tests "lib${TEST_PREFIX}" "seek" "${TEST_SEEK}";
 
 RESULT=$?;
 

@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20150927
+# Version: 20151228
 
 # Generic auto-generated build files
 *~
@@ -36,12 +36,15 @@ stamp-h[1-9]
 /autom4te.cache/
 /build
 /compile
+/confdefs.h
+/config.cache
 /config.guess
 /config.log
 /config.rpath
 /config.status
 /config.sub
 /configure
+/conftest.c
 /depcomp
 /dist
 /install-sh
@@ -116,6 +119,8 @@ stamp-h[1-9]
 /pyexe-python[23]/*.[ch]
 /exetools/exeinfo
 /tests/exe_test_open_close
+/tests/exe_test_read
+/tests/exe_test_seek
 /tests/exe_test_set_ascii_codepage
 /tests/input
 /tests/tmp*
