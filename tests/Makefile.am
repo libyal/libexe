@@ -19,7 +19,9 @@ AM_CPPFLAGS = \
 if HAVE_PYTHON_TESTS
 TESTS_PYEXE = \
 	test_pyexe_set_ascii_codepage.sh \
-	test_pyexe_open_close.sh
+	test_pyexe_open_close.sh \
+	test_pyexe_read.sh \
+	test_pyexe_seek.sh
 endif
 
 TESTS = \
@@ -32,10 +34,14 @@ TESTS = \
 
 check_SCRIPTS = \
 	pyexe_test_open_close.py \
+	pyexe_test_read.py \
+	pyexe_test_seek.py \
 	pyexe_test_set_ascii_codepage.py \
 	test_exeinfo.sh \
 	test_open_close.sh \
 	test_pyexe_open_close.sh \
+	test_pyexe_read.sh \
+	test_pyexe_seek.sh \
 	test_pyexe_set_ascii_codepage.sh \
 	test_read.sh \
 	test_runner.sh \
