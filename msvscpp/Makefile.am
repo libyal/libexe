@@ -1,4 +1,8 @@
 MSVSCPP_FILES = \
+	exe_test_open_close/exe_test_open_close.vcproj \
+	exe_test_read/exe_test_read.vcproj \
+	exe_test_seek/exe_test_seek.vcproj \
+	exe_test_set_ascii_codepage/exe_test_set_ascii_codepage.vcproj \
 	exeinfo/exeinfo.vcproj \
 	libbfio/libbfio.vcproj \
 	libcdata/libcdata.vcproj \

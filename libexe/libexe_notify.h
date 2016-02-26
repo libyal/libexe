@@ -23,9 +23,8 @@
 #define _LIBEXE_NOTIFY_H
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #include "libexe_extern.h"
 #include "libexe_libcerror.h"
@@ -54,11 +53,11 @@ LIBEXE_EXTERN \
 int libexe_notify_stream_close(
      libcerror_error_t **error );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_NOTIFY_H ) */
 

@@ -38,5 +38,5 @@ const char *pyexe_codepage_to_string(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYEXE_CODEPAGE_H */
 

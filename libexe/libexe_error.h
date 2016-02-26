@@ -23,9 +23,8 @@
 #define _LIBEXE_INTERNAL_ERROR_H
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #if !defined( HAVE_LOCAL_LIBEXE )
 #include <libexe/error.h>
@@ -65,11 +64,11 @@ int libexe_error_backtrace_sprint(
      char *string,
      size_t size );
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_INTERNAL_ERROR_H ) */
 

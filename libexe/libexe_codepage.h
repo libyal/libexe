@@ -80,11 +80,11 @@ enum LIBEXE_CODEPAGES
 	LIBEXE_CODEPAGE_WINDOWS_1258			= 1258
 };
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_INTERNAL_CODEPAGE_H ) */
 

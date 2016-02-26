@@ -41,9 +41,9 @@ typedef struct libexe_section {}	libexe_section_t;
 typedef intptr_t libexe_file_t;
 typedef intptr_t libexe_section_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBEXE ) */
 
-#endif
+#endif /* !defined( _LIBEXE_INTERNAL_TYPES_H ) */
 
