@@ -1,13 +1,13 @@
 include_HEADERS = \
-        libexe.h
+	libexe.h
 
 pkginclude_HEADERS = \
-        libexe/codepage.h \
-        libexe/definitions.h \
-        libexe/error.h \
-        libexe/extern.h \
-        libexe/features.h \
-        libexe/types.h
+	libexe/codepage.h \
+	libexe/definitions.h \
+	libexe/error.h \
+	libexe/extern.h \
+	libexe/features.h \
+	libexe/types.h
 
 EXTRA_DIST = \
 	libexe.h.in \

@@ -51,7 +51,7 @@ check_SCRIPTS = \
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
-check_PROGRAMS =  \
+check_PROGRAMS = \
 	exe_test_open_close \
 	exe_test_read \
 	exe_test_seek \
