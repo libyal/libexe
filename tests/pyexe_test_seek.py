@@ -180,9 +180,9 @@ def pyexe_test_seek_file(filename):
   exe_file.open(filename, "r")
 
   result = True
-  for section_index in exe_file.number_of_sections:
+  for section_index in range(0, exe_file.number_of_sections):
     exe_section = exe_file.get_section(section_index)
-    result = pyexe_test_read(exe_section)
+    result = pyexe_test_seek(exe_section)
     if not result:
       break
 
@@ -198,9 +198,9 @@ def pyexe_test_seek_file_object(filename):
   exe_file.open_file_object(file_object, "r")
 
   result = True
-  for section_index in exe_file.number_of_sections:
+  for section_index in range(0, exe_file.number_of_sections):
     exe_section = exe_file.get_section(section_index)
-    result = pyexe_test_read(exe_section)
+    result = pyexe_test_seek(exe_section)
     if not result:
       break
 

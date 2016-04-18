@@ -25,20 +25,26 @@
 #include <common.h>
 
 #if !defined( EXE_TEST_ATTRIBUTE_UNUSED )
+
 #if defined( __GNUC__ ) && __GNUC__ >= 3
 #define EXE_TEST_ATTRIBUTE_UNUSED	__attribute__ ((__unused__))
+
 #else
 #define EXE_TEST_ATTRIBUTE_UNUSED
-#endif
-#endif
+
+#endif /* defined( __GNUC__ ) && __GNUC__ >= 3 */
+
+#endif /* !defined( EXE_TEST_ATTRIBUTE_UNUSED ) */
 
 #if defined( _MSC_VER )
 #define EXE_TEST_UNREFERENCED_PARAMETER( parameter ) \
 	UNREFERENCED_PARAMETER( parameter );
+
 #else
 #define EXE_TEST_UNREFERENCED_PARAMETER( parameter ) \
 	/* parameter */
-#endif
 
-#endif
+#endif /* defined( _MSC_VER ) */
+
+#endif /* !defined( _EXE_TEST_UNUSED_H ) */
 

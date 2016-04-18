@@ -118,6 +118,7 @@ stamp-h[1-9]
 /libexe/libexe_definitions.h
 /pyexe-python[23]/*.[ch]
 /exetools/exeinfo
+/tests/exe_test_get_version
 /tests/exe_test_open_close
 /tests/exe_test_read
 /tests/exe_test_seek

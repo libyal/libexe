@@ -18,44 +18,46 @@ AM_CPPFLAGS = \
 
 if HAVE_PYTHON_TESTS
 TESTS_PYEXE = \
-	test_pyexe_set_ascii_codepage.sh \
-	test_pyexe_open_close.sh \
-	test_pyexe_read.sh \
-	test_pyexe_seek.sh
+	test_python_functions.sh \
+	test_pyexe_set_ascii_codepage.sh
 endif
 
 TESTS = \
+	test_api_functions.sh \
 	test_set_ascii_codepage.sh \
-	test_open_close.sh \
-	test_read.sh \
-	test_seek.sh \
 	test_exeinfo.sh \
 	$(TESTS_PYEXE)
 
 check_SCRIPTS = \
+	pyexe_test_get_version.py \
 	pyexe_test_open_close.py \
 	pyexe_test_read.py \
 	pyexe_test_seek.py \
 	pyexe_test_set_ascii_codepage.py \
 	test_exeinfo.sh \
-	test_open_close.sh \
-	test_pyexe_open_close.sh \
-	test_pyexe_read.sh \
-	test_pyexe_seek.sh \
+	test_python_functions.sh \
 	test_pyexe_set_ascii_codepage.sh \
-	test_read.sh \
 	test_runner.sh \
-	test_seek.sh \
 	test_set_ascii_codepage.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	exe_test_get_version \
 	exe_test_open_close \
 	exe_test_read \
 	exe_test_seek \
 	exe_test_set_ascii_codepage
+
+exe_test_get_version_SOURCES = \
+	exe_test_libcstring.h \
+	exe_test_libexe.h \
+	exe_test_get_version.c
+
+exe_test_get_version_LDADD = \
+	../libexe/libexe.la \
+	@LIBCSTRING_LIBADD@
 
 exe_test_open_close_SOURCES = \
 	exe_test_libcerror.h \
