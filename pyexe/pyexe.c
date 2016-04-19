@@ -39,11 +39,13 @@
 #include "pyexe_unused.h"
 
 #if !defined( LIBEXE_HAVE_BFIO )
+
 LIBEXE_EXTERN \
 int libexe_check_file_signature_file_io_handle(
      libbfio_handle_t *file_io_handle,
      libexe_error_t **error );
-#endif
+
+#endif /* !defined( LIBEXE_HAVE_BFIO ) */
 
 /* The pyexe module methods
  */
