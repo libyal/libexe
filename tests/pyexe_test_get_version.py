@@ -23,7 +23,7 @@
 import argparse
 import sys
 
-import pyewf
+import pyexe
 
 
 def main():
@@ -33,7 +33,7 @@ def main():
   options = args_parser.parse_args()
 
   try:
-    pyewf.get_version()
+    pyexe.get_version()
   except Exception:
     return False
 
