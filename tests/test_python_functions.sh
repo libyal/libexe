@@ -62,15 +62,6 @@ then
 	exit ${EXIT_IGNORE};
 fi
 
-PYTHON=`which python${PYTHON_VERSION} 2> /dev/null`;
-
-if ! test -x ${PYTHON};
-then
-	echo "Missing executable: ${PYTHON}";
-
-	exit ${EXIT_FAILURE};
-fi
-
 TEST_RUNNER="tests/test_runner.sh";
 
 if ! test -f "${TEST_RUNNER}";
