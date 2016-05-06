@@ -125,7 +125,7 @@ int exe_test_read_buffer(
 			      read_size,
 			      &error );
 
-		if( read_count < 0 )
+		if( read_count <= 0 )
 		{
 			break;
 		}
@@ -209,7 +209,7 @@ int exe_test_read_buffer_at_offset(
 			      input_offset,
 			      &error );
 
-		if( read_count < 0 )
+		if( read_count <= 0 )
 		{
 			break;
 		}
@@ -360,7 +360,9 @@ int exe_test_read_from_section(
      libexe_section_t *section,
      size64_t section_size )
 {
-	int result = 0;
+	off64_t read_offset = 0;
+	size64_t read_size  = 0;
+	int result          = 0;
 
 	if( section == NULL )
 	{
@@ -380,13 +382,16 @@ int exe_test_read_from_section(
 	/* Test: offset: 0 size: <section_size>
 	 * Expected result: offset: 0 size: <section_size>
 	 */
+	read_offset = 0;
+	read_size   = section_size;
+
 	result = exe_test_seek_offset_and_read_buffer(
 	          section,
-	          0,
+	          read_offset,
 	          SEEK_SET,
-	          section_size,
-	          0,
-	          section_size );
+	          read_size,
+	          read_offset,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -396,16 +401,13 @@ int exe_test_read_from_section(
 
 		return( result );
 	}
-	/* Test: offset: 0 size: <section_size>
-	 * Expected result: offset: 0 size: <section_size>
-	 */
 	result = exe_test_seek_offset_and_read_buffer(
 	          section,
-	          0,
+	          read_offset,
 	          SEEK_SET,
-	          section_size,
-	          0,
-	          section_size );
+	          read_size,
+	          read_offset,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -422,13 +424,16 @@ int exe_test_read_from_section(
 	/* Test: offset: <section_size / 7> size: <section_size / 2>
 	 * Expected result: offset: <section_size / 7> size: <section_size / 2>
 	 */
+	read_offset = (off64_t) ( section_size / 7 );
+	read_size   = section_size / 2;
+
 	result = exe_test_seek_offset_and_read_buffer(
 	          section,
-	          (off64_t) ( section_size / 7 ),
+	          read_offset,
 	          SEEK_SET,
-	          section_size / 2,
-	          (off64_t) ( section_size / 7 ),
-	          section_size / 2 );
+	          read_size,
+	          read_offset,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -438,16 +443,13 @@ int exe_test_read_from_section(
 
 		return( result );
 	}
-	/* Test: offset: <section_size / 7> size: <section_size / 2>
-	 * Expected result: offset: <section_size / 7> size: <section_size / 2>
-	 */
 	result = exe_test_seek_offset_and_read_buffer(
 	          section,
-	          (off64_t) ( section_size / 7 ),
+	          read_offset,
 	          SEEK_SET,
-	          section_size / 2,
-	          (off64_t) ( section_size / 7 ),
-	          section_size / 2 );
+	          read_size,
+	          read_offset,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -460,6 +462,8 @@ int exe_test_read_from_section(
 
 	/* Case 2: test read beyond section size
 	 */
+	read_offset = (off64_t) ( section_size - 1024 );
+	read_size   = 4096;
 
 	if( section_size < 1024 )
 	{
@@ -468,9 +472,9 @@ int exe_test_read_from_section(
 		 */
 		result = exe_test_seek_offset_and_read_buffer(
 		          section,
-		          (off64_t) ( section_size - 1024 ),
+		          read_offset,
 		          SEEK_SET,
-		          4096,
+		          read_size,
 		          -1,
 		          (size64_t) -1 );
 
@@ -482,14 +486,11 @@ int exe_test_read_from_section(
 
 			return( result );
 		}
-		/* Test: offset: <section_size - 1024> size: 4096
-		 * Expected result: offset: -1 size: <undetermined>
-		 */
 		result = exe_test_seek_offset_and_read_buffer(
 		          section,
-		          (off64_t) ( section_size - 1024 ),
+		          read_offset,
 		          SEEK_SET,
-		          4096,
+		          read_size,
 		          -1,
 		          (size64_t) -1 );
 
@@ -509,10 +510,10 @@ int exe_test_read_from_section(
 		 */
 		result = exe_test_seek_offset_and_read_buffer(
 		          section,
-		          (off64_t) ( section_size - 1024 ),
+		          read_offset,
 		          SEEK_SET,
-		          4096,
-		          (off64_t) ( section_size - 1024 ),
+		          read_size,
+		          read_offset,
 		          1024 );
 
 		if( result != 1 )
@@ -523,15 +524,12 @@ int exe_test_read_from_section(
 
 			return( result );
 		}
-		/* Test: offset: <section_size - 1024> size: 4096
-		 * Expected result: offset: <section_size - 1024> size: 1024
-		 */
 		result = exe_test_seek_offset_and_read_buffer(
 		          section,
-		          (off64_t) ( section_size - 1024 ),
+		          read_offset,
 		          SEEK_SET,
-		          4096,
-		          (off64_t) ( section_size - 1024 ),
+		          read_size,
+		          read_offset,
 		          1024 );
 
 		if( result != 1 )
@@ -549,12 +547,15 @@ int exe_test_read_from_section(
 	/* Test: offset: <section_size / 7> size: <section_size / 2>
 	 * Expected result: offset: < ( section_size / 7 ) + ( section_size / 2 ) > size: <section_size / 2>
 	 */
+	read_offset = (off64_t) ( section_size / 7 );
+	read_size   = section_size / 2;
+
 	result = exe_test_read_buffer_at_offset(
 	          section,
-	          (off64_t) ( section_size / 7 ),
-	          section_size / 2,
-	          (off64_t) ( section_size / 7 ) + ( section_size / 2 ),
-	          section_size / 2 );
+	          read_offset,
+	          read_size,
+	          read_offset + read_size,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -564,15 +565,12 @@ int exe_test_read_from_section(
 
 		return( result );
 	}
-	/* Test: offset: <section_size / 7> size: <section_size / 2>
-	 * Expected result: offset: < ( section_size / 7 ) + ( section_size / 2 ) > size: <section_size / 2>
-	 */
 	result = exe_test_read_buffer_at_offset(
 	          section,
-	          (off64_t) ( section_size / 7 ),
-	          section_size / 2,
-	          (off64_t) ( section_size / 7 ) + ( section_size / 2 ),
-	          section_size / 2 );
+	          read_offset,
+	          read_size,
+	          read_offset + read_size,
+	          read_size );
 
 	if( result != 1 )
 	{
@@ -585,6 +583,165 @@ int exe_test_read_from_section(
 	return( 1 );
 }
 
+/* Tests reading a file
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int exe_test_read(
+     libcstring_system_character_t *source,
+     libcerror_error_t **error )
+{
+	libexe_file_t *file       = NULL;
+	libexe_section_t *section = NULL;
+	size64_t section_size     = 0;
+	int number_of_sections    = 0;
+	int result                = 0;
+	int section_index         = 0;
+
+	if( libexe_file_initialize(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to create file.\n" );
+
+		goto on_error;
+	}
+#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+	if( libexe_file_open_wide(
+	     file,
+	     source,
+	     LIBEXE_OPEN_READ,
+	     error ) != 1 )
+#else
+	if( libexe_file_open(
+	     file,
+	     source,
+	     LIBEXE_OPEN_READ,
+	     error ) != 1 )
+#endif
+	{
+		fprintf(
+		 stderr,
+		 "Unable to open file.\n" );
+
+		goto on_error;
+	}
+	if( libexe_file_get_number_of_sections(
+	     file,
+	     &number_of_sections,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to retrieve number of sections.\n" );
+
+		goto on_error;
+	}
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
+	{
+		if( libexe_file_get_section(
+		     file,
+		     section_index,
+		     &section,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to retrieve section: %d.\n",
+			 section_index );
+
+			goto on_error;
+		}
+		if( libexe_section_get_size(
+		     section,
+		     &section_size,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to retrieve section size.\n" );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Section: %d size: %" PRIu64 " bytes\n",
+		 section_index,
+		 section_size );
+
+		result = exe_test_read_from_section(
+		          section,
+		          section_size );
+
+		if( result == -1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to read from section: %d.\n",
+			 section_index );
+
+			goto on_error;
+		}
+		if( libexe_section_free(
+		     &section,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to free section: %d.\n",
+			 section_index );
+
+			goto on_error;
+		}
+		if( result != 1 )
+		{
+			break;
+		}
+	}
+	if( libexe_file_close(
+	     file,
+	     error ) != 0 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to close file.\n" );
+
+		goto on_error;
+	}
+	if( libexe_file_free(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to free file.\n" );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( section != NULL )
+	{
+		libexe_section_free(
+		 &section,
+		 NULL );
+	}
+	if( file != NULL )
+	{
+		libexe_file_close(
+		 file,
+		 NULL );
+		libexe_file_free(
+		 &file,
+		 NULL );
+	}
+	return( -1 );
+}
+
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 
 /* The thread pool callback function
@@ -594,9 +751,13 @@ int exe_test_read_callback_function(
      libexe_section_t *section,
      void *arguments EXE_TEST_ATTRIBUTE_UNUSED )
 {
+	uint8_t buffer[ EXE_TEST_READ_BUFFER_SIZE ];
+
 	libcerror_error_t *error = NULL;
 	static char *function    = "exe_test_read_callback_function";
-	size64_t section_size    = 0;
+	size_t read_size         = EXE_TEST_READ_BUFFER_SIZE;
+	ssize_t read_count       = 0;
+	int number_of_iterations = 3;
 
 	EXE_TEST_UNREFERENCED_PARAMETER( arguments )
 
@@ -611,50 +772,45 @@ int exe_test_read_callback_function(
 
 		goto on_error;
 	}
-	if( libexe_section_get_size(
-	     section,
-	     &section_size,
-	     &error ) != 1 )
+	while( number_of_iterations > 0 )
 	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve section size.",
-		 function );
+		read_count = libexe_section_read_buffer(
+		              section,
+		              buffer,
+		              read_size,
+		              &error );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Section size: %" PRIu64 " bytes\n",
-	 section_size );
+		if( read_count != (ssize_t) read_size )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read from section.",
+			 function );
 
-	if( exe_test_read_from_section(
-	     section,
-	     section_size ) != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read from section.",
-		 function );
+			goto on_error;
+		}
+		number_of_iterations--;
 
-		goto on_error;
-	}
-	if( libexe_section_free(
-	     &section,
-	     &error ) != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free section.",
-		 function );
+		if( number_of_iterations > 0 )
+		{
+			if( libexe_section_seek_offset(
+			     section,
+			     (off64_t) -read_size,
+			     SEEK_CUR,
+			     &error ) == -1 )
+			{
+				libcerror_error_set(
+				 &error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_SEEK_FAILED,
+				 "%s: unable to seek in section.",
+				 function );
 
-		goto on_error;
+				goto on_error;
+			}
+		}
 	}
 	return( 1 );
 
@@ -671,40 +827,72 @@ on_error:
 	return( -1 );
 }
 
-/* Tests reading data from sections in multiple threads
+/* Tests reading data from a section in multiple threads
  * This test requires multi-threading support
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int exe_test_read_from_sections_multi_thread(
-     libexe_file_t *file,
-     int number_of_sections )
+int exe_test_read_from_section_multi_thread(
+     libexe_section_t *section,
+     size64_t media_size,
+     int number_of_threads )
 {
 	libcerror_error_t *error               = NULL;
 	libcthreads_thread_pool_t *thread_pool = NULL;
-	libexe_section_t *section              = NULL;
-	static char *function                  = "exe_test_read_from_sections_multi_thread";
-	int iterator                           = 0;
-	int number_of_threads                  = EXE_TEST_READ_NUMBER_OF_THREADS;
-	int section_index                      = 0;
+	static char *function                  = "exe_test_read_from_section_multi_thread";
+	off64_t expected_offset                = 0;
+	off64_t result_offset                  = 0;
+	int iteration                          = 0;
+	int number_of_iterations               = 0;
+	int result                             = 0;
 
-	if( file == NULL )
+	if( section == NULL )
 	{
 		libcerror_error_set(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid file.",
+		 "%s: invalid section.",
+		 function );
+
+		goto on_error;
+	}
+	if( libexe_section_seek_offset(
+	     section,
+	     0,
+	     SEEK_SET,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_IO,
+		 LIBCERROR_IO_ERROR_SEEK_FAILED,
+		 "%s: unable to seek in section.",
 		 function );
 
 		goto on_error;
 	}
 	if( number_of_threads > 1 )
 	{
+		number_of_iterations = number_of_threads * 32;
+
+		expected_offset = (off64_t) number_of_iterations * EXE_TEST_READ_BUFFER_SIZE;
+
+		if( (size64_t) expected_offset > media_size )
+		{
+			expected_offset = media_size;
+
+			number_of_iterations = media_size / EXE_TEST_READ_BUFFER_SIZE;
+
+			if( ( media_size % EXE_TEST_READ_BUFFER_SIZE ) != 0 )
+			{
+				number_of_iterations += 1;
+			}
+		}
 		if( libcthreads_thread_pool_create(
 		     &thread_pool,
 		     NULL,
 		     number_of_threads,
-		     number_of_sections,
+		     number_of_iterations,
 		     (int (*)(intptr_t *, void *)) &exe_test_read_callback_function,
 		     NULL,
 		     &error ) != 1 )
@@ -718,25 +906,10 @@ int exe_test_read_from_sections_multi_thread(
 
 			goto on_error;
 		}
-		section_index = number_of_sections - 1;
-
-		for( iterator = 1;
-		     iterator <= number_of_sections;
-		     iterator++ )
+		for( iteration = 0;
+		     iteration < number_of_iterations;
+		     iteration++ )
 		{
-			if( libexe_file_get_section(
-			     file,
-			     section_index,
-			     &section,
-			     &error ) != 1 )
-			{
-				fprintf(
-				 stderr,
-				 "Unable to retrieve section: %d.\n",
-				 section_index );
-
-				goto on_error;
-			}
 			if( libcthreads_thread_pool_push(
 			     thread_pool,
 			     (intptr_t *) section,
@@ -746,15 +919,11 @@ int exe_test_read_from_sections_multi_thread(
 				 &error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-				 "%s: unable to push section: %d onto queue.",
-				 function,
-				 section_index );
+				 "%s: unable to push section onto queue.",
+				 function );
 
 				goto on_error;
 			}
-			section = NULL;
-
-			section_index--;
 		}
 		if( libcthreads_thread_pool_join(
 		     &thread_pool,
@@ -770,7 +939,52 @@ int exe_test_read_from_sections_multi_thread(
 			goto on_error;
 		}
 	}
-	return( 1 );
+	if( libexe_section_get_offset(
+	     section,
+	     &result_offset,
+	     &error ) != 1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve offset.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing multi-threaded read buffer at offset: 0\t" );
+
+	if( expected_offset != result_offset )
+	{
+		fprintf(
+		 stderr,
+		 "Unexpected offset: %" PRIi64 "\n",
+		 result_offset );
+	}
+	else
+	{
+		result = 1;
+	}
+	if( result == 1 )
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	return( result );
 
 on_error:
 	if( error != NULL )
@@ -782,16 +996,176 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
+	if( thread_pool != NULL )
+	{
+		libcthreads_thread_pool_join(
+		 &thread_pool,
+		 NULL );
+	}
+	return( -1 );
+}
+
+/* Tests reading a file in multiple threads
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int exe_test_read_multi_thread(
+     libcstring_system_character_t *source,
+     libcerror_error_t **error )
+{
+	libexe_file_t *file       = NULL;
+	libexe_section_t *section = NULL;
+	size64_t section_size     = 0;
+	int number_of_sections    = 0;
+	int result                = 0;
+	int section_index         = 0;
+
+	if( libexe_file_initialize(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to create file.\n" );
+
+		goto on_error;
+	}
+#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+	if( libexe_file_open_wide(
+	     file,
+	     source,
+	     LIBEXE_OPEN_READ,
+	     error ) != 1 )
+#else
+	if( libexe_file_open(
+	     file,
+	     source,
+	     LIBEXE_OPEN_READ,
+	     error ) != 1 )
+#endif
+	{
+		fprintf(
+		 stderr,
+		 "Unable to open file.\n" );
+
+		goto on_error;
+	}
+	if( libexe_file_get_number_of_sections(
+	     file,
+	     &number_of_sections,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to retrieve number of sections.\n" );
+
+		goto on_error;
+	}
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
+	{
+		if( libexe_file_get_section(
+		     file,
+		     section_index,
+		     &section,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to retrieve section: %d.\n",
+			 section_index );
+
+			goto on_error;
+		}
+		if( libexe_section_get_size(
+		     section,
+		     &section_size,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to retrieve section size.\n" );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Section: %d size: %" PRIu64 " bytes\n",
+		 section_index,
+		 section_size );
+
+		if( section_size == 0 )
+		{
+			result = 1;
+		}
+		else
+		{
+			result = exe_test_read_from_section_multi_thread(
+				  section,
+				  section_size,
+				  EXE_TEST_READ_NUMBER_OF_THREADS );
+
+			if( result == -1 )
+			{
+				fprintf(
+				 stderr,
+				 "Unable to read from file in multiple threads.\n" );
+
+				goto on_error;
+			}
+		}
+		if( libexe_section_free(
+		     &section,
+		     error ) != 1 )
+		{
+			fprintf(
+			 stderr,
+			 "Unable to free section: %d.\n",
+			 section_index );
+
+			goto on_error;
+		}
+		if( result != 1 )
+		{
+			break;
+		}
+	}
+	if( libexe_file_close(
+	     file,
+	     error ) != 0 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to close file.\n" );
+
+		goto on_error;
+	}
+	if( libexe_file_free(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to free file.\n" );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
 	if( section != NULL )
 	{
 		libexe_section_free(
 		 &section,
 		 NULL );
 	}
-	if( thread_pool != NULL )
+	if( file != NULL )
 	{
-		libcthreads_thread_pool_join(
-		 &thread_pool,
+		libexe_file_close(
+		 file,
+		 NULL );
+		libexe_file_free(
+		 &file,
 		 NULL );
 	}
 	return( -1 );
@@ -808,13 +1182,8 @@ int main( int argc, char * const argv[] )
 #endif
 {
 	libcerror_error_t *error              = NULL;
-	libexe_file_t *file                   = NULL;
-	libexe_section_t *section             = NULL;
 	libcstring_system_character_t *source = NULL;
 	libcstring_system_integer_t option    = 0;
-	size64_t section_size                 = 0;
-	int number_of_sections                = 0;
-	int section_index                     = 0;
 
 	while( ( option = libcsystem_getopt(
 	                   argc,
@@ -850,142 +1219,30 @@ int main( int argc, char * const argv[] )
 	 stderr,
 	 NULL );
 #endif
-	/* Initialization
-	 */
-	if( libexe_file_initialize(
-	     &file,
-	     &error ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to create file.\n" );
-
-		goto on_error;
-	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-	if( libexe_file_open_wide(
-	     file,
+	if( exe_test_read(
 	     source,
-	     LIBEXE_OPEN_READ,
-	     &error ) != 1 )
-#else
-	if( libexe_file_open(
-	     file,
-	     source,
-	     LIBEXE_OPEN_READ,
-	     &error ) != 1 )
-#endif
-	{
-		fprintf(
-		 stderr,
-		 "Unable to open file.\n" );
-
-		goto on_error;
-	}
-	if( libexe_file_get_number_of_sections(
-	     file,
-	     &number_of_sections,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to retrieve number of sections.\n" );
+		 "Unable to read file.\n" );
 
 		goto on_error;
 	}
-	for( section_index = number_of_sections - 1;
-	     section_index >= 0;
-	     section_index-- )
-	{
-		if( libexe_file_get_section(
-		     file,
-		     section_index,
-		     &section,
-		     &error ) != 1 )
-		{
-			fprintf(
-			 stderr,
-			 "Unable to retrieve section: %d.\n",
-			 section_index );
-
-			goto on_error;
-		}
-		if( libexe_section_get_size(
-		     section,
-		     &section_size,
-		     &error ) != 1 )
-		{
-			fprintf(
-			 stderr,
-			 "Unable to retrieve section size.\n" );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Section: %d size: %" PRIu64 " bytes\n",
-		 section_index,
-		 section_size );
-
-		if( exe_test_read_from_section(
-		     section,
-		     section_size ) != 1 )
-		{
-			fprintf(
-			 stderr,
-			 "Unable to read from section: %d.\n",
-			 section_index );
-
-			goto on_error;
-		}
-		if( libexe_section_free(
-		     &section,
-		     &error ) != 1 )
-		{
-			fprintf(
-			 stderr,
-			 "Unable to free section: %d.\n",
-			 section_index );
-
-			goto on_error;
-		}
-	}
-/* TODO implement thread support
+/* TODO disabled for now
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
-	if( exe_test_read_from_sections_multi_thread(
-	     file,
-	     number_of_sections ) != 1 )
+	if( exe_test_read_multi_thread(
+	     source,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to read from sections in multiple threads.\n" );
+		 "Unable to read file in multiple threads.\n" );
 
 		goto on_error;
 	}
 #endif
 */
-	/* Clean up
-	 */
-	if( libexe_file_close(
-	     file,
-	     &error ) != 0 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to close file.\n" );
-
-		goto on_error;
-	}
-	if( libexe_file_free(
-	     &file,
-	     &error ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to free file.\n" );
-
-		goto on_error;
-	}
 	return( EXIT_SUCCESS );
 
 on_error:
@@ -996,21 +1253,6 @@ on_error:
 		 stderr );
 		libcerror_error_free(
 		 &error );
-	}
-	if( section != NULL )
-	{
-		libexe_section_free(
-		 &section,
-		 NULL );
-	}
-	if( file != NULL )
-	{
-		libexe_file_close(
-		 file,
-		 NULL );
-		libexe_file_free(
-		 &file,
-		 NULL );
 	}
 	return( EXIT_FAILURE );
 }

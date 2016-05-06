@@ -119,11 +119,12 @@ int exe_test_seek_offset(
 /* Tests seeking in a section
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int exe_test_seek(
+int exe_test_seek_section(
      libexe_section_t *section,
      size64_t section_size )
 {
-	int result = 0;
+	size64_t seek_offset = 0;
+	int result           = 0;
 
 	if( section == NULL )
 	{
@@ -140,11 +141,13 @@ int exe_test_seek(
 	/* Test: SEEK_SET offset: 0
 	 * Expected result: 0
 	 */
+	seek_offset = 0;
+
 	result = exe_test_seek_offset(
 	          section,
-	          0,
+	          seek_offset,
 	          SEEK_SET,
-	          0 );
+	          seek_offset );
 
 	if( result != 1 )
 	{
@@ -157,11 +160,13 @@ int exe_test_seek(
 	/* Test: SEEK_SET offset: <section_size>
 	 * Expected result: <section_size>
 	 */
+	seek_offset = (off64_t) section_size;
+
 	result = exe_test_seek_offset(
 	          section,
-	          (off64_t) section_size,
+	          seek_offset,
 	          SEEK_SET,
-	          (off64_t) section_size );
+	          seek_offset );
 
 	if( result != 1 )
 	{
@@ -174,11 +179,13 @@ int exe_test_seek(
 	/* Test: SEEK_SET offset: <section_size / 5>
 	 * Expected result: <section_size / 5>
 	 */
+	seek_offset = (off64_t) ( section_size / 5 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          (off64_t) ( section_size / 5 ),
+	          seek_offset,
 	          SEEK_SET,
-	          (off64_t) ( section_size / 5 ) );
+	          seek_offset );
 
 	if( result != 1 )
 	{
@@ -191,11 +198,13 @@ int exe_test_seek(
 	/* Test: SEEK_SET offset: <section_size + 987>
 	 * Expected result: <section_size + 987>
 	 */
+	seek_offset = (off64_t) ( section_size + 987 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          (off64_t) ( section_size + 987 ),
+	          seek_offset,
 	          SEEK_SET,
-	          (off64_t) ( section_size + 987 ) );
+	          seek_offset );
 
 	if( result != 1 )
 	{
@@ -208,9 +217,11 @@ int exe_test_seek(
 	/* Test: SEEK_SET offset: -987
 	 * Expected result: -1
 	 */
+	seek_offset = -987;
+
 	result = exe_test_seek_offset(
 	          section,
-	          -987,
+	          seek_offset,
 	          SEEK_SET,
 	          -1 );
 
@@ -225,9 +236,11 @@ int exe_test_seek(
 	/* Test: SEEK_CUR offset: 0
 	 * Expected result: <section_size + 987>
 	 */
+	seek_offset = 0;
+
 	result = exe_test_seek_offset(
 	          section,
-	          0,
+	          seek_offset,
 	          SEEK_CUR,
 	          (off64_t) ( section_size + 987 ) );
 
@@ -242,9 +255,11 @@ int exe_test_seek(
 	/* Test: SEEK_CUR offset: <-1 * (section_size + 987)>
 	 * Expected result: 0
 	 */
+	seek_offset = -1 * (off64_t) ( section_size + 987 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          -1 * (off64_t) ( section_size + 987 ),
+	          seek_offset,
 	          SEEK_CUR,
 	          0 );
 
@@ -259,11 +274,13 @@ int exe_test_seek(
 	/* Test: SEEK_CUR offset: <section_size / 3>
 	 * Expected result: <section_size / 3>
 	 */
+	seek_offset = (off64_t) ( section_size / 3 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          (off64_t) ( section_size / 3 ),
+	          seek_offset,
 	          SEEK_CUR,
-	          (off64_t) ( section_size / 3 ) );
+	          seek_offset );
 
 	if( result != 1 )
 	{
@@ -273,6 +290,8 @@ int exe_test_seek(
 
 		return( result );
 	}
+	seek_offset = -2 * (off64_t) ( section_size / 3 );
+
 	if( section_size == 0 )
 	{
 		/* Test: SEEK_CUR offset: <-2 * (section_size / 3)>
@@ -280,7 +299,7 @@ int exe_test_seek(
 		 */
 		result = exe_test_seek_offset(
 		          section,
-		          -2 * (off64_t) ( section_size / 3 ),
+		          seek_offset,
 		          SEEK_CUR,
 		          0 );
 
@@ -300,7 +319,7 @@ int exe_test_seek(
 		 */
 		result = exe_test_seek_offset(
 		          section,
-		          -2 * (off64_t) ( section_size / 3 ),
+		          seek_offset,
 		          SEEK_CUR,
 		          -1 );
 
@@ -316,9 +335,11 @@ int exe_test_seek(
 	/* Test: SEEK_END offset: 0
 	 * Expected result: <section_size>
 	 */
+	seek_offset = 0;
+
 	result = exe_test_seek_offset(
 	          section,
-	          0,
+	          seek_offset,
 	          SEEK_END,
 	          (off64_t) section_size );
 
@@ -333,9 +354,11 @@ int exe_test_seek(
 	/* Test: SEEK_END offset: <-1 * section_size>
 	 * Expected result: 0
 	 */
+	seek_offset = -1 * (off64_t) section_size;
+
 	result = exe_test_seek_offset(
 	          section,
-	          -1 * (off64_t) section_size,
+	          seek_offset,
 	          SEEK_END,
 	          0 );
 
@@ -350,11 +373,13 @@ int exe_test_seek(
 	/* Test: SEEK_END offset: <-1 * (section_size / 4)>
 	 * Expected result: <section_size - (section_size / 4)>
 	 */
+	seek_offset = (off64_t) ( section_size / 4 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          -1 * (off64_t) ( section_size / 4 ),
+	          -1 * seek_offset,
 	          SEEK_END,
-	          (off64_t) section_size - (off64_t) ( section_size / 4 ) );
+	          (off64_t) section_size - seek_offset );
 
 	if( result != 1 )
 	{
@@ -367,9 +392,11 @@ int exe_test_seek(
 	/* Test: SEEK_END offset: 542
 	 * Expected result: <section_size + 542>
 	 */
+	seek_offset = 542;
+
 	result = exe_test_seek_offset(
 	          section,
-	          542,
+	          seek_offset,
 	          SEEK_END,
 	          (off64_t) ( section_size + 542 ) );
 
@@ -384,9 +411,11 @@ int exe_test_seek(
 	/* Test: SEEK_END offset: <-1 * (section_size + 542)>
 	 * Expected result: -1
 	 */
+	seek_offset = -1 * (off64_t) ( section_size + 542 );
+
 	result = exe_test_seek_offset(
 	          section,
-	          -1 * (off64_t) ( section_size + 542 ),
+	          seek_offset,
 	          SEEK_END,
 	          -1 );
 
@@ -421,12 +450,12 @@ int exe_test_seek(
 /* Tests seeking in a file
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int exe_test_seek_file(
+int exe_test_seek(
      libcstring_system_character_t *source,
      libcerror_error_t **error )
 {
-	libexe_section_t *section = NULL;
 	libexe_file_t *file       = NULL;
+	libexe_section_t *section = NULL;
 	size64_t section_size     = 0;
 	int number_of_sections    = 0;
 	int result                = 0;
@@ -473,9 +502,9 @@ int exe_test_seek_file(
 
 		goto on_error;
 	}
-	for( section_index = number_of_sections - 1;
-	     section_index >= 0;
-	     section_index-- )
+	for( section_index = 0;
+	     section_index < number_of_sections;
+	     section_index++ )
 	{
 		if( libexe_file_get_section(
 		     file,
@@ -503,22 +532,29 @@ int exe_test_seek_file(
 		}
 		fprintf(
 		 stdout,
-		 "Section: %d section size: %" PRIu64 " bytes\n",
+		 "Section: %d size: %" PRIu64 " bytes\n",
 		 section_index,
 		 section_size );
 
-		result = exe_test_seek(
-		          section,
-		          section_size );
-
-		if( result == -1 )
+		if( section_size == 0 )
 		{
-			fprintf(
-			 stderr,
-			 "Unable to seek in section: %d.\n",
-			 section_index );
+			result = 1;
+		}
+		else
+		{
+			result = exe_test_seek_section(
+			          section,
+			          section_size );
 
-			goto on_error;
+			if( result == -1 )
+			{
+				fprintf(
+				 stderr,
+				 "Unable to seek in section: %d.\n",
+				 section_index );
+
+				goto on_error;
+			}
 		}
 		if( libexe_section_free(
 		     &section,
@@ -531,7 +567,7 @@ int exe_test_seek_file(
 
 			goto on_error;
 		}
-		if( result == 0 )
+		if( result != 1 )
 		{
 			break;
 		}
@@ -577,6 +613,106 @@ on_error:
 	return( -1 );
 }
 
+/* Tests seeking in a file without opening it
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int exe_test_seek_no_open(
+     libcstring_system_character_t *source EXE_TEST_ATTRIBUTE_UNUSED,
+     libcerror_error_t **error )
+{
+	libexe_file_t *file       = NULL;
+	libexe_section_t *section = NULL;
+	int number_of_sections    = 0;
+	int result                = 0;
+
+	EXE_TEST_UNREFERENCED_PARAMETER( source );
+
+	if( libexe_file_initialize(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to create file.\n" );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing seek without open: \t" );
+
+	if( libexe_file_get_number_of_sections(
+	     file,
+	     &number_of_sections,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to retrieve number of sections.\n" );
+
+		goto on_error;
+	}
+	if( number_of_sections == 0 )
+	{
+		if( libexe_file_get_section(
+		     file,
+		     0,
+		     &section,
+		     error ) != 1 )
+		{
+			result = 1;
+		}
+	}
+	if( result != 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( ( error != NULL )
+	 && ( *error != NULL ) )
+	{
+		if( result != 1 )
+		{
+			libcerror_error_backtrace_fprint(
+			 *error,
+			 stderr );
+		}
+		libcerror_error_free(
+		 error );
+	}
+	if( libexe_file_free(
+	     &file,
+	     error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to free file.\n" );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( file != NULL )
+	{
+		libexe_file_free(
+		 &file,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -588,7 +724,6 @@ int main( int argc, char * const argv[] )
 	libcerror_error_t *error              = NULL;
 	libcstring_system_character_t *source = NULL;
 	libcstring_system_integer_t option    = 0;
-	int result                            = 0;
 
 	while( ( option = libcsystem_getopt(
 	                   argc,
@@ -624,15 +759,23 @@ int main( int argc, char * const argv[] )
 	 stderr,
 	 NULL );
 #endif
-	result = exe_test_seek_file(
-	          source,
-	          &error );
-
-	if( result != 1 )
+	if( exe_test_seek(
+	     source,
+	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
 		 "Unable to seek in file.\n" );
+
+		goto on_error;
+	}
+	if( exe_test_seek_no_open(
+	     source,
+	     &error ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to seek in file without open.\n" );
 
 		goto on_error;
 	}

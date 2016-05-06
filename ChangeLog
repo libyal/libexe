@@ -1,4 +1,5 @@
 TODO:
+* complete multi thread support
 * add libexe_section_get_offset
 * add libexe_section_get_utf8_name and libexe_section_get_utf8_name_size
 * update man pages

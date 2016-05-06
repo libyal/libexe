@@ -18,7 +18,6 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
-#
 
 from __future__ import print_function
 import argparse
@@ -43,11 +42,12 @@ def get_whence_string(whence):
 
 def pyexe_test_seek_offset(
     exe_section, input_offset, input_whence, expected_offset):
+  """Tests seeking an offset."""
+  description = "Testing seek of offset: {0:d} and whence: {1:s}\t".format(
+      input_offset, get_whence_string(input_whence))
+  print(description, end="")
 
-  print("Testing seek of offset: {0:d} and whence: {1:s}\t".format(
-      input_offset, get_whence_string(input_whence)), end="")
-
-  error_string = ""
+  error_string = None
   result = True
   try:
     exe_section.seek(input_offset, input_whence)
@@ -72,22 +72,29 @@ def pyexe_test_seek_offset(
 
 
 def pyexe_test_seek(exe_section):
+  """Tests the seek function."""
   section_size = exe_section.size
 
   # Test: SEEK_SET offset: 0
   # Expected result: 0
-  if not pyexe_test_seek_offset(exe_section, 0, os.SEEK_SET, 0):
+  seek_offset = 0
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_SET, seek_offset):
     return False
 
   # Test: SEEK_SET offset: <section_size>
   # Expected result: <section_size>
+  seek_offset = section_size
+
   if not pyexe_test_seek_offset(
-      exe_section, section_size, os.SEEK_SET, section_size):
+      exe_section, seek_offset, os.SEEK_SET, seek_offset):
     return False
 
   # Test: SEEK_SET offset: <section_size / 5>
   # Expected result: <section_size / 5>
   seek_offset, _ = divmod(section_size, 5)
+
   if not pyexe_test_seek_offset(
       exe_section, seek_offset, os.SEEK_SET, seek_offset):
     return False
@@ -95,6 +102,7 @@ def pyexe_test_seek(exe_section):
   # Test: SEEK_SET offset: <section_size + 987>
   # Expected result: <section_size + 987>
   seek_offset = section_size + 987
+
   if not pyexe_test_seek_offset(
       exe_section, seek_offset, os.SEEK_SET, seek_offset):
     return False
@@ -102,23 +110,31 @@ def pyexe_test_seek(exe_section):
   # Test: SEEK_SET offset: -987
   # Expected result: -1
   seek_offset = -987
-  if not pyexe_test_seek_offset(exe_section, seek_offset, os.SEEK_SET, -1):
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_SET, -1):
     return False
 
   # Test: SEEK_CUR offset: 0
   # Expected result: <section_size + 987>
-  if not pyexe_test_seek_offset(exe_section, 0, os.SEEK_CUR, section_size + 987):
+  seek_offset = 0
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_CUR, section_size + 987):
     return False
 
   # Test: SEEK_CUR offset: <-1 * (section_size + 987)>
   # Expected result: 0
+  seek_offset = -1 * (section_size + 987)
+
   if not pyexe_test_seek_offset(
-      exe_section, -1 * (section_size + 987), os.SEEK_CUR, 0):
+      exe_section, seek_offset, os.SEEK_CUR, 0):
     return False
 
   # Test: SEEK_CUR offset: <section_size / 3>
   # Expected result: <section_size / 3>
   seek_offset, _ = divmod(section_size, 3)
+
   if not pyexe_test_seek_offset(
       exe_section, seek_offset, os.SEEK_CUR, seek_offset):
     return False
@@ -127,54 +143,71 @@ def pyexe_test_seek(exe_section):
     # Test: SEEK_CUR offset: <-2 * (section_size / 3)>
     # Expected result: 0
     seek_offset, _ = divmod(section_size, 3)
-    if not pyexe_test_seek_offset(exe_section, -2 * seek_offset, os.SEEK_CUR, 0):
+
+    if not pyexe_test_seek_offset(
+        exe_section, -2 * seek_offset, os.SEEK_CUR, 0):
       return False
 
   else:
     # Test: SEEK_CUR offset: <-2 * (section_size / 3)>
     # Expected result: -1
     seek_offset, _ = divmod(section_size, 3)
+
     if not pyexe_test_seek_offset(
         exe_section, -2 * seek_offset, os.SEEK_CUR, -1):
       return False
 
   # Test: SEEK_END offset: 0
   # Expected result: <section_size>
-  if not pyexe_test_seek_offset(exe_section, 0, os.SEEK_END, section_size):
+  seek_offset = 0
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_END, section_size):
     return False
 
   # Test: SEEK_END offset: <-1 * section_size>
   # Expected result: 0
-  if not pyexe_test_seek_offset(exe_section, -1 * section_size, os.SEEK_END, 0):
+  seek_offset = -1 * section_size
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_END, 0):
     return False
 
   # Test: SEEK_END offset: <-1 * (section_size / 4)>
   # Expected result: <section_size - (section_size / 4)>
   seek_offset, _ = divmod(section_size, 4)
+
   if not pyexe_test_seek_offset(
       exe_section, -1 * seek_offset, os.SEEK_END, section_size - seek_offset):
     return False
 
   # Test: SEEK_END offset: 542
   # Expected result: <section_size + 542>
-  if not pyexe_test_seek_offset(exe_section, 542, os.SEEK_END, section_size + 542):
+  seek_offset = 542
+
+  if not pyexe_test_seek_offset(
+      exe_section, seek_offset, os.SEEK_END, section_size + 542):
     return False
 
   # Test: SEEK_END offset: <-1 * (section_size + 542)>
   # Expected result: -1
+  seek_offset = -1 * (section_size + 542)
+
   if not pyexe_test_seek_offset(
-      exe_section, -1 * (section_size + 542), os.SEEK_END, -1):
+      exe_section, seek_offset, os.SEEK_END, -1):
     return False
 
   # Test: UNKNOWN (88) offset: 0
   # Expected result: -1
-  if not pyexe_test_seek_offset(exe_section, 0, 88, -1):
+  if not pyexe_test_seek_offset(
+      exe_section, 0, 88, -1):
     return False
 
   return True
 
 
 def pyexe_test_seek_file(filename):
+  """Tests the seek function with a file."""
   exe_file = pyexe.file()
 
   exe_file.open(filename, "r")
@@ -192,6 +225,7 @@ def pyexe_test_seek_file(filename):
 
 
 def pyexe_test_seek_file_object(filename):
+  """Tests the seek function with a file-like object."""
   file_object = open(filename, "rb")
   exe_file = pyexe.file()
 
@@ -209,9 +243,34 @@ def pyexe_test_seek_file_object(filename):
   return result
 
 
+def pyexe_test_seek_file_no_open(filename):
+  """Tests the seek function with a file without open."""
+  description = "Testing seek of offset without open:\t"
+  print(description, end="")
+
+  exe_file = pyexe.file()
+
+  error_string = None
+  result = False
+  try:
+    exe_file.get_section(0)
+  except Exception as exception:
+    error_string = str(exception)
+    result = True
+
+  if not result:
+    print("(FAIL)")
+  else:
+    print("(PASS)")
+
+  if error_string:
+    print(error_string)
+  return result
+
+
 def main():
-  args_parser = argparse.ArgumentParser(description=(
-      "Tests seek."))
+  args_parser = argparse.ArgumentParser(
+      description="Tests seek.")
 
   args_parser.add_argument(
       "source", nargs="?", action="store", metavar="FILENAME",
@@ -232,6 +291,9 @@ def main():
   if not pyexe_test_seek_file_object(options.source):
     return False
 
+  if not pyexe_test_seek_file_no_open(options.source):
+    return False
+
   return True
 
 
@@ -240,4 +302,3 @@ if __name__ == "__main__":
     sys.exit(1)
   else:
     sys.exit(0)
-
