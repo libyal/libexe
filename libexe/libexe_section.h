@@ -160,5 +160,5 @@ int libexe_section_get_data_file_io_handle(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_INTERNAL_SECTION_H ) */
 

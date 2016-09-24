@@ -24,6 +24,7 @@ endif
 
 TESTS = \
 	test_api_functions.sh \
+	test_api_types.sh \
 	test_set_ascii_codepage.sh \
 	test_exeinfo.sh \
 	$(TESTS_PYEXE)
@@ -34,6 +35,8 @@ check_SCRIPTS = \
 	pyexe_test_read.py \
 	pyexe_test_seek.py \
 	pyexe_test_set_ascii_codepage.py \
+	test_api_functions.sh \
+	test_api_types.sh \
 	test_exeinfo.sh \
 	test_python_functions.sh \
 	test_pyexe_set_ascii_codepage.sh \
@@ -67,13 +70,12 @@ exe_test_error_LDADD = \
 exe_test_file_SOURCES = \
 	exe_test_file.c \
 	exe_test_libcerror.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
 	exe_test_libcsystem.h \
 	exe_test_libcthreads.h \
+	exe_test_libexe.h \
 	exe_test_macros.h \
-	exe_test_memory.c exe_test_memory.h \
-	exe_test_unused.h
+	exe_test_memory.c exe_test_memory.h
 
 exe_test_file_LDADD = \
 	@LIBCSYSTEM_LIBADD@ \
@@ -96,10 +98,10 @@ exe_test_get_version_LDADD = \
 
 exe_test_open_close_SOURCES = \
 	exe_test_libcerror.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
 	exe_test_libcsystem.h \
 	exe_test_libcthreads.h \
+	exe_test_libexe.h \
 	exe_test_open_close.c \
 	exe_test_unused.h
 
@@ -113,10 +115,10 @@ exe_test_open_close_LDADD = \
 
 exe_test_read_SOURCES = \
 	exe_test_libcerror.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
 	exe_test_libcsystem.h \
 	exe_test_libcthreads.h \
+	exe_test_libexe.h \
 	exe_test_read.c \
 	exe_test_unused.h
 
@@ -130,10 +132,10 @@ exe_test_read_LDADD = \
 
 exe_test_section_SOURCES = \
 	exe_test_libcerror.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
 	exe_test_libcsystem.h \
 	exe_test_libcthreads.h \
+	exe_test_libexe.h \
 	exe_test_macros.h \
 	exe_test_memory.c exe_test_memory.h \
 	exe_test_section.c \
@@ -149,10 +151,10 @@ exe_test_section_LDADD = \
 
 exe_test_seek_SOURCES = \
 	exe_test_libcerror.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
 	exe_test_libcsystem.h \
 	exe_test_libcthreads.h \
+	exe_test_libexe.h \
 	exe_test_seek.c \
 	exe_test_unused.h
 
@@ -167,8 +169,8 @@ exe_test_seek_LDADD = \
 exe_test_set_ascii_codepage_SOURCES = \
 	exe_test_libcerror.h \
 	exe_test_libclocale.h \
-	exe_test_libexe.h \
 	exe_test_libcstring.h \
+	exe_test_libexe.h \
 	exe_test_set_ascii_codepage.c
 
 exe_test_set_ascii_codepage_LDADD = \
