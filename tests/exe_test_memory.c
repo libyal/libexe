@@ -55,8 +55,8 @@ void *malloc(
 	if( exe_test_real_malloc == NULL )
 	{
 		exe_test_real_malloc = dlsym(
-		                           RTLD_NEXT,
-		                           "malloc" );
+		                        RTLD_NEXT,
+		                        "malloc" );
 	}
 	if( exe_test_malloc_attempts_before_fail == 0 )
 	{
@@ -86,8 +86,8 @@ void *memcpy(
 	if( exe_test_real_memcpy == NULL )
 	{
 		exe_test_real_memcpy = dlsym(
-		                           RTLD_NEXT,
-		                           "memcpy" );
+		                        RTLD_NEXT,
+		                        "memcpy" );
 	}
 	if( exe_test_memcpy_attempts_before_fail == 0 )
 	{
@@ -119,8 +119,8 @@ void *memset(
 	if( exe_test_real_memset == NULL )
 	{
 		exe_test_real_memset = dlsym(
-		                           RTLD_NEXT,
-		                           "memset" );
+		                        RTLD_NEXT,
+		                        "memset" );
 	}
 	if( exe_test_memset_attempts_before_fail == 0 )
 	{
@@ -151,8 +151,8 @@ void *realloc(
 	if( exe_test_real_realloc == NULL )
 	{
 		exe_test_real_realloc = dlsym(
-		                            RTLD_NEXT,
-		                            "realloc" );
+		                         RTLD_NEXT,
+		                         "realloc" );
 	}
 	if( exe_test_realloc_attempts_before_fail == 0 )
 	{
