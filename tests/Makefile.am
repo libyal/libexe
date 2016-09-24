@@ -45,9 +45,11 @@ EXTRA_DIST = \
 
 check_PROGRAMS = \
 	exe_test_error \
+	exe_test_file \
 	exe_test_get_version \
 	exe_test_open_close \
 	exe_test_read \
+	exe_test_section \
 	exe_test_seek \
 	exe_test_set_ascii_codepage
 
@@ -61,6 +63,25 @@ exe_test_error_SOURCES = \
 exe_test_error_LDADD = \
 	../libexe/libexe.la \
 	@LIBCSTRING_LIBADD@
+
+exe_test_file_SOURCES = \
+	exe_test_file.c \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_libcstring.h \
+	exe_test_libcsystem.h \
+	exe_test_libcthreads.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_unused.h
+
+exe_test_file_LDADD = \
+	@LIBCSYSTEM_LIBADD@ \
+	../libexe/libexe.la \
+	@LIBCTHREADS_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 exe_test_get_version_SOURCES = \
 	exe_test_get_version.c \
@@ -100,6 +121,25 @@ exe_test_read_SOURCES = \
 	exe_test_unused.h
 
 exe_test_read_LDADD = \
+	@LIBCSYSTEM_LIBADD@ \
+	../libexe/libexe.la \
+	@LIBCTHREADS_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@ \
+	@PTHREAD_LIBADD@
+
+exe_test_section_SOURCES = \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_libcstring.h \
+	exe_test_libcsystem.h \
+	exe_test_libcthreads.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_section.c \
+	exe_test_unused.h
+
+exe_test_section_LDADD = \
 	@LIBCSYSTEM_LIBADD@ \
 	../libexe/libexe.la \
 	@LIBCTHREADS_LIBADD@ \

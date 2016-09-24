@@ -154,5 +154,5 @@ int libexe_file_get_section_by_name(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_INTERNAL_FILE_H ) */
 

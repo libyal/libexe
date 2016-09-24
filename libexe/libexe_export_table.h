@@ -52,7 +52,7 @@ int libexe_export_table_free(
 int libexe_export_table_read(
      libexe_export_table_t *export_table,
      libbfio_handle_t *file_io_handle,
-     uint32_t file_offset,
+     off64_t file_offset,
      uint32_t size,
      libcerror_error_t **error );
 
@@ -60,5 +60,5 @@ int libexe_export_table_read(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_EXPORT_TABLE_H ) */
 

@@ -1,8 +1,10 @@
 MSVSCPP_FILES = \
 	exe_test_error/exe_test_error.vcproj \
+	exe_test_file/exe_test_file.vcproj \
 	exe_test_get_version/exe_test_get_version.vcproj \
 	exe_test_open_close/exe_test_open_close.vcproj \
 	exe_test_read/exe_test_read.vcproj \
+	exe_test_section/exe_test_section.vcproj \
 	exe_test_seek/exe_test_seek.vcproj \
 	exe_test_set_ascii_codepage/exe_test_set_ascii_codepage.vcproj \
 	exeinfo/exeinfo.vcproj \

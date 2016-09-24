@@ -143,7 +143,7 @@ int libexe_export_table_free(
 int libexe_export_table_read(
      libexe_export_table_t *export_table,
      libbfio_handle_t *file_io_handle,
-     uint32_t file_offset,
+     off64_t file_offset,
      uint32_t size,
      libcerror_error_t **error )
 {
@@ -179,7 +179,7 @@ int libexe_export_table_read(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: reading export table at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 "%s: reading export table at offset: %" PRIi64 " (0x%08" PRIx64 ")\n",
 		 function,
 		 file_offset,
 		 file_offset );
@@ -187,7 +187,7 @@ int libexe_export_table_read(
 #endif
 	if( libbfio_handle_seek_offset(
 	     file_io_handle,
-	     (off64_t) file_offset,
+	     file_offset,
 	     SEEK_SET,
 	     error ) == -1 )
 	{
@@ -195,7 +195,7 @@ int libexe_export_table_read(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek export table offset: %" PRIx32 ".",
+		 "%s: unable to seek export table offset: 0x%08" PRIx64 ".",
 		 function,
 		 file_offset );
 
