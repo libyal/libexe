@@ -49,6 +49,7 @@ EXTRA_DIST = \
 check_PROGRAMS = \
 	exe_test_error \
 	exe_test_file \
+	exe_test_notify \
 	exe_test_open_close \
 	exe_test_read \
 	exe_test_section \
@@ -84,6 +85,17 @@ exe_test_file_LDADD = \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@ \
 	@PTHREAD_LIBADD@
+
+exe_test_notify_SOURCES = \
+	exe_test_libcstring.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_notify.c \
+	exe_test_unused.h
+
+exe_test_notify_LDADD = \
+	../libexe/libexe.la \
+	@LIBCSTRING_LIBADD@
 
 exe_test_open_close_SOURCES = \
 	exe_test_libcerror.h \

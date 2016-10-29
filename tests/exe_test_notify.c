@@ -1,5 +1,5 @@
 /*
- * Library error functions test program
+ * Library notification functions test program
  *
  * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,78 +30,60 @@
 #include "exe_test_macros.h"
 #include "exe_test_unused.h"
 
-/* Tests the libexe_error_free function
+/* Tests the libexe_notify_set_verbose function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_error_free(
+int exe_test_notify_set_verbose(
      void )
 {
 	/* Test invocation of function only
 	 */
-	libexe_error_free(
-	 NULL );
-
-	return( 1 );
-}
-
-/* Tests the libexe_error_fprint function
- * Returns 1 if successful or 0 if not
- */
-int exe_test_error_fprint(
-     void )
-{
-	/* Test invocation of function only
-	 */
-	libexe_error_fprint(
-	 NULL,
-	 NULL );
-
-	return( 1 );
-}
-
-/* Tests the libexe_error_sprint function
- * Returns 1 if successful or 0 if not
- */
-int exe_test_error_sprint(
-     void )
-{
-	/* Test invocation of function only
-	 */
-	libexe_error_sprint(
-	 NULL,
-	 NULL,
+	libexe_notify_set_verbose(
 	 0 );
 
 	return( 1 );
 }
 
-/* Tests the libexe_error_backtrace_fprint function
+/* Tests the libexe_notify_set_stream function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_error_backtrace_fprint(
+int exe_test_notify_set_stream(
      void )
 {
 	/* Test invocation of function only
 	 */
-	libexe_error_backtrace_fprint(
+	libexe_notify_set_stream(
 	 NULL,
 	 NULL );
 
 	return( 1 );
 }
 
-/* Tests the libexe_error_backtrace_sprint function
+/* Tests the libexe_notify_stream_open function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_error_backtrace_sprint(
+int exe_test_notify_stream_open(
      void )
 {
 	/* Test invocation of function only
 	 */
-	libexe_error_backtrace_sprint(
+	libexe_notify_stream_open(
 	 NULL,
-	 NULL,
-	 0 );
+	 NULL );
+
+	return( 1 );
+}
+
+/* Tests the libexe_notify_stream_close function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_notify_stream_close(
+     void )
+{
+	/* Test invocation of function only
+	 */
+	libexe_notify_stream_close(
+	 NULL );
 
 	return( 1 );
 }
@@ -122,24 +104,20 @@ int main(
 	EXE_TEST_UNREFERENCED_PARAMETER( argv )
 
 	EXE_TEST_RUN(
-	 "libexe_error_free",
-	 exe_test_error_free );
+	 "libexe_notify_set_verbose",
+	 exe_test_notify_set_verbose )
 
 	EXE_TEST_RUN(
-	 "libexe_error_fprint",
-	 exe_test_error_fprint );
+	 "libexe_notify_set_stream",
+	 exe_test_notify_set_stream )
 
 	EXE_TEST_RUN(
-	 "libexe_error_sprint",
-	 exe_test_error_sprint );
+	 "libexe_notify_stream_open",
+	 exe_test_notify_stream_open )
 
 	EXE_TEST_RUN(
-	 "libexe_error_backtrace_fprint",
-	 exe_test_error_backtrace_fprint );
-
-	EXE_TEST_RUN(
-	 "libexe_error_backtrace_sprint",
-	 exe_test_error_backtrace_sprint );
+	 "libexe_notify_stream_close",
+	 exe_test_notify_stream_close )
 
 	return( EXIT_SUCCESS );
 

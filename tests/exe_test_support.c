@@ -1,5 +1,5 @@
 /*
- * Library get version test program
+ * Library support functions test program
  *
  * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -30,7 +30,7 @@
 #include "exe_test_macros.h"
 #include "exe_test_unused.h"
 
-/* Tests retrieving the library version
+/* Tests the libexe_get_version function
  * Returns 1 if successful or 0 if not
  */
 int exe_test_get_version(
@@ -74,7 +74,7 @@ int main(
 
 	EXE_TEST_RUN(
 	 "libexe_get_version",
-	 exe_test_get_version() )
+	 exe_test_get_version );
 
 	return( EXIT_SUCCESS );
 

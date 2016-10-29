@@ -675,11 +675,11 @@ int main(
 
 	EXE_TEST_RUN(
 	 "libexe_file_initialize",
-	 exe_test_file_initialize() )
+	 exe_test_file_initialize );
 
 	EXE_TEST_RUN(
 	 "libexe_file_free",
-	 exe_test_file_free() )
+	 exe_test_file_free );
 
 	/* TODO add test for libexe_file_signal_abort */
 

@@ -88,7 +88,7 @@ int main(
 
 	EXE_TEST_RUN(
 	 "libexe_section_free",
-	 exe_test_section_free() )
+	 exe_test_section_free );
 
 	return( EXIT_SUCCESS );
 
