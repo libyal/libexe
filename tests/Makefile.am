@@ -49,12 +49,12 @@ EXTRA_DIST = \
 check_PROGRAMS = \
 	exe_test_error \
 	exe_test_file \
-	exe_test_get_version \
 	exe_test_open_close \
 	exe_test_read \
 	exe_test_section \
 	exe_test_seek \
-	exe_test_set_ascii_codepage
+	exe_test_set_ascii_codepage \
+	exe_test_support
 
 exe_test_error_SOURCES = \
 	exe_test_error.c \
@@ -84,17 +84,6 @@ exe_test_file_LDADD = \
 	@LIBCERROR_LIBADD@ \
 	@LIBCSTRING_LIBADD@ \
 	@PTHREAD_LIBADD@
-
-exe_test_get_version_SOURCES = \
-	exe_test_get_version.c \
-	exe_test_libcstring.h \
-	exe_test_libexe.h \
-	exe_test_macros.h \
-	exe_test_unused.h
-
-exe_test_get_version_LDADD = \
-	../libexe/libexe.la \
-	@LIBCSTRING_LIBADD@
 
 exe_test_open_close_SOURCES = \
 	exe_test_libcerror.h \
@@ -177,6 +166,17 @@ exe_test_set_ascii_codepage_LDADD = \
 	../libexe/libexe.la \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@
+
+exe_test_support_SOURCES = \
+	exe_test_libcstring.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_support.c \
+	exe_test_unused.h
+
+exe_test_support_LDADD = \
+	../libexe/libexe.la \
 	@LIBCSTRING_LIBADD@
 
 MAINTAINERCLEANFILES = \

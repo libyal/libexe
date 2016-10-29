@@ -123,12 +123,12 @@ stamp-h[1-9]
 /exetools/exeinfo
 /tests/exe_test_error
 /tests/exe_test_file
-/tests/exe_test_get_version
 /tests/exe_test_open_close
 /tests/exe_test_read
 /tests/exe_test_section
 /tests/exe_test_seek
 /tests/exe_test_set_ascii_codepage
+/tests/exe_test_support
 /tests/input
 /tests/tmp*
 

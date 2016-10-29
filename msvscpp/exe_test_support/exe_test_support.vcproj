@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="exe_test_get_version"
-	ProjectGUID="{20CB8707-4C32-40D5-9365-AE33E4296D4F}"
-	RootNamespace="exe_test_get_version"
+	Name="exe_test_support"
+	ProjectGUID="{74E36F4D-7877-4D2D-A166-8CD1BE4D68F2}"
+	RootNamespace="exe_test_support"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\exe_test_get_version.c"
+				RelativePath="..\..\tests\exe_test_support.c"
 				>
 			</File>
 		</Filter>

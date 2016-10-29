@@ -681,8 +681,6 @@ int main(
 	 "libexe_file_free",
 	 exe_test_file_free() )
 
-	return( EXIT_SUCCESS );
-
 	/* TODO add test for libexe_file_signal_abort */
 
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
