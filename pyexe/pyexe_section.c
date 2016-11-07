@@ -31,7 +31,6 @@
 #include "pyexe_file.h"
 #include "pyexe_integer.h"
 #include "pyexe_libcerror.h"
-#include "pyexe_libcstring.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
 #include "pyexe_section.h"

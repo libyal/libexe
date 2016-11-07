@@ -39,7 +39,7 @@ enum LIBEXE_ERROR_DOMAINS
 	LIBEXE_ERROR_DOMAIN_INPUT			= (int) 'i',
 	LIBEXE_ERROR_DOMAIN_MEMORY			= (int) 'm',
 	LIBEXE_ERROR_DOMAIN_OUTPUT			= (int) 'o',
-	LIBEXE_ERROR_DOMAIN_RUNTIME			= (int) 'r',
+	LIBEXE_ERROR_DOMAIN_RUNTIME			= (int) 'r'
 };
 
 /* The argument error codes
@@ -208,6 +208,17 @@ enum LIBEXE_MEMORY_ERROR
 	LIBEXE_MEMORY_ERROR_SET_FAILED			= 3
 };
 
+/* The output error codes
+ */
+enum LIBEXE_OUTPUT_ERROR
+{
+	LIBEXE_OUTPUT_ERROR_GENERIC			= 0,
+
+	/* There is insuficient space to write the output
+	 */
+	LIBEXE_OUTPUT_ERROR_INSUFFICIENT_SPACE		= 1
+};
+
 /* The runtime error codes
  * to signify errors regarding runtime processing
  */
@@ -276,16 +287,5 @@ enum LIBEXE_RUNTIME_ERROR
 	LIBEXE_RUNTIME_ERROR_ABORT_REQUESTED		= 15
 };
 
-/* The output error codes
- */
-enum LIBEXE_OUTPUT_ERROR
-{
-	LIBEXE_OUTPUT_ERROR_GENERIC			= 0,
-
-	/* There is insuficient space to write the output
-	 */
-	LIBEXE_OUTPUT_ERROR_INSUFFICIENT_SPACE		= 1
-};
-
-#endif
+#endif /* !defined( _LIBEXE_ERROR_H ) */
 

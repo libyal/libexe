@@ -21,13 +21,13 @@
 
 #include <common.h>
 #include <file_stream.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
 #include "exe_test_libcerror.h"
-#include "exe_test_libcstring.h"
 #include "exe_test_libexe.h"
 #include "exe_test_macros.h"
 #include "exe_test_memory.h"
@@ -73,7 +73,7 @@ on_error:
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc EXE_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] EXE_TEST_ATTRIBUTE_UNUSED )

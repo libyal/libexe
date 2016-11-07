@@ -21,7 +21,9 @@
 
 #include <common.h>
 #include <memory.h>
+#include <narrow_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "libexe_data_directory_descriptor.h"
 #include "libexe_codepage.h"
@@ -36,7 +38,6 @@
 #include "libexe_libcdata.h"
 #include "libexe_libcerror.h"
 #include "libexe_libcnotify.h"
-#include "libexe_libcstring.h"
 #include "libexe_section.h"
 #include "libexe_section_descriptor.h"
 
@@ -279,6 +280,7 @@ int libexe_file_open(
 	libbfio_handle_t *file_io_handle      = NULL;
 	libexe_internal_file_t *internal_file = NULL;
 	static char *function                 = "libexe_file_open";
+	size_t filename_length                = 0;
 
 	if( file == NULL )
 	{
@@ -356,11 +358,13 @@ int libexe_file_open(
 		goto on_error;
 	}
 #endif
+	filename_length = narrow_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name(
 	     file_io_handle,
 	     filename,
-	     libcstring_narrow_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(
@@ -416,6 +420,7 @@ int libexe_file_open_wide(
 	libbfio_handle_t *file_io_handle      = NULL;
 	libexe_internal_file_t *internal_file = NULL;
 	static char *function                 = "libexe_file_open_wide";
+	size_t filename_length                = 0;
 
 	if( file == NULL )
 	{
@@ -493,11 +498,13 @@ int libexe_file_open_wide(
 		goto on_error;
 	}
 #endif
+	filename_length = wide_string_length(
+	                   filename );
+
 	if( libbfio_file_set_name_wide(
 	     file_io_handle,
 	     filename,
-	     libcstring_wide_string_length(
-	      filename ) + 1,
+	     filename_length + 1,
 	     error ) != 1 )
 	{
                 libcerror_error_set(
@@ -1570,7 +1577,7 @@ int libexe_file_get_section_by_name(
 		}
 		if( ( name_length + 1 ) == section_descriptor->name_size )
 		{
-			if( libcstring_narrow_string_compare(
+			if( narrow_string_compare(
 			     section_descriptor->name,
 			     name,
 			     name_length ) == 0 )

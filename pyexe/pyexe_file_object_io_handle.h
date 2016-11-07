@@ -27,7 +27,6 @@
 
 #include "pyexe_libbfio.h"
 #include "pyexe_libcerror.h"
-#include "pyexe_libcstring.h"
 #include "pyexe_python.h"
 
 #if defined( __cplusplus )

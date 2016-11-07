@@ -22,11 +22,13 @@
 #include <common.h>
 #include <file_stream.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
+#include <wide_string.h>
 
 #include "exetools_libcerror.h"
 #include "exetools_libclocale.h"
-#include "exetools_libcstring.h"
 #include "exetools_libexe.h"
 #include "info_handle.h"
 
@@ -214,7 +216,7 @@ int info_handle_signal_abort(
  */
 int info_handle_set_ascii_codepage(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *string,
+     const system_character_t *string,
      libcerror_error_t **error )
 {
 	static char *function  = "info_handle_set_ascii_codepage";
@@ -236,10 +238,10 @@ int info_handle_set_ascii_codepage(
 	feature_flags = LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_KOI8
 	              | LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_WINDOWS;
 
-	string_length = libcstring_system_string_length(
+	string_length = system_string_length(
 	                 string );
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libclocale_codepage_copy_from_string_wide(
 	          &( info_handle->ascii_codepage ),
 	          string,
@@ -273,7 +275,7 @@ int info_handle_set_ascii_codepage(
  */
 int info_handle_open_input(
      info_handle_t *info_handle,
-     const libcstring_system_character_t *filename,
+     const system_character_t *filename,
      libcerror_error_t **error )
 {
 	static char *function = "info_handle_open_input";
@@ -289,7 +291,7 @@ int info_handle_open_input(
 
 		return( -1 );
 	}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	if( libexe_file_open_wide(
 	     info_handle->input_file,
 	     filename,

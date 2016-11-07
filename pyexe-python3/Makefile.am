@@ -8,7 +8,6 @@ if HAVE_PYTHON3
 AM_CFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -30,7 +29,6 @@ BUILT_SOURCES = \
 	pyexe_libbfio.h \
 	pyexe_libcerror.h \
 	pyexe_libclocale.h \
-	pyexe_libcstring.h \
 	pyexe_libexe.h \
 	pyexe_section.c pyexe_section.h \
 	pyexe_sections.c pyexe_sections.h \
@@ -42,8 +40,7 @@ pyexec_LTLIBRARIES = pyexe.la
 nodist_pyexe_la_SOURCES = $(BUILT_SOURCES)
 
 pyexe_la_LIBADD = \
-	@LIBCSTRING_LIBADD@ \
-	@LIBCERROR_LIBADD@ \
+	@LIBCERROR_LIBADD@
 	../libexe/libexe.la \
 	@LIBCDATA_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \

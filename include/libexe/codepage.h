@@ -118,5 +118,5 @@ enum LIBEXE_CODEPAGES
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_CODEPAGE_H ) */
 

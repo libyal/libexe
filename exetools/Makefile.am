@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
 	@LIBCLOCALE_CPPFLAGS@ \
@@ -29,7 +28,6 @@ exeinfo_SOURCES = \
 	exetools_libcerror.h \
 	exetools_libclocale.h \
 	exetools_libcnotify.h \
-	exetools_libcstring.h \
 	exetools_libcsystem.h \
 	exetools_libfdatetime.h \
 	exetools_libexe.h \
@@ -43,7 +41,6 @@ exeinfo_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@ \
 	@LIBINTL@
 
 MAINTAINERCLEANFILES = \

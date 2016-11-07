@@ -20,6 +20,7 @@
  */
 
 #include <common.h>
+#include <narrow_string.h>
 #include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( HAVE_WINAPI )
@@ -34,7 +35,6 @@
 #include "pyexe_libbfio.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libclocale.h"
-#include "pyexe_libcstring.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
 #include "pyexe_section.h"
@@ -515,7 +515,7 @@ PyObject *pyexe_file_open(
 	char *mode                   = NULL;
 	int result                   = 0;
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	const wchar_t *filename_wide = NULL;
 #else
 	PyObject *utf8_string_object = NULL;
@@ -575,7 +575,7 @@ PyObject *pyexe_file_open(
 	{
 		PyErr_Clear();
 
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		filename_wide = (wchar_t *) PyUnicode_AsUnicode(
 		                             string_object );
 		Py_BEGIN_ALLOW_THREADS
@@ -988,7 +988,7 @@ int pyexe_file_set_ascii_codepage_from_string(
 
 		return( -1 );
 	}
-	codepage_string_length = libcstring_narrow_string_length(
+	codepage_string_length = narrow_string_length(
 	                          codepage_string );
 
 	feature_flags = LIBCLOCALE_CODEPAGE_FEATURE_FLAG_HAVE_WINDOWS;
@@ -1442,7 +1442,7 @@ PyObject *pyexe_file_get_section_by_name(
 	{
 		goto on_error;
 	}
-	section_name_length = libcstring_narrow_string_length(
+	section_name_length = narrow_string_length(
 	                       section_name );
 
 	Py_BEGIN_ALLOW_THREADS

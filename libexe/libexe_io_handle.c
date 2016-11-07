@@ -22,6 +22,8 @@
 #include <common.h>
 #include <byte_stream.h>
 #include <memory.h>
+#include <narrow_string.h>
+#include <system_string.h>
 #include <types.h>
 
 #include "libexe_codepage.h"
@@ -33,7 +35,6 @@
 #include "libexe_libcerror.h"
 #include "libexe_libcdata.h"
 #include "libexe_libcnotify.h"
-#include "libexe_libcstring.h"
 #include "libexe_libfdatetime.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
@@ -1082,7 +1083,7 @@ int libexe_io_handle_read_coff_header(
 	uint16_t optional_header_size         = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
-	libcstring_system_character_t posix_time_string[ 32 ];
+	system_character_t posix_time_string[ 32 ];
 
 	libfdatetime_posix_time_t *posix_time = NULL;
 	uint32_t value_32bit                  = 0;
@@ -1199,7 +1200,7 @@ int libexe_io_handle_read_coff_header(
 
 			goto on_error;
 		}
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 		result = libfdatetime_posix_time_copy_to_utf16_string(
 			  posix_time,
 			  (uint16_t *) posix_time_string,
@@ -1226,7 +1227,7 @@ int libexe_io_handle_read_coff_header(
 			goto on_error;
 		}
 		libcnotify_printf(
-		 "%s: creation time\t\t\t: %" PRIs_LIBCSTRING_SYSTEM " UTC\n",
+		 "%s: creation time\t\t\t: %" PRIs_SYSTEM " UTC\n",
 		 function,
 		 posix_time_string );
 
@@ -2400,7 +2401,7 @@ int libexe_io_handle_read_section_table(
 		}
 		section_descriptor->name[ 8 ] = 0;
 
-		section_descriptor->name_size = libcstring_narrow_string_length(
+		section_descriptor->name_size = narrow_string_length(
 		                                 section_descriptor->name );
 
 		if( section_descriptor->name_size > 0 )

@@ -6,7 +6,6 @@ MSVSCPP_FILES = \
 	exe_test_read/exe_test_read.vcproj \
 	exe_test_section/exe_test_section.vcproj \
 	exe_test_seek/exe_test_seek.vcproj \
-	exe_test_set_ascii_codepage/exe_test_set_ascii_codepage.vcproj \
 	exe_test_support/exe_test_support.vcproj \
 	exeinfo/exeinfo.vcproj \
 	libbfio/libbfio.vcproj \
@@ -17,7 +16,6 @@ MSVSCPP_FILES = \
 	libcnotify/libcnotify.vcproj \
 	libcpath/libcpath.vcproj \
 	libcsplit/libcsplit.vcproj \
-	libcstring/libcstring.vcproj \
 	libcsystem/libcsystem.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libexe/libexe.vcproj \

@@ -28,7 +28,6 @@
 #include "pyexe_integer.h"
 #include "pyexe_libbfio.h"
 #include "pyexe_libcerror.h"
-#include "pyexe_libcstring.h"
 #include "pyexe_python.h"
 
 /* Creates a file object IO handle
