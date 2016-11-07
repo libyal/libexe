@@ -65,18 +65,21 @@ exe_test_error_LDADD = \
 exe_test_file_SOURCES = \
 	exe_test_file.c \
 	exe_test_libcerror.h \
-	exe_test_libcsystem.h \
-	exe_test_libcthreads.h \
+	exe_test_libclocale.h \
 	exe_test_libexe.h \
+	exe_test_libcsystem.h \
+	exe_test_libuna.h \
 	exe_test_macros.h \
 	exe_test_memory.c exe_test_memory.h
 
 exe_test_file_LDADD = \
 	@LIBCSYSTEM_LIBADD@ \
+	@LIBUNA_LIBADD@ \
+	@LIBCNOTIFY_LIBADD@ \
+	@LIBCLOCALE_LIBADD@ \
+	@LIBCDATA_LIBADD@ \
 	../libexe/libexe.la \
-	@LIBCTHREADS_LIBADD@ \
 	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
 
 exe_test_notify_SOURCES = \
 	exe_test_libexe.h \

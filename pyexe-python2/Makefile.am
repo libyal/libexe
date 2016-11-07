@@ -40,7 +40,7 @@ pyexec_LTLIBRARIES = pyexe.la
 nodist_pyexe_la_SOURCES = $(BUILT_SOURCES)
 
 pyexe_la_LIBADD = \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
 	../libexe/libexe.la \
 	@LIBCDATA_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \

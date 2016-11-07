@@ -194,15 +194,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\tests\exe_test_libclocale.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\tests\exe_test_libcsystem.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\exe_test_libcthreads.h"
+				RelativePath="..\..\tests\exe_test_libexe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\exe_test_libexe.h"
+				RelativePath="..\..\tests\exe_test_libuna.h"
 				>
 			</File>
 			<File

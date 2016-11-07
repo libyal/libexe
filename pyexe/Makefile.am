@@ -30,7 +30,7 @@ pyexe_la_SOURCES = \
 	pyexe_unused.h
 
 pyexe_la_LIBADD = \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
 	../libexe/libexe.la \
 	@LIBCDATA_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
