@@ -1,5 +1,5 @@
 /*
- * Debug functions
+ * The internal libcnotify header
  *
  * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,39 +19,32 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_DEBUG_H )
-#define _LIBEXE_DEBUG_H
+#if !defined( _EXE_TEST_LIBCNOTIFY_H )
+#define _EXE_TEST_LIBCNOTIFY_H
 
 #include <common.h>
-#include <types.h>
 
-#include "libexe_libbfio.h"
-#include "libexe_libcerror.h"
+/* Define HAVE_LOCAL_LIBCNOTIFY for local use of libcnotify
+ */
+#if defined( HAVE_LOCAL_LIBCNOTIFY )
 
-#if defined( __cplusplus )
-extern "C" {
+#include <libcnotify_definitions.h>
+#include <libcnotify_print.h>
+#include <libcnotify_stream.h>
+#include <libcnotify_verbose.h>
+
+#else
+
+/* If libtool DLL support is enabled set LIBCNOTIFY_DLL_IMPORT
+ * before including libcnotify.h
+ */
+#if defined( _WIN32 ) && defined( DLL_IMPORT )
+#define LIBCNOTIFY_DLL_IMPORT
 #endif
 
-#if defined( HAVE_DEBUG_OUTPUT )
+#include <libcnotify.h>
 
-void libexe_debug_print_file_characteristic_flags(
-      uint16_t characteristic_flags );
+#endif /* defined( HAVE_LOCAL_LIBCNOTIFY ) */
 
-void libexe_debug_print_dll_characteristic_flags(
-      uint16_t characteristic_flags );
-
-void libexe_debug_print_section_characteristic_flags(
-      uint32_t characteristic_flags );
-
-int libexe_debug_print_read_offsets(
-     libbfio_handle_t *file_io_handle,
-     libcerror_error_t **error );
-
-#endif
-
-#if defined( __cplusplus )
-}
-#endif
-
-#endif /* !defined( _LIBEXE_DEBUG_H ) */
+#endif /* !defined( _EXE_TEST_LIBCNOTIFY_H ) */
 

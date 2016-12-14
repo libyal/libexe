@@ -45,5 +45,5 @@ void exeoutput_version_detailed_fprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _EXEOUTPUT_H ) */
 

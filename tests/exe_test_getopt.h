@@ -1,5 +1,5 @@
 /*
- * Import table functions
+ * GetOpt functions
  *
  * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -19,46 +19,50 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBEXE_IMPORT_TABLE_H )
-#define _LIBEXE_IMPORT_TABLE_H
+#if !defined( _EXE_TEST_GETOPT_H )
+#define _EXE_TEST_GETOPT_H
 
 #include <common.h>
 #include <types.h>
 
-#include "libexe_libbfio.h"
-#include "libexe_libcerror.h"
+/* unistd.h is included here to export getopt, optarg, optind and optopt
+ */
+#if defined( HAVE_UNISTD_H )
+#include <unistd.h>
+#endif
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
 
-typedef struct libexe_import_table libexe_import_table_t;
+#if defined( HAVE_GETOPT )
+#define exe_test_getopt( argument_count, argument_values, options_string ) \
+	getopt( argument_count, argument_values, options_string )
 
-struct libexe_import_table
-{
-	/* Dummy
-	 */
-	int dummy;
-};
+#else
 
-int libexe_import_table_initialize(
-     libexe_import_table_t **import_table,
-     libcerror_error_t **error );
+#if !defined( __CYGWIN__ )
+extern int optind;
+extern system_character_t *optarg;
+extern system_integer_t optopt;
 
-int libexe_import_table_free(
-     libexe_import_table_t **import_table,
-     libcerror_error_t **error );
+#else
+int optind;
+system_character_t *optarg;
+system_integer_t optopt;
 
-int libexe_import_table_read(
-     libexe_import_table_t *import_table,
-     libbfio_handle_t *file_io_handle,
-     uint32_t file_offset,
-     uint32_t size,
-     libcerror_error_t **error );
+#endif /* !defined( __CYGWIN__ ) */
+
+system_integer_t exe_test_getopt(
+                  int argument_count,
+                  system_character_t * const argument_values[],
+                  const system_character_t *options_string );
+
+#endif /* defined( HAVE_GETOPT ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif /* !defined( _LIBEXE_IMPORT_TABLE_H ) */
+#endif /* !defined( _EXE_TEST_GETOPT_H ) */
 

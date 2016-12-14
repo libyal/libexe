@@ -156,5 +156,5 @@ off64_t libexe_io_handle_seek_segment_offset(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_IO_HANDLE_H ) */
 

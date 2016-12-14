@@ -33,6 +33,8 @@
 #include "exe_test_memory.h"
 #include "exe_test_unused.h"
 
+#include "../libexe/libexe_section.h"
+
 /* Tests the libexe_section_free function
  * Returns 1 if successful or 0 if not
  */
@@ -71,6 +73,10 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+#endif /* defined( __GNUC__ ) */
+
 /* The main program
  */
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
@@ -86,9 +92,47 @@ int main(
 	EXE_TEST_UNREFERENCED_PARAMETER( argc )
 	EXE_TEST_UNREFERENCED_PARAMETER( argv )
 
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libexe_section_initialize */
+
+#endif /* defined( __GNUC__ ) */
+
 	EXE_TEST_RUN(
 	 "libexe_section_free",
 	 exe_test_section_free );
+
+#if defined( __GNUC__ )
+
+	/* TODO: add tests for libexe_section_get_name_size */
+
+	/* TODO: add tests for libexe_section_get_name */
+
+	/* TODO: add tests for libexe_section_get_utf8_name_size */
+
+	/* TODO: add tests for libexe_section_get_utf8_name */
+
+	/* TODO: add tests for libexe_section_get_utf16_name_size */
+
+	/* TODO: add tests for libexe_section_get_utf16_name */
+
+	/* TODO: add tests for libexe_section_read_buffer */
+
+	/* TODO: add tests for libexe_section_read_buffer_at_offset */
+
+	/* TODO: add tests for libexe_section_seek_offset */
+
+	/* TODO: add tests for libexe_section_get_offset */
+
+	/* TODO: add tests for libexe_section_get_size */
+
+	/* TODO: add tests for libexe_section_get_start_offset */
+
+	/* TODO: add tests for libexe_section_get_virtual_address */
+
+	/* TODO: add tests for libexe_section_get_data_file_io_handle */
+
+#endif /* defined( __GNUC__ ) */
 
 	return( EXIT_SUCCESS );
 

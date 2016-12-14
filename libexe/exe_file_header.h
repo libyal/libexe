@@ -631,5 +631,5 @@ struct exe_coff_optional_header_data_directories
 }
 #endif
 
-#endif
+#endif /* !defined( _EXE_FILE_HEADER_H ) */
 

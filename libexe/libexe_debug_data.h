@@ -60,5 +60,5 @@ int libexe_debug_data_read(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_DEBUG_DATA_H ) */
 

@@ -24,11 +24,11 @@
 
 #include <libexe/types.h>
 
-#define LIBEXE_VERSION					@VERSION@
+#define LIBEXE_VERSION						@VERSION@
 
 /* The version string
  */
-#define LIBEXE_VERSION_STRING				"@VERSION@"
+#define LIBEXE_VERSION_STRING					"@VERSION@"
 
 /* The access flags definitions
  * bit 1        set to 1 for read access
@@ -37,18 +37,18 @@
  */
 enum LIBEXE_ACCESS_FLAGS
 {
-	LIBEXE_ACCESS_FLAG_READ				= 0x01,
+	LIBEXE_ACCESS_FLAG_READ					= 0x01,
 /* Reserved: not supported yet */
-	LIBEXE_ACCESS_FLAG_WRITE			= 0x02
+	LIBEXE_ACCESS_FLAG_WRITE				= 0x02
 };
 
 /* The file access macros
  */
-#define LIBEXE_OPEN_READ				( LIBEXE_ACCESS_FLAG_READ )
+#define LIBEXE_OPEN_READ					( LIBEXE_ACCESS_FLAG_READ )
 /* Reserved: not supported yet */
-#define LIBEXE_OPEN_WRITE				( LIBEXE_ACCESS_FLAG_WRITE )
+#define LIBEXE_OPEN_WRITE					( LIBEXE_ACCESS_FLAG_WRITE )
 /* Reserved: not supported yet */
-#define LIBEXE_OPEN_READ_WRITE				( LIBEXE_ACCESS_FLAG_READ | LIBEXE_ACCESS_FLAG_WRITE )
+#define LIBEXE_OPEN_READ_WRITE					( LIBEXE_ACCESS_FLAG_READ | LIBEXE_ACCESS_FLAG_WRITE )
 
 /* The executable types
  */

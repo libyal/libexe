@@ -48,5 +48,5 @@ struct libexe_data_directory_descriptor
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_DATA_DIRECTORY_DESCRIPTOR_H ) */
 

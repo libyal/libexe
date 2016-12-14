@@ -2,7 +2,6 @@ MSVSCPP_FILES = \
 	exe_test_error/exe_test_error.vcproj \
 	exe_test_file/exe_test_file.vcproj \
 	exe_test_notify/exe_test_notify.vcproj \
-	exe_test_open_close/exe_test_open_close.vcproj \
 	exe_test_read/exe_test_read.vcproj \
 	exe_test_section/exe_test_section.vcproj \
 	exe_test_seek/exe_test_seek.vcproj \

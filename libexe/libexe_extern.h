@@ -38,9 +38,9 @@
 #include <libexe/extern.h>
 
 #else
-#define LIBEXE_EXTERN	extern
+#define LIBEXE_EXTERN	/* extern */
 
-#endif
+#endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 
 #endif /* !defined( _LIBEXE_INTERNAL_EXTERN_H ) */
 

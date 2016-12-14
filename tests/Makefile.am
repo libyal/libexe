@@ -11,6 +11,9 @@ AM_CPPFLAGS = \
 	@LIBCFILE_CPPFLAGS@ \
 	@LIBCPATH_CPPFLAGS@ \
 	@LIBBFIO_CPPFLAGS@ \
+	@LIBFCACHE_CPPFLAGS@ \
+	@LIBFDATA_CPPFLAGS@ \
+	@LIBFDATETIME_CPPFLAGS@ \
 	@LIBCSYSTEM_CPPFLAGS@ \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBEXE_DLL_IMPORT@
@@ -36,8 +39,8 @@ check_SCRIPTS = \
 	test_api_functions.sh \
 	test_api_types.sh \
 	test_exeinfo.sh \
-	test_python_functions.sh \
 	test_pyexe_set_ascii_codepage.sh \
+	test_python_functions.sh \
 	test_runner.sh
 
 EXTRA_DIST = \
@@ -47,7 +50,6 @@ check_PROGRAMS = \
 	exe_test_error \
 	exe_test_file \
 	exe_test_notify \
-	exe_test_open_close \
 	exe_test_read \
 	exe_test_section \
 	exe_test_seek \
@@ -64,22 +66,24 @@ exe_test_error_LDADD = \
 
 exe_test_file_SOURCES = \
 	exe_test_file.c \
+	exe_test_getopt.c exe_test_getopt.h \
 	exe_test_libcerror.h \
 	exe_test_libclocale.h \
+	exe_test_libcnotify.h \
 	exe_test_libexe.h \
-	exe_test_libcsystem.h \
 	exe_test_libuna.h \
 	exe_test_macros.h \
 	exe_test_memory.c exe_test_memory.h
 
 exe_test_file_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
 	../libexe/libexe.la \
-	@LIBCERROR_LIBADD@
+	@LIBCTHREADS_LIBADD@ \
+	@LIBCERROR_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 exe_test_notify_SOURCES = \
 	exe_test_libexe.h \
@@ -89,21 +93,6 @@ exe_test_notify_SOURCES = \
 
 exe_test_notify_LDADD = \
 	../libexe/libexe.la
-
-exe_test_open_close_SOURCES = \
-	exe_test_libcerror.h \
-	exe_test_libcsystem.h \
-	exe_test_libcthreads.h \
-	exe_test_libexe.h \
-	exe_test_open_close.c \
-	exe_test_unused.h
-
-exe_test_open_close_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
-	../libexe/libexe.la \
-	@LIBCTHREADS_LIBADD@ \
-	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
 
 exe_test_read_SOURCES = \
 	exe_test_libcerror.h \
@@ -122,8 +111,6 @@ exe_test_read_LDADD = \
 
 exe_test_section_SOURCES = \
 	exe_test_libcerror.h \
-	exe_test_libcsystem.h \
-	exe_test_libcthreads.h \
 	exe_test_libexe.h \
 	exe_test_macros.h \
 	exe_test_memory.c exe_test_memory.h \
@@ -131,11 +118,8 @@ exe_test_section_SOURCES = \
 	exe_test_unused.h
 
 exe_test_section_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	../libexe/libexe.la \
-	@LIBCTHREADS_LIBADD@ \
 	@LIBCERROR_LIBADD@
-	@PTHREAD_LIBADD@
 
 exe_test_seek_SOURCES = \
 	exe_test_libcerror.h \
@@ -153,16 +137,20 @@ exe_test_seek_LDADD = \
 	@PTHREAD_LIBADD@
 
 exe_test_support_SOURCES = \
+	exe_test_getopt.c exe_test_getopt.h \
+	exe_test_libbfio.h \
 	exe_test_libcerror.h \
 	exe_test_libclocale.h \
+	exe_test_libcnotify.h \
 	exe_test_libexe.h \
-	exe_test_libcsystem.h \
 	exe_test_libuna.h \
 	exe_test_macros.h \
 	exe_test_support.c
 
 exe_test_support_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \

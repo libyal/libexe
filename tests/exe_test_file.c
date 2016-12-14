@@ -30,15 +30,15 @@
 #include <stdlib.h>
 #endif
 
+#include "exe_test_getopt.h"
 #include "exe_test_libcerror.h"
 #include "exe_test_libclocale.h"
-#include "exe_test_libcsystem.h"
 #include "exe_test_libexe.h"
 #include "exe_test_libuna.h"
 #include "exe_test_macros.h"
 #include "exe_test_memory.h"
 
-#if SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
 #endif
 
@@ -256,8 +256,8 @@ int exe_test_file_get_wide_source(
      libcerror_error_t **error )
 {
 	static char *function   = "exe_test_file_get_wide_source";
-	size_t wide_source_size = 0;
 	size_t source_length    = 0;
+	size_t wide_source_size = 0;
 
 #if !defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	int result              = 0;
@@ -584,11 +584,17 @@ int exe_test_file_close_source(
 int exe_test_file_initialize(
      void )
 {
-	libcerror_error_t *error = NULL;
-	libexe_file_t *file      = NULL;
-	int result               = 0;
+	libcerror_error_t *error        = NULL;
+	libexe_file_t *file             = NULL;
+	int result                      = 0;
 
-	/* Test libexe_file_initialize
+#if defined( HAVE_EXE_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
+	/* Test regular cases
 	 */
 	result = libexe_file_initialize(
 	          &file,
@@ -664,79 +670,89 @@ int exe_test_file_initialize(
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 
-	/* Test libexe_file_initialize with malloc failing
-	 */
-	exe_test_malloc_attempts_before_fail = 0;
-
-	result = libexe_file_initialize(
-	          &file,
-	          &error );
-
-	if( exe_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		exe_test_malloc_attempts_before_fail = -1;
+		/* Test libexe_file_initialize with malloc failing
+		 */
+		exe_test_malloc_attempts_before_fail = test_number;
 
-		if( file != NULL )
+		result = libexe_file_initialize(
+		          &file,
+		          &error );
+
+		if( exe_test_malloc_attempts_before_fail != -1 )
 		{
-			libexe_file_free(
-			 &file,
-			 NULL );
+			exe_test_malloc_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libexe_file_free(
+				 &file,
+				 NULL );
+			}
+		}
+		else
+		{
+			EXE_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			EXE_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
+
+			EXE_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
 		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		EXE_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libexe_file_initialize with memset failing
+		 */
+		exe_test_memset_attempts_before_fail = test_number;
 
-		EXE_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+		result = libexe_file_initialize(
+		          &file,
+		          &error );
 
-		EXE_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libexe_file_initialize with memset failing
-	 */
-	exe_test_memset_attempts_before_fail = 0;
-
-	result = libexe_file_initialize(
-	          &file,
-	          &error );
-
-	if( exe_test_memset_attempts_before_fail != -1 )
-	{
-		exe_test_memset_attempts_before_fail = -1;
-
-		if( file != NULL )
+		if( exe_test_memset_attempts_before_fail != -1 )
 		{
-			libexe_file_free(
-			 &file,
-			 NULL );
+			exe_test_memset_attempts_before_fail = -1;
+
+			if( file != NULL )
+			{
+				libexe_file_free(
+				 &file,
+				 NULL );
+			}
 		}
-	}
-	else
-	{
-		EXE_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		else
+		{
+			EXE_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-		EXE_TEST_ASSERT_IS_NULL(
-		 "file",
-		 file );
+			EXE_TEST_ASSERT_IS_NULL(
+			 "file",
+			 file );
 
-		EXE_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+			EXE_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_EXE_TEST_MEMORY ) */
 
@@ -795,7 +811,7 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libexe_file_open functions
+/* Tests the libexe_file_open function
  * Returns 1 if successful or 0 if not
  */
 int exe_test_file_open(
@@ -858,21 +874,28 @@ int exe_test_file_open(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libexe_file_close(
+	result = libexe_file_open(
 	          file,
+	          narrow_source,
+	          LIBEXE_OPEN_READ,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
+        EXE_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libexe_file_free(
 	          &file,
 	          &error );
@@ -909,7 +932,7 @@ on_error:
 
 #if defined( HAVE_WIDE_CHARACTER_TYPE )
 
-/* Tests the libexe_file_open_wide functions
+/* Tests the libexe_file_open_wide function
  * Returns 1 if successful or 0 if not
  */
 int exe_test_file_open_wide(
@@ -972,21 +995,28 @@ int exe_test_file_open_wide(
          "error",
          error );
 
-	/* Clean up
+	/* Test error cases
 	 */
-	result = libexe_file_close(
+	result = libexe_file_open_wide(
 	          file,
+	          wide_source,
+	          LIBEXE_OPEN_READ,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 0 );
+	 -1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
+        EXE_TEST_ASSERT_IS_NOT_NULL(
          "error",
          error );
 
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
 	result = libexe_file_free(
 	          &file,
 	          &error );
@@ -1023,51 +1053,18 @@ on_error:
 
 #endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
 
-/* Tests the libexe_file_get_ascii_codepage functions
+/* Tests the libexe_file_close function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_file_get_ascii_codepage(
-     libexe_file_t *file )
+int exe_test_file_close(
+     void )
 {
 	libcerror_error_t *error = NULL;
-	int codepage             = 0;
 	int result               = 0;
-
-	result = libexe_file_get_ascii_codepage(
-	          file,
-	          &codepage,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test error cases
 	 */
-	result = libexe_file_get_ascii_codepage(
-	          NULL,
-	          &codepage,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
-	result = libexe_file_get_ascii_codepage(
-	          file,
+	result = libexe_file_close(
 	          NULL,
 	          &error );
 
@@ -1094,11 +1091,283 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libexe_file_set_ascii_codepage functions
+/* Tests the libexe_file_open and libexe_file_close functions
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_file_open_close(
+     const system_character_t *source )
+{
+	libcerror_error_t *error = NULL;
+	libexe_file_t *file      = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libexe_file_initialize(
+	          &file,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "file",
+         file );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libexe_file_open_wide(
+	          file,
+	          source,
+	          LIBEXE_OPEN_READ,
+	          &error );
+#else
+	result = libexe_file_open(
+	          file,
+	          source,
+	          LIBEXE_OPEN_READ,
+	          &error );
+#endif
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libexe_file_close(
+	          file,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test open and close a second time to validate clean up on close
+	 */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+	result = libexe_file_open_wide(
+	          file,
+	          source,
+	          LIBEXE_OPEN_READ,
+	          &error );
+#else
+	result = libexe_file_open(
+	          file,
+	          source,
+	          LIBEXE_OPEN_READ,
+	          &error );
+#endif
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libexe_file_close(
+	          file,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Clean up
+	 */
+	result = libexe_file_free(
+	          &file,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "file",
+         file );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( file != NULL )
+	{
+		libexe_file_free(
+		 &file,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libexe_file_signal_abort function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_file_signal_abort(
+     libexe_file_t *file )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test regular cases
+	 */
+	result = libexe_file_signal_abort(
+	          file,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libexe_file_signal_abort(
+	          NULL,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libexe_file_get_ascii_codepage function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_file_get_ascii_codepage(
+     libexe_file_t *file )
+{
+	libcerror_error_t *error  = NULL;
+	int ascii_codepage        = 0;
+	int ascii_codepage_is_set = 0;
+	int result                = 0;
+
+	/* Test regular cases
+	 */
+	result = libexe_file_get_ascii_codepage(
+	          file,
+	          &ascii_codepage,
+	          &error );
+
+	EXE_TEST_ASSERT_NOT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	ascii_codepage_is_set = result;
+
+	/* Test error cases
+	 */
+	result = libexe_file_get_ascii_codepage(
+	          NULL,
+	          &ascii_codepage,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	if( ascii_codepage_is_set != 0 )
+	{
+		result = libexe_file_get_ascii_codepage(
+		          file,
+		          NULL,
+		          &error );
+
+		EXE_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		EXE_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libexe_file_set_ascii_codepage function
  * Returns 1 if successful or 0 if not
  */
 int exe_test_file_set_ascii_codepage(
-     void )
+     libexe_file_t *file )
 {
 	int supported_codepages[ 15 ] = {
 		LIBEXE_CODEPAGE_ASCII,
@@ -1137,29 +1406,9 @@ int exe_test_file_set_ascii_codepage(
 		LIBEXE_CODEPAGE_KOI8_U };
 
 	libcerror_error_t *error = NULL;
-	libexe_file_t *file      = NULL;
 	int codepage             = 0;
 	int index                = 0;
 	int result               = 0;
-
-	/* Initialize test
-	 */
-	result = libexe_file_initialize(
-	          &file,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "file",
-         file );
-
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
 
 	/* Test set ASCII codepage
 	 */
@@ -1227,18 +1476,15 @@ int exe_test_file_set_ascii_codepage(
 	}
 	/* Clean up
 	 */
-	result = libexe_file_free(
-	          &file,
+	result = libexe_file_set_ascii_codepage(
+	          file,
+	          LIBEXE_CODEPAGE_WINDOWS_1252,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
-
-        EXE_TEST_ASSERT_IS_NULL(
-         "file",
-         file );
 
         EXE_TEST_ASSERT_IS_NULL(
          "error",
@@ -1252,38 +1498,37 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( file != NULL )
-	{
-		libexe_file_free(
-		 &file,
-		 NULL );
-	}
 	return( 0 );
 }
 
-/* Tests the libexe_file_get_number_of_sections functions
+/* Tests the libexe_file_get_number_of_sections function
  * Returns 1 if successful or 0 if not
  */
 int exe_test_file_get_number_of_sections(
      libexe_file_t *file )
 {
-	libcerror_error_t *error = NULL;
-	int number_of_sections   = 0;
-	int result               = 0;
+	libcerror_error_t *error      = NULL;
+	int number_of_sections        = 0;
+	int number_of_sections_is_set = 0;
+	int result                    = 0;
 
+	/* Test regular cases
+	 */
 	result = libexe_file_get_number_of_sections(
 	          file,
 	          &number_of_sections,
 	          &error );
 
-	EXE_TEST_ASSERT_EQUAL_INT(
+	EXE_TEST_ASSERT_NOT_EQUAL_INT(
 	 "result",
 	 result,
-	 1 );
+	 -1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	number_of_sections_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1297,30 +1542,32 @@ int exe_test_file_get_number_of_sections(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
 
-	result = libexe_file_get_number_of_sections(
-	          file,
-	          NULL,
-	          &error );
+	if( number_of_sections_is_set != 0 )
+	{
+		result = libexe_file_get_number_of_sections(
+		          file,
+		          NULL,
+		          &error );
 
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
+		EXE_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+		EXE_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-	libcerror_error_free(
-	 &error );
-
+		libcerror_error_free(
+		 &error );
+	}
 	return( 1 );
 
 on_error:
@@ -1345,12 +1592,12 @@ int main(
 #endif
 {
 	libcerror_error_t *error   = NULL;
-	system_character_t *source = NULL;
 	libexe_file_t *file        = NULL;
+	system_character_t *source = NULL;
 	system_integer_t option    = 0;
 	int result                 = 0;
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = exe_test_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "" ) ) ) != (system_integer_t) -1 )
@@ -1387,10 +1634,6 @@ int main(
 	 "libexe_file_free",
 	 exe_test_file_free );
 
-	EXE_TEST_RUN(
-	 "libexe_file_set_ascii_codepage",
-	 exe_test_file_set_ascii_codepage );
-
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 	if( source != NULL )
 	{
@@ -1414,7 +1657,14 @@ int main(
 
 #endif /* defined( LIBEXE_HAVE_BFIO ) */
 
-		/* TODO add test for libexe_file_close */
+		EXE_TEST_RUN(
+		 "libexe_file_close",
+		 exe_test_file_close );
+
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_open_close",
+		 exe_test_file_open_close,
+		 source );
 
 		/* Initialize test
 		 */
@@ -1437,17 +1687,40 @@ int main(
 	         error );
 
 		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_signal_abort",
+		 exe_test_file_signal_abort,
+		 file );
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libexe_file_open_read */
+
+#endif /* defined( __GNUC__ ) */
+
+		EXE_TEST_RUN_WITH_ARGS(
 		 "libexe_file_get_ascii_codepage",
 		 exe_test_file_get_ascii_codepage,
 		 file );
+
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_set_ascii_codepage",
+		 exe_test_file_set_ascii_codepage,
+		 file );
+
+#if defined( __GNUC__ )
+
+		/* TODO: add tests for libexe_file_get_offset_by_relative_virtual_address */
+
+#endif /* defined( __GNUC__ ) */
 
 		EXE_TEST_RUN_WITH_ARGS(
 		 "libexe_file_get_number_of_sections",
 		 exe_test_file_get_number_of_sections,
 		 file );
 
-               /* TODO add test for libexe_file_get_section */
-               /* TODO add test for libexe_file_get_section_by_name */
+		/* TODO: add tests for libexe_file_get_section */
+
+		/* TODO: add tests for libexe_file_get_section_by_name */
 
 		/* Clean up
 		 */

@@ -107,5 +107,5 @@ int libexe_section_io_handle_get_size(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_SECTION_IO_HANDLE_H ) */
 

@@ -83,5 +83,5 @@ int libexe_section_descriptor_set_data_range(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBEXE_SECTION_DESCRIPTOR_H ) */
 

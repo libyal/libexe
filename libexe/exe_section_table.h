@@ -89,5 +89,5 @@ struct exe_section_table_entry
 }
 #endif
 
-#endif
+#endif /* !defined( _EXE_SECTION_TABLE_H ) */
 
