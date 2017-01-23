@@ -1,7 +1,7 @@
 /*
- * Common output functions for the exetools
+ * Library data_directory_descriptor type test program
  *
- * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -19,31 +19,38 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _EXEOUTPUT_H )
-#define _EXEOUTPUT_H
-
 #include <common.h>
 #include <file_stream.h>
 #include <types.h>
 
-#if defined( __cplusplus )
-extern "C" {
+#if defined( HAVE_STDLIB_H ) || defined( WINAPI )
+#include <stdlib.h>
 #endif
 
-void exeoutput_copyright_fprint(
-      FILE *stream );
+#include "exe_test_libcerror.h"
+#include "exe_test_libexe.h"
+#include "exe_test_macros.h"
+#include "exe_test_memory.h"
+#include "exe_test_unused.h"
 
-void exeoutput_version_fprint(
-      FILE *stream,
-      const char *program );
+/* The main program
+ */
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+int wmain(
+     int argc EXE_TEST_ATTRIBUTE_UNUSED,
+     wchar_t * const argv[] EXE_TEST_ATTRIBUTE_UNUSED )
+#else
+int main(
+     int argc EXE_TEST_ATTRIBUTE_UNUSED,
+     char * const argv[] EXE_TEST_ATTRIBUTE_UNUSED )
+#endif
+{
+	EXE_TEST_UNREFERENCED_PARAMETER( argc )
+	EXE_TEST_UNREFERENCED_PARAMETER( argv )
 
-void exeoutput_version_detailed_fprint(
-      FILE *stream,
-      const char *program );
+	return( EXIT_SUCCESS );
 
-#if defined( __cplusplus )
+on_error:
+	return( EXIT_FAILURE );
 }
-#endif
-
-#endif /* !defined( _EXEOUTPUT_H ) */
 

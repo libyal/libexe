@@ -1,7 +1,7 @@
 /*
  * Shows information obtained from an executable (EXE) file
  *
- * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -33,12 +33,14 @@
 #include <stdlib.h>
 #endif
 
-#include "exeoutput.h"
+#include "exetools_getopt.h"
 #include "exetools_libcerror.h"
 #include "exetools_libclocale.h"
 #include "exetools_libcnotify.h"
-#include "exetools_libcsystem.h"
 #include "exetools_libexe.h"
+#include "exetools_output.h"
+#include "exetools_signal.h"
+#include "exetools_unused.h"
 #include "info_handle.h"
 
 info_handle_t *exeinfo_info_handle = NULL;
@@ -73,12 +75,12 @@ void usage_fprint(
 /* Signal handler for exeinfo
  */
 void exeinfo_signal_handler(
-      libcsystem_signal_t signal LIBCSYSTEM_ATTRIBUTE_UNUSED )
+      exetools_signal_t signal EXETOOLS_ATTRIBUTE_UNUSED )
 {
 	libcerror_error_t *error = NULL;
 	static char *function    = "exeinfo_signal_handler";
 
-	LIBCSYSTEM_UNREFERENCED_PARAMETER( signal )
+	EXETOOLS_UNREFERENCED_PARAMETER( signal )
 
 	exeinfo_abort = 1;
 
@@ -100,8 +102,13 @@ void exeinfo_signal_handler(
 	}
 	/* Force stdin to close otherwise any function reading it will remain blocked
 	 */
-	if( libcsystem_file_io_close(
+#if defined( WINAPI ) && !defined( __CYGWIN__ )
+	if( _close(
 	     0 ) != 0 )
+#else
+	if( close(
+	     0 ) != 0 )
+#endif
 	{
 		libcnotify_printf(
 		 "%s: unable to close stdin.\n",
@@ -141,13 +148,13 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( libcsystem_initialize(
+	if( exetools_output_initialize(
 	     _IONBF,
 	     &error ) != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to initialize system values.\n" );
+		 "Unable to initialize output settings.\n" );
 
 		goto on_error;
 	}
@@ -155,7 +162,7 @@ int main( int argc, char * const argv[] )
 	 stdout,
 	 program );
 
-	while( ( option = libcsystem_getopt(
+	while( ( option = exetools_getopt(
 	                   argc,
 	                   argv,
 	                   _SYSTEM_STRING( "c:hvV" ) ) ) != (system_integer_t) -1 )

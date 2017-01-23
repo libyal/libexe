@@ -1,7 +1,7 @@
 /*
- * Python object definition of the libexe file
+ * Python object wrapper of libexe_file_t
  *
- * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -113,7 +113,7 @@ PyObject *pyexe_file_get_number_of_sections(
            PyObject *arguments );
 
 PyObject *pyexe_file_get_section_by_index(
-           pyexe_file_t *pyexe_file,
+           PyObject *pyexe_file,
            int section_index );
 
 PyObject *pyexe_file_get_section(
@@ -134,5 +134,5 @@ PyObject *pyexe_file_get_section_by_name(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYEXE_FILE_H ) */
 

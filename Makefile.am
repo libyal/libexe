@@ -17,7 +17,6 @@ SUBDIRS = \
 	libfdata \
 	libfdatetime \
 	libexe \
-	libcsystem \
 	exetools \
 	pyexe \
 	pyexe-python2 \
@@ -121,7 +120,6 @@ splint:
 	(cd $(srcdir)/libfdata && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libfdatetime && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/libexe && $(MAKE) splint $(AM_MAKEFLAGS))
-	(cd $(srcdir)/libcsystem && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/exetools && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/pyexe && $(MAKE) splint $(AM_MAKEFLAGS))
 	(cd $(srcdir)/tests && $(MAKE) splint $(AM_MAKEFLAGS))

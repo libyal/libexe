@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20161214],
+ [20170123],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -96,17 +96,8 @@ AX_LIBFDATETIME_CHECK_ENABLE
 dnl Check for library function support
 AX_LIBEXE_CHECK_LOCAL
 
-dnl Check for enabling libcsystem for cross-platform C generic system functions
-AX_LIBCSYSTEM_CHECK_ENABLE
-
-dnl Check if exetools should be build as static executables
-AX_COMMON_CHECK_ENABLE_STATIC_EXECUTABLES
-
-dnl Check if libexe should be build with verbose output
-AX_COMMON_CHECK_ENABLE_VERBOSE_OUTPUT
-
-dnl Check if libexe should be build with debug output
-AX_COMMON_CHECK_ENABLE_DEBUG_OUTPUT
+dnl Check for exetools function support
+AX_EXETOOLS_CHECK_LOCAL
 
 dnl Check if libexe python bindings (pyexe) should be build
 AX_PYTHON_CHECK_PYPREFIX
@@ -131,29 +122,6 @@ AS_IF(
 dnl Check for test function support
 AX_TESTS_CHECK_LOCAL
 
-dnl Check if DLL support is needed
-AS_IF(
- [test "x$enable_shared" = xyes],
- [AS_CASE(
-  [$host],
-  [*cygwin* | *mingw*],
-  [AC_DEFINE(
-   [HAVE_DLLMAIN],
-   [1],
-   [Define to 1 to enable the DllMain function.])
-  AC_SUBST(
-   [HAVE_DLLMAIN],
-   [1])
-
-  AS_IF(
-   [test "x$ac_cv_enable_static_executables" = xno],
-   [AC_SUBST(
-    [LIBEXE_DLL_IMPORT],
-    ["-DLIBEXE_DLL_IMPORT"])
-   ])
-  ])
- ])
-
 dnl Set additional compiler flags
 CFLAGS="$CFLAGS -Wall";
 
@@ -165,13 +133,6 @@ AS_IF(
   [Requires:])
  AC_SUBST(
   [libexe_spec_build_requires],
-  [BuildRequires:])
- ])
-
-AS_IF(
- [test "x$ac_cv_libcsystem" = xyes],
- [AC_SUBST(
-  [libexe_tools_spec_build_requires],
   [BuildRequires:])
  ])
 
@@ -208,7 +169,6 @@ AC_CONFIG_FILES([libfcache/Makefile])
 AC_CONFIG_FILES([libfdata/Makefile])
 AC_CONFIG_FILES([libfdatetime/Makefile])
 AC_CONFIG_FILES([libexe/Makefile])
-AC_CONFIG_FILES([libcsystem/Makefile])
 AC_CONFIG_FILES([exetools/Makefile])
 AC_CONFIG_FILES([pyexe/Makefile])
 AC_CONFIG_FILES([pyexe-python2/Makefile])

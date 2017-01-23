@@ -1,7 +1,7 @@
 /*
- * Python object definition of the libexe file
+ * Python object wrapper of libexe_file_t
  *
- * Copyright (C) 2011-2016, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -1249,7 +1249,7 @@ PyObject *pyexe_file_get_number_of_sections(
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_file_get_section_by_index(
-           pyexe_file_t *pyexe_file,
+           PyObject *pyexe_file,
            int section_index )
 {
 	libcerror_error_t *error  = NULL;
@@ -1270,7 +1270,7 @@ PyObject *pyexe_file_get_section_by_index(
 	Py_BEGIN_ALLOW_THREADS
 
 	result = libexe_file_get_section(
-	          pyexe_file->file,
+	          ( (pyexe_file_t *) pyexe_file )->file,
 	          section_index,
 	          &section,
 	          &error );
@@ -1293,7 +1293,7 @@ PyObject *pyexe_file_get_section_by_index(
 	}
 	section_object = pyexe_section_new(
 	                  section,
-	                  pyexe_file );
+	                  (pyexe_file_t *) pyexe_file );
 
 	if( section_object == NULL )
 	{
@@ -1338,7 +1338,7 @@ PyObject *pyexe_file_get_section(
 		return( NULL );
 	}
 	section_object = pyexe_file_get_section_by_index(
-	                  pyexe_file,
+	                  (PyObject *) pyexe_file,
 	                  section_index );
 
 	return( section_object );
@@ -1391,7 +1391,7 @@ PyObject *pyexe_file_get_sections(
 		return( NULL );
 	}
 	sections_object = pyexe_sections_new(
-	                   pyexe_file,
+	                   (PyObject *) pyexe_file,
 	                   &pyexe_file_get_section_by_index,
 	                   number_of_sections );
 

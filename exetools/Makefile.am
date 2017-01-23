@@ -13,7 +13,6 @@ AM_CPPFLAGS = \
 	@LIBFCACHE_CPPFLAGS@ \
 	@LIBFDATA_CPPFLAGS@ \
 	@LIBFDATETIME_CPPFLAGS@ \
-	@LIBCSYSTEM_CPPFLAGS@ \
 	@LIBEXE_DLL_IMPORT@
 
 AM_LDFLAGS = @STATIC_LDFLAGS@
@@ -23,23 +22,25 @@ bin_PROGRAMS = \
 
 exeinfo_SOURCES = \
 	exeinfo.c \
-	exeoutput.c exeoutput.h \
+	exetools_getopt.c exetools_getopt.h \
+	exetools_i18n.h \
 	exetools_libbfio.h \
 	exetools_libcerror.h \
 	exetools_libclocale.h \
 	exetools_libcnotify.h \
-	exetools_libcsystem.h \
 	exetools_libfdatetime.h \
 	exetools_libexe.h \
 	exetools_libuna.h \
+	exetools_output.c exetools_output.h \
+	exetools_signal.c exetools_signal.h \
+	exetools_unused.h \
 	info_handle.c info_handle.h
 
 exeinfo_LDADD = \
-	@LIBCSYSTEM_LIBADD@ \
 	@LIBUNA_LIBADD@ \
-	../libexe/libexe.la \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
+	../libexe/libexe.la \
 	@LIBCERROR_LIBADD@ \
 	@LIBINTL@
 

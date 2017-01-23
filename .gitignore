@@ -122,12 +122,16 @@ stamp-h[1-9]
 /libexe/libexe_definitions.h
 /pyexe-python[23]/*.[ch]
 /exetools/exeinfo
+/tests/exe_test_data_directory_descriptor
+/tests/exe_test_debug_data
 /tests/exe_test_error
+/tests/exe_test_export_table
 /tests/exe_test_file
+/tests/exe_test_import_table
+/tests/exe_test_io_handle
 /tests/exe_test_notify
-/tests/exe_test_read
 /tests/exe_test_section
-/tests/exe_test_seek
+/tests/exe_test_section_descriptor
 /tests/exe_test_support
 /tests/input
 /tests/tmp*
@@ -141,7 +145,6 @@ stamp-h[1-9]
 /libcnotify
 /libcpath
 /libcsplit
-/libcsystem
 /libcthreads
 /libfcache
 /libfdata
