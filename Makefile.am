@@ -32,13 +32,12 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libexe.docs \
-	dpkg/libexe-dev.docs \
-	dpkg/libexe-python.docs \
-	dpkg/libexe-python3.docs \
-	dpkg/libexe-tools.docs \
+	dpkg/libexe.install \
+	dpkg/libexe-dev.install \
+	dpkg/libexe-python.install \
+	dpkg/libexe-python3.install \
+	dpkg/libexe-tools.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \

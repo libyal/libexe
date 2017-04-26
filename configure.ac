@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libexe],
- [20170123],
+ [20170426],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -187,7 +187,6 @@ AC_CONFIG_FILES([libexe/libexe_definitions.h])
 dnl Have configure make distribution specific files
 AC_CONFIG_FILES([common/types.h])
 AC_CONFIG_FILES([dpkg/changelog])
-AC_CONFIG_FILES([dpkg/copyright])
 AC_CONFIG_FILES([libexe/libexe.rc])
 AC_CONFIG_FILES([libexe.pc])
 AC_CONFIG_FILES([libexe.spec])
