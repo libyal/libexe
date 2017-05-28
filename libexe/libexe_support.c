@@ -26,11 +26,12 @@
 #include <wide_string.h>
 
 #include "libexe_definitions.h"
-#include "libexe_io_handle.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
 #include "libexe_libclocale.h"
 #include "libexe_support.h"
+
+#include "exe_mz_header.h"
 
 #if !defined( HAVE_LOCAL_LIBEXE )
 
@@ -423,8 +424,8 @@ int libexe_check_file_signature_file_io_handle(
 		}
 	}
 	if( memory_compare(
-	     exe_mz_signature,
 	     signature,
+	     EXE_MZ_SIGNATURE,
 	     2 ) == 0 )
 	{
 		return( 1 );

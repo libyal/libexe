@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libexe\libexe_mz_header.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libexe\libexe_notify.c"
 				>
 			</File>
@@ -229,6 +233,10 @@
 			>
 			<File
 				RelativePath="..\..\libexe\exe_file_header.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libexe\exe_mz_header.h"
 				>
 			</File>
 			<File
@@ -313,6 +321,10 @@
 			</File>
 			<File
 				RelativePath="..\..\libexe\libexe_libuna.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libexe\libexe_mz_header.h"
 				>
 			</File>
 			<File

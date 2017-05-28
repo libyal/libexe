@@ -36,13 +36,14 @@
 #include "libexe_libcdata.h"
 #include "libexe_libcnotify.h"
 #include "libexe_libfdatetime.h"
+#include "libexe_mz_header.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
 
 #include "exe_file_header.h"
+#include "exe_mz_header.h"
 #include "exe_section_table.h"
 
-const char *exe_mz_signature = "MZ";
 const char *exe_le_signature = "LE";
 const char *exe_ne_signature = "NE";
 const char *exe_pe_signature = "PE\x0\x0";
@@ -221,13 +222,26 @@ int libexe_io_handle_read_file_header(
      uint16_t *number_of_sections,
      libcerror_error_t **error )
 {
+	libexe_mz_header_t *mz_header   = NULL;
 	static char *function           = "libexe_io_handle_read_file_header";
-	uint32_t extended_header_offset = 0;
 
-	if( libexe_io_handle_read_mz_header(
-	     io_handle,
+	if( libexe_mz_header_initialize(
+	     &mz_header,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create MZ header.",
+		 function );
+
+		goto on_error;
+	}
+	if( libexe_mz_header_read_file_io_handle(
+	     mz_header,
 	     file_io_handle,
-	     &extended_header_offset,
+	     0,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -237,17 +251,17 @@ int libexe_io_handle_read_file_header(
 		 "%s: unable to read MZ header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 /* TODO check if value is sane */
-	if( extended_header_offset != 0 )
+	if( mz_header->extended_header_offset != 0 )
 	{
 /* TODO print data between current offset and extended_header_offset */
 
 		if( libexe_io_handle_read_extended_header(
 		     io_handle,
 		     file_io_handle,
-		     extended_header_offset,
+		     mz_header->extended_header_offset,
 		     number_of_sections,
 		     error ) != 1 )
 		{
@@ -258,271 +272,32 @@ int libexe_io_handle_read_file_header(
 			 "%s: unable to read extended header.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
-	return( 1 );
-}
-
-/* Reads the MZ header
- * Returns 1 if successful or -1 on error
- */
-int libexe_io_handle_read_mz_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t *extended_header_offset,
-     libcerror_error_t **error )
-{
-	exe_mz_header_t mz_header;
-
-	static char *function                 = "libexe_io_handle_read_mz_header";
-	ssize_t read_count                    = 0;
-	uint16_t number_of_relocation_entries = 0;
-	uint16_t relocation_table_offset      = 0;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	uint32_t value_32bit                  = 0;
-	uint16_t value_16bit                  = 0;
-#endif
-
-	if( io_handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
-
-		return( -1 );
-	}
-	if( extended_header_offset == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid extended header offset.",
-		 function );
-
-		return( -1 );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading MZ header at offset: 0 (0x00000000)\n",
-		 function );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     0,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek MZ header offset: 0.",
-		 function );
-
-		return( -1 );
-	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              (uint8_t *) &mz_header,
-	              sizeof( exe_mz_header_t ),
-	              error );
-
-	if( read_count != (ssize_t) sizeof( exe_mz_header_t ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read MZ header.",
-		 function );
-
-		return( -1 );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: MZ header:\n",
-		 function );
-		libcnotify_print_data(
-		 (uint8_t *) &mz_header,
-		 sizeof( exe_mz_header_t ),
-		 0 );
-	}
-#endif
-	if( memory_compare(
-	     mz_header.signature,
-	     exe_mz_signature,
-	     2 ) != 0 )
+	if( libexe_mz_header_free(
+	     &mz_header,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid signature.",
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free MZ header.",
 		 function );
 
-		return( -1 );
-	}
-	byte_stream_copy_to_uint16_little_endian(
-	 mz_header.number_of_relocation_entries,
-	 number_of_relocation_entries );
-
-	byte_stream_copy_to_uint16_little_endian(
-	 mz_header.relocation_table_offset,
-	 relocation_table_offset );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: signature\t\t\t\t: %c%c\n",
-		 function,
-		 mz_header.signature[ 0 ],
-		 mz_header.signature[ 1 ] );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.last_page_size,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: last page size\t\t\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.number_of_pages,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: number of pages\t\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		libcnotify_printf(
-		 "%s: number of relocation entries\t\t: %" PRIu16 "\n",
-		 function,
-		 number_of_relocation_entries );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.number_of_header_paragraphs,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: number of header paragraphs\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.minimum_allocated_paragraphs,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: minimum allocated paragraphs\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.maximum_allocated_paragraphs,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: maximum allocated paragraphs\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.initial_stack_segment,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: initial stack segment\t\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.initial_stack_pointer,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: initial stack pointer\t\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.checksum,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: checksum\t\t\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 value_16bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 mz_header.entry_point,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: entry point\t\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		libcnotify_printf(
-		 "%s: relocation table offset\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 relocation_table_offset );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 mz_header.overlay_number,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: overlay number\t\t\t\t: %" PRIu16 "\n",
-		 function,
-		 value_16bit );
-
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
-	if( relocation_table_offset >= 0x40 )
-	{
-/* TODO read data */
-		byte_stream_copy_to_uint32_little_endian(
-		 mz_header.extended_header_offset,
-		 *extended_header_offset );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: unknown1:\n",
-			 function );
-			libcnotify_print_data(
-			 mz_header.unknown1,
-			 32,
-			 0 );
-
-			libcnotify_printf(
-			 "%s: extended header offset\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 *extended_header_offset );
-
-			libcnotify_printf(
-			 "%s: unknown2:\n",
-			 function );
-			libcnotify_print_data(
-			 mz_header.unknown2,
-			 112,
-			 0 );
-		}
-#endif
-	}
-/* TODO print data between realloc and current offset */
-	if( number_of_relocation_entries > 0 )
-	{
-/* TODO print relation table entries */
+		goto on_error;
 	}
 	return( 1 );
+
+on_error:
+	if( mz_header != NULL )
+	{
+		libexe_mz_header_free(
+		 &mz_header,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Reads the extended header

@@ -35,8 +35,6 @@
 extern "C" {
 #endif
 
-extern const char *exe_mz_signature;
-
 typedef struct libexe_io_handle libexe_io_handle_t;
 
 struct libexe_io_handle
@@ -78,12 +76,6 @@ int libexe_io_handle_read_file_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
      uint16_t *number_of_sections,
-     libcerror_error_t **error );
-
-int libexe_io_handle_read_mz_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint32_t *extended_header_offset,
      libcerror_error_t **error );
 
 int libexe_io_handle_read_extended_header(
