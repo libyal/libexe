@@ -1,0 +1,79 @@
+name: byte
+type: integer
+attributes:
+  format: unsigned
+  size: 1
+  units: bytes
+---
+name: uint16
+type: integer
+attributes:
+  format: unsigned
+  size: 2
+  units: bytes
+---
+name: uint32
+type: integer
+attributes:
+  format: unsigned
+  size: 4
+  units: bytes
+---
+name: pecoff
+type: format
+description: Portable Executable and Common Object File Format
+metadata:
+  authors: ['Joachim Metz <joachim.metz@gmail.com>']
+  year: 2011
+attributes:
+  byte_order: little-endian
+layout:
+- data_type: mz_header
+---
+name: mz_header
+description: MZ header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: signature
+  type: stream
+  element_data_type: byte
+  elements_data_size: 2
+- name: last_page_size
+  description: size of the last page
+  data_type: uint16
+- name: number_of_pages
+  data_type: uint16
+- name: number_of_relocation_entries
+  data_type: uint16
+- name: number_of_header_paragraphs
+  data_type: uint16
+- name: minimum_allocated_paragraphs
+  description: minimum number of allocated paragraphs
+  data_type: uint16
+- name: maximum_allocated_paragraphs
+  description: maximum number of allocated paragraphs
+  data_type: uint16
+- name: initial_stack_segment
+  data_type: uint16
+- name: initial_stack_pointer
+  data_type: uint16
+- name: checksum
+  data_type: uint16
+- name: entry_point
+  data_type: uint32
+- name: relocation_table_offset
+  data_type: uint16
+- name: overlay_number
+  data_type: uint16
+- name: unknown1
+  type: stream
+  element_data_type: byte
+  elements_data_size: 32
+- name: extended_header_offset
+  data_type: uint32
+- name: unknown2
+  type: stream
+  element_data_type: byte
+  elements_data_size: 112

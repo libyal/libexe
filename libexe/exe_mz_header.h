@@ -1,5 +1,5 @@
 /*
- * The MZ header of an executable (EXE) file
+ * MZ header of an executable (EXE) file
  *
  * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -37,81 +37,80 @@ struct exe_mz_header
 {
 	/* Signature
 	 * Consists of 2 bytes
-	 * "MZ"
 	 */
 	uint8_t signature[ 2 ];
 
-	/* The size of the last page
+	/* Size of the last page
 	 * Consists of 2 bytes
 	 */
 	uint8_t last_page_size[ 2 ];
 
-	/* The number of pages
+	/* Number of pages
 	 * Consists of 2 bytes
 	 */
 	uint8_t number_of_pages[ 2 ];
 
-	/* The number of relocation entries
+	/* Number of relocation entries
 	 * Consists of 2 bytes
 	 */
 	uint8_t number_of_relocation_entries[ 2 ];
 
-	/* The number of header paragraphs
+	/* Number of header paragraphs
 	 * Consists of 2 bytes
 	 */
 	uint8_t number_of_header_paragraphs[ 2 ];
 
-	/* The minimum number of allocated paragraphs
+	/* Minimum number of allocated paragraphs
 	 * Consists of 2 bytes
 	 */
 	uint8_t minimum_allocated_paragraphs[ 2 ];
 
-	/* The maximum number of allocated paragraphs
+	/* Maximum number of allocated paragraphs
 	 * Consists of 2 bytes
 	 */
 	uint8_t maximum_allocated_paragraphs[ 2 ];
 
-	/* The initial stack segment
+	/* Initial stack segment
 	 * Consists of 2 bytes
 	 */
 	uint8_t initial_stack_segment[ 2 ];
 
-	/* The initial stack pointer
+	/* Initial stack pointer
 	 * Consists of 2 bytes
 	 */
 	uint8_t initial_stack_pointer[ 2 ];
 
-	/* The checksum
+	/* Checksum
 	 * Consists of 2 bytes
 	 */
 	uint8_t checksum[ 2 ];
 
-	/* The entry point
+	/* Entry point
 	 * Consists of 4 bytes
 	 */
 	uint8_t entry_point[ 4 ];
 
-	/* The relocation table offset
+	/* Relocation table offset
 	 * Consists of 2 bytes
 	 */
 	uint8_t relocation_table_offset[ 2 ];
 
-	/* The overlay number
+	/* Overlay number
 	 * Consists of 2 bytes
 	 */
 	uint8_t overlay_number[ 2 ];
 
-	/* Unknown
+	/* Unknown1
 	 * Consists of 32 bytes
 	 */
 	uint8_t unknown1[ 32 ];
 
-	/* The extended header offset
+	/* Extended header offset
 	 * Consists of 4 bytes
 	 */
 	uint8_t extended_header_offset[ 4 ];
 
-	/* Unknown
+	/* Unknown2
 	 * Consists of 112 bytes
 	 */
 	uint8_t unknown2[ 112 ];
