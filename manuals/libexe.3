@@ -69,7 +69,7 @@ File functions
 .Ft int
 .Fn libexe_file_get_number_of_sections "libexe_file_t *file, int *number_of_sections, libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_section "libexe_file_t *file, int section_index, libexe_section_t **section, libexe_error_t **error"
+.Fn libexe_file_get_section_by_index "libexe_file_t *file, int section_index, libexe_section_t **section, libexe_error_t **error"
 .Ft int
 .Fn libexe_file_get_section_by_name "libexe_file_t *file, const char *string, size_t string_length, libexe_section_t **section, libexe_error_t **error"
 .Pp
@@ -85,17 +85,17 @@ Section functions
 .Ft int
 .Fn libexe_section_free "libexe_section_t **section, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Fn libexe_section_get_name_size "libexe_section_t *section, size_t *string_size, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_name "libexe_section_t *section, char *name, size_t name_size, libexe_error_t **error"
+.Fn libexe_section_get_name "libexe_section_t *section, char *string, size_t string_size, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf8_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Fn libexe_section_get_utf8_name_size "libexe_section_t *section, size_t *utf8_string_size, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf8_name "libexe_section_t *section, uint8_t *name, size_t name_size, libexe_error_t **error"
+.Fn libexe_section_get_utf8_name "libexe_section_t *section, uint8_t *utf8_string, size_t utf8_string_size, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf16_name_size "libexe_section_t *section, size_t *name, libexe_error_t **error"
+.Fn libexe_section_get_utf16_name_size "libexe_section_t *section, size_t *utf16_string_size, libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf16_name "libexe_section_t *section, uint16_t *name, size_t name_size, libexe_error_t **error"
+.Fn libexe_section_get_utf16_name "libexe_section_t *section, uint16_t *utf16_string, size_t utf16_string_size, libexe_error_t **error"
 .Ft ssize_t
 .Fn libexe_section_read_buffer "libexe_section_t *section, void *buffer, size_t buffer_size, libexe_error_t **error"
 .Ft ssize_t

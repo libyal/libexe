@@ -270,6 +270,113 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libexe_import_table_read function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_import_table_read(
+     void )
+{
+	libcerror_error_t *error            = NULL;
+	libexe_import_table_t *import_table = NULL;
+	int result                          = 0;
+
+	/* Initialize test
+	 */
+	result = libexe_import_table_initialize(
+	          &import_table,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "import_table",
+         import_table );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libexe_import_table_read(
+	          NULL,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_import_table_read(
+	          import_table,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+	/* Clean up
+	 */
+	result = libexe_import_table_free(
+	          &import_table,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "import_table",
+         import_table );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( import_table != NULL )
+	{
+		libexe_import_table_free(
+		 &import_table,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -297,7 +404,9 @@ int main(
 	 "libexe_import_table_free",
 	 exe_test_import_table_free );
 
-	/* TODO: add tests for libexe_import_table_read */
+	EXE_TEST_RUN(
+	 "libexe_import_table_read",
+	 exe_test_import_table_read );
 
 #endif /* defined( __GNUC__ ) */
 

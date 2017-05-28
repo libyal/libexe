@@ -239,7 +239,7 @@ int libexe_section_descriptor_get_data_range(
      size64_t *data_size,
      libcerror_error_t **error )
 {
-	static char *function = "libexe_section_descriptor_get_data_range";
+	static char *function  = "libexe_section_descriptor_get_data_range";
 	uint32_t segment_flags = 0;
 	int segment_file_index = 0;
 

@@ -270,6 +270,113 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libexe_debug_data_read function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_debug_data_read(
+     void )
+{
+	libcerror_error_t *error        = NULL;
+	libexe_debug_data_t *debug_data = NULL;
+	int result                      = 0;
+
+	/* Initialize test
+	 */
+	result = libexe_debug_data_initialize(
+	          &debug_data,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "debug_data",
+         debug_data );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libexe_debug_data_read(
+	          NULL,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_debug_data_read(
+	          debug_data,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+	/* Clean up
+	 */
+	result = libexe_debug_data_free(
+	          &debug_data,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "debug_data",
+         debug_data );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( debug_data != NULL )
+	{
+		libexe_debug_data_free(
+		 &debug_data,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -297,7 +404,9 @@ int main(
 	 "libexe_debug_data_free",
 	 exe_test_debug_data_free );
 
-	/* TODO: add tests for libexe_debug_data_read */
+	EXE_TEST_RUN(
+	 "libexe_debug_data_read",
+	 exe_test_debug_data_read );
 
 #endif /* defined( __GNUC__ ) */
 

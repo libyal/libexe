@@ -270,6 +270,104 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libexe_io_handle_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_io_handle_clear(
+     void )
+{
+	libcerror_error_t *error      = NULL;
+	libexe_io_handle_t *io_handle = NULL;
+	int result                    = 0;
+
+	/* Initialize test
+	 */
+	result = libexe_io_handle_initialize(
+	          &io_handle,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "io_handle",
+         io_handle );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test regular cases
+	 */
+	result = libexe_io_handle_clear(
+	          io_handle,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libexe_io_handle_clear(
+	          NULL,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libexe_io_handle_free(
+	          &io_handle,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "io_handle",
+         io_handle );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( io_handle != NULL )
+	{
+		libexe_io_handle_free(
+		 &io_handle,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -297,7 +395,9 @@ int main(
 	 "libexe_io_handle_free",
 	 exe_test_io_handle_free );
 
-	/* TODO: add tests for libexe_io_handle_clear */
+	EXE_TEST_RUN(
+	 "libexe_io_handle_clear",
+	 exe_test_io_handle_clear );
 
 	/* TODO: add tests for libexe_io_handle_read_file_header */
 

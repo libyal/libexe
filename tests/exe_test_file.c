@@ -1637,6 +1637,27 @@ int main(
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 	if( source != NULL )
 	{
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
+		result = libexe_check_file_signature_wide(
+		          source,
+		          &error );
+#else
+		result = libexe_check_file_signature(
+		          source,
+		          &error );
+#endif
+
+		EXE_TEST_ASSERT_NOT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+	        EXE_TEST_ASSERT_IS_NULL(
+	         "error",
+	         error );
+	}
+	if( result != 0 )
+	{
 		EXE_TEST_RUN_WITH_ARGS(
 		 "libexe_file_open",
 		 exe_test_file_open,
@@ -1719,6 +1740,8 @@ int main(
 		 file );
 
 		/* TODO: add tests for libexe_file_get_section */
+
+		/* TODO: add tests for libexe_file_get_section_by_index */
 
 		/* TODO: add tests for libexe_file_get_section_by_name */
 

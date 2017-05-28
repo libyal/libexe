@@ -270,6 +270,113 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libexe_export_table_read function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_export_table_read(
+     void )
+{
+	libcerror_error_t *error            = NULL;
+	libexe_export_table_t *export_table = NULL;
+	int result                          = 0;
+
+	/* Initialize test
+	 */
+	result = libexe_export_table_initialize(
+	          &export_table,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "export_table",
+         export_table );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libexe_export_table_read(
+	          NULL,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_export_table_read(
+	          export_table,
+	          NULL,
+	          0,
+	          0,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        EXE_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+	/* Clean up
+	 */
+	result = libexe_export_table_free(
+	          &export_table,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "export_table",
+         export_table );
+
+        EXE_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( export_table != NULL )
+	{
+		libexe_export_table_free(
+		 &export_table,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* defined( __GNUC__ ) */
 
 /* The main program
@@ -297,7 +404,9 @@ int main(
 	 "libexe_export_table_free",
 	 exe_test_export_table_free );
 
-	/* TODO: add tests for libexe_export_table_read */
+	EXE_TEST_RUN(
+	 "libexe_export_table_read",
+	 exe_test_export_table_read );
 
 #endif /* defined( __GNUC__ ) */
 
