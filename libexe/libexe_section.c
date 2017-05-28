@@ -168,7 +168,7 @@ int libexe_section_free(
  */
 int libexe_section_get_name_size(
      libexe_section_t *section,
-     size_t *name_size,
+     size_t *string_size,
      libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
@@ -198,18 +198,18 @@ int libexe_section_get_name_size(
 
 		return( -1 );
 	}
-	if( name_size == NULL )
+	if( string_size == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid name size.",
+		 "%s: invalid string size.",
 		 function );
 
 		return( -1 );
 	}
-	*name_size = internal_section->section_descriptor->name_size;
+	*string_size = internal_section->section_descriptor->name_size;
 
 	return( 1 );
 }
@@ -220,8 +220,8 @@ int libexe_section_get_name_size(
  */
 int libexe_section_get_name(
      libexe_section_t *section,
-     char *name,
-     size_t name_size,
+     char *string,
+     size_t string_size,
      libcerror_error_t **error )
 {
 	libexe_internal_section_t *internal_section = NULL;
@@ -251,37 +251,37 @@ int libexe_section_get_name(
 
 		return( -1 );
 	}
-	if( name_size > (size_t) SSIZE_MAX )
+	if( string_size > (size_t) SSIZE_MAX )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid name size value exceeds maximum.",
+		 "%s: invalid string size value exceeds maximum.",
 		 function );
 
 		return( -1 );
 	}
-	if( ( name_size < 1 )
-	 || ( name_size < internal_section->section_descriptor->name_size ) )
+	if( ( string_size < 1 )
+	 || ( string_size < internal_section->section_descriptor->name_size ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid name value too small.",
+		 "%s: invalid string value too small.",
 		 function );
 
 		return( -1 );
 	}
 	if( internal_section->section_descriptor->name_size == 0 )
 	{
-		name[ 0 ] = 0;
+		string[ 0 ] = 0;
 	}
 	else
 	{
 		if( memory_copy(
-		     name,
+		     string,
 		     internal_section->section_descriptor->name,
 		     internal_section->section_descriptor->name_size ) == NULL )
 		{

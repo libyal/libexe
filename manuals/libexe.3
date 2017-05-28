@@ -1,4 +1,4 @@
-.Dd January 22, 2017
+.Dd May 28, 2017
 .Dt libexe 3
 .Os libexe
 .Sh NAME
@@ -71,7 +71,7 @@ File functions
 .Ft int
 .Fn libexe_file_get_section "libexe_file_t *file, int section_index, libexe_section_t **section, libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_section_by_name "libexe_file_t *file, const char *name, size_t name_length, libexe_section_t **section, libexe_error_t **error"
+.Fn libexe_file_get_section_by_name "libexe_file_t *file, const char *string, size_t string_length, libexe_section_t **section, libexe_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int

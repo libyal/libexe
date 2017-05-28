@@ -291,7 +291,7 @@ int libexe_file_get_number_of_sections(
  * Returns 1 if successful or -1 on error
  */
 LIBEXE_EXTERN \
-int libexe_file_get_section(
+int libexe_file_get_section_by_index(
      libexe_file_t *file,
      int section_index,
      libexe_section_t **section,
@@ -303,8 +303,26 @@ int libexe_file_get_section(
 LIBEXE_EXTERN \
 int libexe_file_get_section_by_name(
      libexe_file_t *file,
-     const char *name,
-     size_t name_length,
+     const char *string,
+     size_t string_length,
+     libexe_section_t **section,
+     libexe_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * File functions - deprecated
+ * ------------------------------------------------------------------------- */
+
+/* Retrieves a specific section
+ *
+ * This function is deprecated use libexe_file_get_section_by_index instead
+ *
+ * Returns 1 if successful or -1 on error
+ */
+LIBEXE_DEPRECATED \
+LIBEXE_EXTERN \
+int libexe_file_get_section(
+     libexe_file_t *file,
+     int section_index,
      libexe_section_t **section,
      libexe_error_t **error );
 
@@ -327,7 +345,7 @@ int libexe_section_free(
 LIBEXE_EXTERN \
 int libexe_section_get_name_size(
      libexe_section_t *section,
-     size_t *name,
+     size_t *string_size,
      libexe_error_t **error );
 
 /* Retrieves the ASCII formatted name
@@ -337,8 +355,8 @@ int libexe_section_get_name_size(
 LIBEXE_EXTERN \
 int libexe_section_get_name(
      libexe_section_t *section,
-     char *name,
-     size_t name_size,
+     char *string,
+     size_t string_size,
      libexe_error_t **error );
 
 /* Retrieves the size of the UTF-8 formatted name
@@ -348,7 +366,7 @@ int libexe_section_get_name(
 LIBEXE_EXTERN \
 int libexe_section_get_utf8_name_size(
      libexe_section_t *section,
-     size_t *name,
+     size_t *utf8_string_size,
      libexe_error_t **error );
 
 /* Retrieves the UTF-8 formatted name
@@ -358,8 +376,8 @@ int libexe_section_get_utf8_name_size(
 LIBEXE_EXTERN \
 int libexe_section_get_utf8_name(
      libexe_section_t *section,
-     uint8_t *name,
-     size_t name_size,
+     uint8_t *utf8_string,
+     size_t utf8_string_size,
      libexe_error_t **error );
 
 /* Retrieves the size of the UTF-16 formatted name
@@ -369,7 +387,7 @@ int libexe_section_get_utf8_name(
 LIBEXE_EXTERN \
 int libexe_section_get_utf16_name_size(
      libexe_section_t *section,
-     size_t *name,
+     size_t *utf16_string_size,
      libexe_error_t **error );
 
 /* Retrieves the UTF-16 formatted name
@@ -379,8 +397,8 @@ int libexe_section_get_utf16_name_size(
 LIBEXE_EXTERN \
 int libexe_section_get_utf16_name(
      libexe_section_t *section,
-     uint16_t *name,
-     size_t name_size,
+     uint16_t *utf16_string,
+     size_t utf16_string_size,
      libexe_error_t **error );
 
 /* Reads data at the current offset into a buffer

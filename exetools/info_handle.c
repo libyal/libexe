@@ -421,7 +421,7 @@ int info_handle_file_fprint(
 			 "Section: %d\n",
 			 section_index );
 
-			if( libexe_file_get_section(
+			if( libexe_file_get_section_by_index(
 			     info_handle->input_file,
 			     section_index,
 			     &section,

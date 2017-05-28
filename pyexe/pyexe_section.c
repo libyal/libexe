@@ -28,7 +28,6 @@
 
 #include "pyexe_datetime.h"
 #include "pyexe_error.h"
-#include "pyexe_file.h"
 #include "pyexe_integer.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libexe.h"
@@ -254,8 +253,9 @@ PyTypeObject pyexe_section_type_object = {
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_section_new(
+           PyTypeObject *type_object,
            libexe_section_t *section,
-           pyexe_file_t *file_object )
+           PyObject *parent_object )
 {
 	pyexe_section_t *pyexe_section = NULL;
 	static char *function          = "pyexe_section_new";
@@ -271,7 +271,7 @@ PyObject *pyexe_section_new(
 	}
 	pyexe_section = PyObject_New(
 	                 struct pyexe_section,
-	                 &pyexe_section_type_object );
+	                 type_object );
 
 	if( pyexe_section == NULL )
 	{
@@ -292,11 +292,11 @@ PyObject *pyexe_section_new(
 
 		goto on_error;
 	}
-	pyexe_section->section     = section;
-	pyexe_section->file_object = file_object;
+	pyexe_section->section       = section;
+	pyexe_section->parent_object = parent_object;
 
 	Py_IncRef(
-	 (PyObject *) pyexe_section->file_object );
+	 (PyObject *) pyexe_section->parent_object );
 
 	return( (PyObject *) pyexe_section );
 
@@ -394,10 +394,10 @@ void pyexe_section_free(
 		libcerror_error_free(
 		 &error );
 	}
-	if( pyexe_section->file_object != NULL )
+	if( pyexe_section->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) pyexe_section->file_object );
+		 (PyObject *) pyexe_section->parent_object );
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyexe_section );

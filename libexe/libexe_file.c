@@ -1456,13 +1456,96 @@ int libexe_file_get_section(
 	return( 1 );
 }
 
+/* Retrieves a specific section
+ * Returns 1 if successful or -1 on error
+ */
+int libexe_file_get_section_by_index(
+     libexe_file_t *file,
+     int section_index,
+     libexe_section_t **section,
+     libcerror_error_t **error )
+{
+	libexe_internal_file_t *internal_file           = NULL;
+	libexe_section_descriptor_t *section_descriptor = NULL;
+	static char *function                           = "libexe_file_get_section_by_index";
+
+	if( file == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid file.",
+		 function );
+
+		return( -1 );
+	}
+	internal_file = (libexe_internal_file_t *) file;
+
+	if( section == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid section.",
+		 function );
+
+		return( -1 );
+	}
+	if( *section != NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid section value already set.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_array_get_entry_by_index(
+	     internal_file->sections_array,
+	     section_index,
+	     (intptr_t **) &section_descriptor,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve section descriptor: %d.",
+		 function,
+		 section_index );
+
+		return( -1 );
+	}
+	if( libexe_section_initialize(
+	     section,
+	     internal_file->io_handle,
+	     internal_file->file_io_handle,
+	     section_descriptor,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create section.",
+		 function );
+
+		return( -1 );
+	}
+	return( 1 );
+}
+
 /* Retrieves a specific section by an ASCII formatted name
  * Returns 1 if successful, 0 if no such section or -1 on error
  */
 int libexe_file_get_section_by_name(
      libexe_file_t *file,
-     const char *name,
-     size_t name_length,
+     const char *string,
+     size_t string_length,
      libexe_section_t **section,
      libcerror_error_t **error )
 {
@@ -1485,24 +1568,24 @@ int libexe_file_get_section_by_name(
 	}
 	internal_file = (libexe_internal_file_t *) file;
 
-	if( name == NULL )
+	if( string == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid name.",
+		 "%s: invalid string.",
 		 function );
 
 		return( -1 );
 	}
-	if( name_length > (size_t) SSIZE_MAX )
+	if( string_length > (size_t) SSIZE_MAX )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid name length value exceeds maximum.",
+		 "%s: invalid string length value exceeds maximum.",
 		 function );
 
 		return( -1 );
@@ -1575,12 +1658,12 @@ int libexe_file_get_section_by_name(
 
 			return( -1 );
 		}
-		if( ( name_length + 1 ) == section_descriptor->name_size )
+		if( ( string_length + 1 ) == section_descriptor->name_size )
 		{
 			if( narrow_string_compare(
 			     section_descriptor->name,
-			     name,
-			     name_length ) == 0 )
+			     string,
+			     string_length ) == 0 )
 			{
 				if( libexe_section_initialize(
 				     section,

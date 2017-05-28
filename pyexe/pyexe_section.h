@@ -25,7 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include "pyexe_file.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
 
@@ -45,17 +44,18 @@ struct pyexe_section
 	 */
 	libexe_section_t *section;
 
-	/* The pyexe file object
+	/* The parent object
 	 */
-	pyexe_file_t *file_object;
+	PyObject *parent_object;
 };
 
 extern PyMethodDef pyexe_section_object_methods[];
 extern PyTypeObject pyexe_section_type_object;
 
 PyObject *pyexe_section_new(
+           PyTypeObject *type_object,
            libexe_section_t *section,
-           pyexe_file_t *file_object );
+           PyObject *parent_object );
 
 int pyexe_section_init(
      pyexe_section_t *pyexe_section );

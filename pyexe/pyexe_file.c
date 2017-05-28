@@ -42,13 +42,15 @@
 #include "pyexe_unused.h"
 
 #if !defined( LIBEXE_HAVE_BFIO )
+
 LIBEXE_EXTERN \
 int libexe_file_open_file_io_handle(
      libexe_file_t *file,
      libbfio_handle_t *file_io_handle,
      int access_flags,
      libexe_error_t **error );
-#endif
+
+#endif /* !defined( LIBEXE_HAVE_BFIO ) */
 
 PyMethodDef pyexe_file_object_methods[] = {
 
@@ -58,8 +60,6 @@ PyMethodDef pyexe_file_object_methods[] = {
 	  "signal_abort() -> None\n"
 	  "\n"
 	  "Signals the file to abort the current activity." },
-
-	/* Functions to access the file */
 
 	{ "open",
 	  (PyCFunction) pyexe_file_open,
@@ -87,24 +87,20 @@ PyMethodDef pyexe_file_object_methods[] = {
 	  METH_NOARGS,
 	  "get_ascii_codepage() -> String\n"
 	  "\n"
-	  "Returns the codepage used for ASCII strings in the file." },
+	  "Retrieves the codepage for ASCII strings used in the file." },
 
 	{ "set_ascii_codepage",
 	  (PyCFunction) pyexe_file_set_ascii_codepage,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "set_ascii_codepage(codepage) -> None\n"
 	  "\n"
-	  "Set the codepage used for ASCII strings in the file.\n"
-	  "Expects the codepage to be a String containing a Python codec definition." },
-
-	/* Functions to access the metadata */
-
-	/* Functions to access the sections */
+	  "Sets the codepage for ASCII strings used in the file.\n"
+	  "Expects the codepage to be a string containing a Python codec definition." },
 
 	{ "get_number_of_sections",
 	  (PyCFunction) pyexe_file_get_number_of_sections,
 	  METH_NOARGS,
-	  "get_number_of_sections() -> Integer\n"
+	  "get_number_of_sections() -> Integer or None\n"
 	  "\n"
 	  "Retrieves the number of sections." },
 
@@ -113,11 +109,11 @@ PyMethodDef pyexe_file_object_methods[] = {
 	  METH_VARARGS | METH_KEYWORDS,
 	  "get_section(section_index) -> Object or None\n"
 	  "\n"
-	  "Retrieves a specific section." },
+	  "Retrieves the section specified by the index." },
 
 	{ "get_sections",
 	  (PyCFunction) pyexe_file_get_sections,
-	  METH_VARARGS | METH_KEYWORDS,
+	  METH_NOARGS,
 	  "get_sections() -> Object\n"
 	  "\n"
 	  "Retrieves a sequence object of the sections." },
@@ -317,7 +313,7 @@ PyObject *pyexe_file_new_open(
 	return( pyexe_file );
 }
 
-/* Creates a new file object and opens it
+/* Creates a new file object and opens it using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_file_new_open_file_object(
@@ -345,8 +341,8 @@ PyObject *pyexe_file_new_open_file_object(
 int pyexe_file_init(
      pyexe_file_t *pyexe_file )
 {
-	static char *function    = "pyexe_file_init";
 	libcerror_error_t *error = NULL;
+	static char *function    = "pyexe_file_init";
 
 	if( pyexe_file == NULL )
 	{
@@ -383,8 +379,8 @@ int pyexe_file_init(
 void pyexe_file_free(
       pyexe_file_t *pyexe_file )
 {
-	libcerror_error_t *error    = NULL;
 	struct _typeobject *ob_type = NULL;
+	libcerror_error_t *error    = NULL;
 	static char *function       = "pyexe_file_free";
 	int result                  = 0;
 
@@ -509,9 +505,9 @@ PyObject *pyexe_file_open(
 {
 	PyObject *string_object      = NULL;
 	libcerror_error_t *error     = NULL;
+	const char *filename_narrow  = NULL;
 	static char *function        = "pyexe_file_open";
 	static char *keyword_list[]  = { "filename", "mode", NULL };
-	const char *filename_narrow  = NULL;
 	char *mode                   = NULL;
 	int result                   = 0;
 
@@ -565,7 +561,7 @@ PyObject *pyexe_file_open(
 	if( result == -1 )
 	{
 		pyexe_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type unicode.",
 		 function );
 
@@ -582,7 +578,7 @@ PyObject *pyexe_file_open(
 
 		result = libexe_file_open_wide(
 		          pyexe_file->file,
-	                  filename_wide,
+		          filename_wide,
 		          LIBEXE_OPEN_READ,
 		          &error );
 
@@ -602,16 +598,16 @@ PyObject *pyexe_file_open(
 		}
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libexe_file_open(
 		          pyexe_file->file,
-	                  filename_narrow,
+		          filename_narrow,
 		          LIBEXE_OPEN_READ,
 		          &error );
 
@@ -642,17 +638,17 @@ PyObject *pyexe_file_open(
 
 #if PY_MAJOR_VERSION >= 3
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyBytes_Type );
+	          string_object,
+	          (PyObject *) &PyBytes_Type );
 #else
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyString_Type );
+	          string_object,
+	          (PyObject *) &PyString_Type );
 #endif
 	if( result == -1 )
 	{
 		pyexe_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type string.",
 		 function );
 
@@ -664,16 +660,16 @@ PyObject *pyexe_file_open(
 
 #if PY_MAJOR_VERSION >= 3
 		filename_narrow = PyBytes_AsString(
-				   string_object );
+		                   string_object );
 #else
 		filename_narrow = PyString_AsString(
-				   string_object );
+		                   string_object );
 #endif
 		Py_BEGIN_ALLOW_THREADS
 
 		result = libexe_file_open(
 		          pyexe_file->file,
-	                  filename_narrow,
+		          filename_narrow,
 		          LIBEXE_OPEN_READ,
 		          &error );
 
@@ -715,9 +711,9 @@ PyObject *pyexe_file_open_file_object(
 {
 	PyObject *file_object       = NULL;
 	libcerror_error_t *error    = NULL;
-	char *mode                  = NULL;
-	static char *keyword_list[] = { "file_object", "mode", NULL };
 	static char *function       = "pyexe_file_open_file_object";
+	static char *keyword_list[] = { "file_object", "mode", NULL };
+	char *mode                  = NULL;
 	int result                  = 0;
 
 	if( pyexe_file == NULL )
@@ -750,6 +746,16 @@ PyObject *pyexe_file_open_file_object(
 
 		return( NULL );
 	}
+	if( pyexe_file->file_io_handle != NULL )
+	{
+		pyexe_error_raise(
+		 error,
+		 PyExc_IOError,
+		 "%s: invalid file - file IO handle already set.",
+		 function );
+
+		goto on_error;
+	}
 	if( pyexe_file_object_initialize(
 	     &( pyexe_file->file_io_handle ),
 	     file_object,
@@ -770,7 +776,7 @@ PyObject *pyexe_file_open_file_object(
 
 	result = libexe_file_open_file_io_handle(
 	          pyexe_file->file,
-	          pyexe_file->file_io_handle ,
+	          pyexe_file->file_io_handle,
 	          LIBEXE_OPEN_READ,
 	          &error );
 
@@ -795,7 +801,7 @@ PyObject *pyexe_file_open_file_object(
 	return( Py_None );
 
 on_error:
-	if( pyexe_file->file_io_handle  != NULL )
+	if( pyexe_file->file_io_handle != NULL )
 	{
 		libbfio_handle_free(
 		 &( pyexe_file->file_io_handle ),
@@ -884,8 +890,8 @@ PyObject *pyexe_file_get_ascii_codepage(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error    = NULL;
 	PyObject *string_object     = NULL;
+	libcerror_error_t *error    = NULL;
 	const char *codepage_string = NULL;
 	static char *function       = "pyexe_file_get_ascii_codepage";
 	int ascii_codepage          = 0;
@@ -1044,8 +1050,8 @@ PyObject *pyexe_file_set_ascii_codepage(
            PyObject *arguments,
            PyObject *keywords )
 {
-	static char *keyword_list[] = { "codepage", NULL };
 	char *codepage_string       = NULL;
+	static char *keyword_list[] = { "codepage", NULL };
 	int result                  = 0;
 
 	if( PyArg_ParseTupleAndKeywords(
@@ -1080,8 +1086,8 @@ int pyexe_file_set_ascii_codepage_setter(
      void *closure PYEXE_ATTRIBUTE_UNUSED )
 {
 	PyObject *utf8_string_object = NULL;
-	static char *function        = "pyexe_file_set_ascii_codepage_setter";
 	char *codepage_string        = NULL;
+	static char *function        = "pyexe_file_set_ascii_codepage_setter";
 	int result                   = 0;
 
 	PYEXE_UNREFERENCED_PARAMETER( closure )
@@ -1095,7 +1101,7 @@ int pyexe_file_set_ascii_codepage_setter(
 	if( result == -1 )
 	{
 		pyexe_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type unicode.",
 		 function );
 
@@ -1119,10 +1125,10 @@ int pyexe_file_set_ascii_codepage_setter(
 		}
 #if PY_MAJOR_VERSION >= 3
 		codepage_string = PyBytes_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #else
 		codepage_string = PyString_AsString(
-				   utf8_string_object );
+		                   utf8_string_object );
 #endif
 		if( codepage_string == NULL )
 		{
@@ -1142,17 +1148,17 @@ int pyexe_file_set_ascii_codepage_setter(
 
 #if PY_MAJOR_VERSION >= 3
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyBytes_Type );
+	          string_object,
+	          (PyObject *) &PyBytes_Type );
 #else
 	result = PyObject_IsInstance(
-		  string_object,
-		  (PyObject *) &PyString_Type );
+	          string_object,
+	          (PyObject *) &PyString_Type );
 #endif
 	if( result == -1 )
 	{
 		pyexe_error_fetch_and_raise(
-	         PyExc_RuntimeError,
+		 PyExc_RuntimeError,
 		 "%s: unable to determine if string object is of type string.",
 		 function );
 
@@ -1172,8 +1178,8 @@ int pyexe_file_set_ascii_codepage_setter(
 			return( -1 );
 		}
 		result = pyexe_file_set_ascii_codepage_from_string(
-			  pyexe_file,
-			  codepage_string );
+		          pyexe_file,
+		          codepage_string );
 
 		if( result != 1 )
 		{
@@ -1196,8 +1202,8 @@ PyObject *pyexe_file_get_number_of_sections(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
-	libcerror_error_t *error = NULL;
 	PyObject *integer_object = NULL;
+	libcerror_error_t *error = NULL;
 	static char *function    = "pyexe_file_get_number_of_sections";
 	int number_of_sections   = 0;
 	int result               = 0;
@@ -1207,7 +1213,7 @@ PyObject *pyexe_file_get_number_of_sections(
 	if( pyexe_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -1252,16 +1258,16 @@ PyObject *pyexe_file_get_section_by_index(
            PyObject *pyexe_file,
            int section_index )
 {
+	PyObject *section_object  = NULL;
 	libcerror_error_t *error  = NULL;
 	libexe_section_t *section = NULL;
-	PyObject *section_object  = NULL;
 	static char *function     = "pyexe_file_get_section_by_index";
 	int result                = 0;
 
 	if( pyexe_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -1269,7 +1275,7 @@ PyObject *pyexe_file_get_section_by_index(
 	}
 	Py_BEGIN_ALLOW_THREADS
 
-	result = libexe_file_get_section(
+	result = libexe_file_get_section_by_index(
 	          ( (pyexe_file_t *) pyexe_file )->file,
 	          section_index,
 	          &section,
@@ -1292,8 +1298,9 @@ PyObject *pyexe_file_get_section_by_index(
 		goto on_error;
 	}
 	section_object = pyexe_section_new(
+	                  &pyexe_section_type_object,
 	                  section,
-	                  (pyexe_file_t *) pyexe_file );
+	                  (PyObject *) pyexe_file );
 
 	if( section_object == NULL )
 	{
@@ -1344,15 +1351,15 @@ PyObject *pyexe_file_get_section(
 	return( section_object );
 }
 
-/* Retrieves a sections sequence and iterator object for the sections
+/* Retrieves a sequence and iterator object for the sections
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_file_get_sections(
            pyexe_file_t *pyexe_file,
            PyObject *arguments PYEXE_ATTRIBUTE_UNUSED )
 {
+	PyObject *sequence_object = NULL;
 	libcerror_error_t *error  = NULL;
-	PyObject *sections_object = NULL;
 	static char *function     = "pyexe_file_get_sections";
 	int number_of_sections    = 0;
 	int result                = 0;
@@ -1362,7 +1369,7 @@ PyObject *pyexe_file_get_sections(
 	if( pyexe_file == NULL )
 	{
 		PyErr_Format(
-		 PyExc_TypeError,
+		 PyExc_ValueError,
 		 "%s: invalid file.",
 		 function );
 
@@ -1390,21 +1397,22 @@ PyObject *pyexe_file_get_sections(
 
 		return( NULL );
 	}
-	sections_object = pyexe_sections_new(
+	sequence_object = pyexe_sections_new(
 	                   (PyObject *) pyexe_file,
 	                   &pyexe_file_get_section_by_index,
 	                   number_of_sections );
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
-		PyErr_Format(
+		pyexe_error_raise(
+		 error,
 		 PyExc_MemoryError,
-		 "%s: unable to create sections object.",
+		 "%s: unable to create sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	return( sections_object );
+	return( sequence_object );
 }
 
 /* Retrieves the section specified by the name
@@ -1480,8 +1488,9 @@ PyObject *pyexe_file_get_section_by_name(
 		return( Py_None );
 	}
 	section_object = pyexe_section_new(
+	                  &pyexe_section_type_object,
 	                  section,
-	                  pyexe_file );
+	                  (PyObject *) pyexe_file );
 
 	if( section_object == NULL )
 	{

@@ -68,14 +68,14 @@ int libexe_section_free(
 LIBEXE_EXTERN \
 int libexe_section_get_name_size(
      libexe_section_t *section,
-     size_t *name_size,
+     size_t *string_size,
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \
 int libexe_section_get_name(
      libexe_section_t *section,
-     char *name,
-     size_t name_size,
+     char *string,
+     size_t string_size,
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \

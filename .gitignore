@@ -131,6 +131,7 @@ stamp-h[1-9]
 /tests/exe_test_notify
 /tests/exe_test_section
 /tests/exe_test_section_descriptor
+/tests/exe_test_section_io_handle
 /tests/exe_test_support
 /tests/input
 /tests/tmp*

@@ -143,10 +143,17 @@ int libexe_file_get_section(
      libcerror_error_t **error );
 
 LIBEXE_EXTERN \
+int libexe_file_get_section_by_index(
+     libexe_file_t *file,
+     int section_index,
+     libexe_section_t **section,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
 int libexe_file_get_section_by_name(
      libexe_file_t *file,
-     const char *name,
-     size_t name_length,
+     const char *string,
+     size_t string_length,
      libexe_section_t **section,
      libcerror_error_t **error );
 
