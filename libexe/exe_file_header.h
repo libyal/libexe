@@ -29,47 +29,6 @@
 extern "C" {
 #endif
 
-typedef struct exe_le_header exe_le_header_t;
-
-struct exe_le_header
-{
-	/* Signature
-	 * Consists of 2 bytes
-	 * "LE"
-	 */
-	uint8_t signature[ 2 ];
-
-/* TODO */
-};
-
-typedef struct exe_ne_header exe_ne_header_t;
-
-struct exe_ne_header
-{
-	/* Signature
-	 * Consists of 2 bytes
-	 * "NE"
-	 */
-	uint8_t signature[ 2 ];
-
-/* TODO */
-	/* Todo
-	 * Consists of 62 bytes
-	 */
-	uint8_t todo[ 62 ];
-};
-
-typedef struct exe_pe_header exe_pe_header_t;
-
-struct exe_pe_header
-{
-	/* Signature
-	 * Consists of 4 bytes
-	 * "PE\x0\x0"
-	 */
-	uint8_t signature[ 4 ];
-};
-
 typedef struct exe_coff_header exe_coff_header_t;
 
 struct exe_coff_header

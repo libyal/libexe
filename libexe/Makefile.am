@@ -20,7 +20,10 @@ lib_LTLIBRARIES = libexe.la
 
 libexe_la_SOURCES = \
 	exe_file_header.h \
+	exe_le_header.h \
 	exe_mz_header.h \
+	exe_ne_header.h \
+	exe_pe_header.h \
 	exe_section_table.h \
 	libexe.c \
 	libexe_codepage.h \
@@ -34,6 +37,7 @@ libexe_la_SOURCES = \
 	libexe_file.c libexe_file.h \
 	libexe_import_table.c libexe_import_table.h \
 	libexe_io_handle.c libexe_io_handle.h \
+	libexe_le_header.c libexe_le_header.h \
 	libexe_libbfio.h \
 	libexe_libcdata.h \
 	libexe_libcerror.h \
@@ -44,6 +48,7 @@ libexe_la_SOURCES = \
 	libexe_libfdatetime.h \
 	libexe_libuna.h \
 	libexe_mz_header.c libexe_mz_header.h \
+	libexe_ne_header.c libexe_ne_header.h \
 	libexe_notify.c libexe_notify.h \
 	libexe_section.c libexe_section.h \
 	libexe_section_descriptor.c libexe_section_descriptor.h \

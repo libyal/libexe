@@ -31,21 +31,22 @@
 #include "libexe_debug.h"
 #include "libexe_definitions.h"
 #include "libexe_io_handle.h"
+#include "libexe_le_header.h"
 #include "libexe_libbfio.h"
 #include "libexe_libcerror.h"
 #include "libexe_libcdata.h"
 #include "libexe_libcnotify.h"
 #include "libexe_libfdatetime.h"
 #include "libexe_mz_header.h"
+#include "libexe_ne_header.h"
 #include "libexe_section_descriptor.h"
 #include "libexe_unused.h"
 
 #include "exe_file_header.h"
 #include "exe_mz_header.h"
+#include "exe_pe_header.h"
 #include "exe_section_table.h"
 
-const char *exe_le_signature = "LE";
-const char *exe_ne_signature = "NE";
 const char *exe_pe_signature = "PE\x0\x0";
 
 /* Creates an IO handle
@@ -466,10 +467,8 @@ int libexe_io_handle_read_le_header(
      uint16_t *number_of_sections,
      libcerror_error_t **error )
 {
-	exe_le_header_t le_header;
-
-	static char *function = "libexe_io_handle_read_le_header";
-	ssize_t read_count    = 0;
+	libexe_le_header_t *le_header = NULL;
+	static char *function         = "libexe_io_handle_read_le_header";
 
 	if( io_handle == NULL )
 	{
@@ -493,39 +492,24 @@ int libexe_io_handle_read_le_header(
 
 		return( -1 );
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading LE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
-		 function,
-		 le_header_offset,
-		 le_header_offset );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) le_header_offset,
-	     SEEK_SET,
-	     error ) == -1 )
+	if( libexe_le_header_initialize(
+	     &le_header,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek LE header offset: %" PRIu32 ".",
-		 function,
-		 le_header_offset );
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create LE header.",
+		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              (uint8_t *) &le_header,
-	              sizeof( exe_le_header_t ),
-	              error );
-
-	if( read_count != (ssize_t) sizeof( exe_le_header_t ) )
+	if( libexe_le_header_read_file_io_handle(
+	     le_header,
+	     file_io_handle,
+	     0,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -534,54 +518,35 @@ int libexe_io_handle_read_le_header(
 		 "%s: unable to read LE header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: LE header:\n",
-		 function );
-		libcnotify_print_data(
-		 (uint8_t *) &le_header,
-		 sizeof( exe_le_header_t ),
-		 0 );
-	}
-#endif
-	if( memory_compare(
-	     le_header.signature,
-	     exe_le_signature,
-	     2 ) != 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid signature.",
-		 function );
-
-		return( -1 );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: signature\t\t\t\t: %c%c\n",
-		 function,
-		 le_header.signature[ 0 ],
-		 le_header.signature[ 1 ] );
-
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
-
-/* TODO */
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_LE;
 
 	*number_of_sections = 0;
 
+	if( libexe_le_header_free(
+	     &le_header,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free LE header.",
+		 function );
+
+		goto on_error;
+	}
 	return( 1 );
+
+on_error:
+	if( le_header != NULL )
+	{
+		libexe_le_header_free(
+		 &le_header,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Reads the NE header
@@ -594,10 +559,8 @@ int libexe_io_handle_read_ne_header(
      uint16_t *number_of_sections,
      libcerror_error_t **error )
 {
-	exe_ne_header_t ne_header;
-
-	static char *function = "libexe_io_handle_read_ne_header";
-	ssize_t read_count    = 0;
+	libexe_ne_header_t *ne_header = NULL;
+	static char *function         = "libexe_io_handle_read_ne_header";
 
 	if( io_handle == NULL )
 	{
@@ -621,39 +584,24 @@ int libexe_io_handle_read_ne_header(
 
 		return( -1 );
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading NE header at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
-		 function,
-		 ne_header_offset,
-		 ne_header_offset );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) ne_header_offset,
-	     SEEK_SET,
-	     error ) == -1 )
+	if( libexe_ne_header_initialize(
+	     &ne_header,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek NE header offset: %" PRIu32 ".",
-		 function,
-		 ne_header_offset );
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create NE header.",
+		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              (uint8_t *) &ne_header,
-	              sizeof( exe_ne_header_t ),
-	              error );
-
-	if( read_count != (ssize_t) sizeof( exe_ne_header_t ) )
+	if( libexe_ne_header_read_file_io_handle(
+	     ne_header,
+	     file_io_handle,
+	     0,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -662,54 +610,35 @@ int libexe_io_handle_read_ne_header(
 		 "%s: unable to read NE header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: NE header:\n",
-		 function );
-		libcnotify_print_data(
-		 (uint8_t *) &ne_header,
-		 sizeof( exe_ne_header_t ),
-		 0 );
-	}
-#endif
-	if( memory_compare(
-	     ne_header.signature,
-	     exe_ne_signature,
-	     2 ) != 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: invalid signature.",
-		 function );
-
-		return( -1 );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: signature\t\t\t\t: %c%c\n",
-		 function,
-		 ne_header.signature[ 0 ],
-		 ne_header.signature[ 1 ] );
-
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
-
-/* TODO */
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_NE;
 
 	*number_of_sections = 0;
 
+	if( libexe_ne_header_free(
+	     &ne_header,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free NE header.",
+		 function );
+
+		goto on_error;
+	}
 	return( 1 );
+
+on_error:
+	if( ne_header != NULL )
+	{
+		libexe_ne_header_free(
+		 &ne_header,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* Reads the PE/COFF header
