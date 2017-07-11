@@ -5,6 +5,13 @@ attributes:
   size: 1
   units: bytes
 ---
+name: uint8
+type: integer
+attributes:
+  format: unsigned
+  size: 1
+  units: bytes
+---
 name: uint16
 type: integer
 attributes:
@@ -19,9 +26,9 @@ attributes:
   size: 4
   units: bytes
 ---
-name: pecoff
+name: exe
 type: format
-description: Portable Executable and Common Object File Format
+description: Executable file (.exe) format
 metadata:
   authors: ['Joachim Metz <joachim.metz@gmail.com>']
   year: 2011
@@ -29,6 +36,18 @@ attributes:
   byte_order: little-endian
 layout:
 - data_type: mz_header
+---
+name: le_header
+description: LE header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: signature
+  type: stream
+  element_data_type: byte
+  elements_data_size: 2
+  value: "LE"
 ---
 name: mz_header
 description: MZ header
@@ -40,6 +59,7 @@ members:
   type: stream
   element_data_type: byte
   elements_data_size: 2
+  value: "MZ"
 - name: last_page_size
   description: size of the last page
   data_type: uint16
@@ -77,3 +97,258 @@ members:
   type: stream
   element_data_type: byte
   elements_data_size: 112
+---
+name: ne_header
+description: NE header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: signature
+  type: stream
+  element_data_type: byte
+  elements_data_size: 2
+  value: "NE"
+- name: unknown1
+  type: stream
+  element_data_type: byte
+  elements_data_size: 62
+---
+name: pe_header
+description: Portable Executable (PE) header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: signature
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+  value: "PE\x00\x00"
+---
+name: coff_header
+description: Common Object File Format (COFF) header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: target_architecture_type
+  data_type: uint16
+- name: number_of_sections
+  data_type: uint16
+- name: creation_time
+  data_type: uint32
+- name: symbol_table_offset
+  data_type: uint32
+- name: number_of_symbols
+  data_type: uint32
+- name: optional_header_size
+  data_type: uint16
+- name: characteristic_flags
+  data_type: uint16
+---
+name: coff_optional_header
+description: Common Object File Format (COFF) optional header
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: signature
+  type: stream
+  element_data_type: byte
+  elements_data_size: 2
+- name: major_linker_version
+  data_type: uint8
+- name: minor_linker_version
+  data_type: uint8
+- name: text_section_size
+  data_type: uint32
+- name: initialized_data_section_size
+  data_type: uint32
+- name: uninitialized_data_section_size
+  data_type: uint32
+- name: entry_point_offset
+  data_type: uint32
+- name: code_base_offset
+  data_type: uint32
+- name: data_base_offset
+  data_type: uint32
+---
+name: coff_optional_header_pe32
+description: Common Object File Format (COFF) optional header PE32
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: image_base_offset
+  data_type: uint32
+- name: section_alignment_size
+  data_type: uint32
+- name: file_alignment_size
+  data_type: uint32
+- name: major_operating_system_version
+  data_type: uint16
+- name: minor_operating_system_version
+  data_type: uint16
+- name: major_image_version
+  data_type: uint16
+- name: minor_image_version
+  data_type: uint16
+- name: major_subsystem_version
+  data_type: uint16
+- name: minor_subsystem_version
+  data_type: uint16
+- name: unknown1
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+- name: image_size
+  data_type: uint32
+- name: headers_size
+  data_type: uint32
+- name: checksum
+  data_type: uint32
+- name: subsystem
+  data_type: uint16
+- name: dll_characteristic_flags
+  data_type: uint16
+- name: stack_reservation_size
+  data_type: uint32
+- name: stack_commit_size
+  data_type: uint32
+- name: heap_reservation_size
+  data_type: uint32
+- name: heap_commit_size
+  data_type: uint32
+- name: unknown2
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+- name: number_of_data_directories_entries
+  data_type: uint32
+---
+name: coff_optional_header_pe32_plus
+description: Common Object File Format (COFF) optional header PE32+
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: image_base_offset
+  data_type: uint64
+- name: section_alignment_size
+  data_type: uint32
+- name: file_alignment_size
+  data_type: uint32
+- name: major_operating_system_version
+  data_type: uint16
+- name: minor_operating_system_version
+  data_type: uint16
+- name: major_image_version
+  data_type: uint16
+- name: minor_image_version
+  data_type: uint16
+- name: major_subsystem_version
+  data_type: uint16
+- name: minor_subsystem_version
+  data_type: uint16
+- name: unknown1
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+- name: image_size
+  data_type: uint32
+- name: headers_size
+  data_type: uint32
+- name: checksum
+  data_type: uint32
+- name: subsystem
+  data_type: uint16
+- name: dll_characteristic_flags
+  data_type: uint16
+- name: stack_reservation_size
+  data_type: uint64
+- name: stack_commit_size
+  data_type: uint64
+- name: heap_reservation_size
+  data_type: uint64
+- name: heap_commit_size
+  data_type: uint64
+- name: unknown2
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+- name: number_of_data_directories_entries
+  data_type: uint32
+---
+name: coff_optional_header_data_directories
+description: Common Object File Format (COFF) optional header data directories
+type: structure
+attributes:
+  byte_order: little-endian
+members:
+- name: export_table_rva
+  data_type: uint32
+- name: export_table_size
+  data_type: uint32
+- name: import_table_rva
+  data_type: uint32
+- name: import_table_size
+  data_type: uint32
+- name: resource_table_rva
+  data_type: uint32
+- name: resource_table_size
+  data_type: uint32
+- name: exception_table_rva
+  data_type: uint32
+- name: exception_table_size
+  data_type: uint32
+- name: certificate_table_rva
+  data_type: uint32
+- name: certificate_table_size
+  data_type: uint32
+- name: base_relocation_table_rva
+  data_type: uint32
+- name: base_relocation_table_size
+  data_type: uint32
+- name: debug_data_rva
+  data_type: uint32
+- name: debug_data_size
+  data_type: uint32
+- name: architecture_specific_data_rva
+  data_type: uint32
+- name: architecture_specific_data_size
+  data_type: uint32
+- name: global_pointer_register
+  data_type: uint32
+- name: unknown1
+  type: stream
+  element_data_type: byte
+  elements_data_size: 4
+- name: thread_local_storage_table_rva
+  data_type: uint32
+- name: thread_local_storage_table_size
+  data_type: uint32
+- name: load_configuration_table_rva
+  data_type: uint32
+- name: load_configuration_table_size
+  data_type: uint32
+- name: bound_import_table_rva
+  data_type: uint32
+- name: bound_import_table_size
+  data_type: uint32
+- name: import_address_table_rva
+  data_type: uint32
+- name: import_address_table_size
+  data_type: uint32
+- name: delay_import_descriptor_rva
+  data_type: uint32
+- name: delay_import_descriptor_size
+  data_type: uint32
+- name: com_plus_runtime_header_rva
+  data_type: uint32
+- name: com_plus_runtime_header_size
+  data_type: uint32
+- name: unknown2
+  type: stream
+  element_data_type: byte
+  elements_data_size: 8
