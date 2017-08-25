@@ -339,8 +339,6 @@ int exe_test_import_table_read(
 	libcerror_error_free(
 	 &error );
 
-	return( 1 );
-
 	/* Clean up
 	 */
 	result = libexe_import_table_free(

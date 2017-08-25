@@ -339,8 +339,6 @@ int exe_test_debug_data_read(
 	libcerror_error_free(
 	 &error );
 
-	return( 1 );
-
 	/* Clean up
 	 */
 	result = libexe_debug_data_free(
