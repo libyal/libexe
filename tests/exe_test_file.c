@@ -1712,11 +1712,11 @@ int main(
 		 exe_test_file_signal_abort,
 		 file );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 		/* TODO: add tests for libexe_file_open_read */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 		EXE_TEST_RUN_WITH_ARGS(
 		 "libexe_file_get_ascii_codepage",
@@ -1728,11 +1728,11 @@ int main(
 		 exe_test_file_set_ascii_codepage,
 		 file );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 		/* TODO: add tests for libexe_file_get_offset_by_relative_virtual_address */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 		EXE_TEST_RUN_WITH_ARGS(
 		 "libexe_file_get_number_of_sections",

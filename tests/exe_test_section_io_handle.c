@@ -35,7 +35,7 @@
 
 #include "../libexe/libexe_section_io_handle.h"
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 /* Tests the libexe_section_io_handle_free function
  * Returns 1 if successful or 0 if not
@@ -75,7 +75,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,7 +92,7 @@ int main(
 	EXE_TEST_UNREFERENCED_PARAMETER( argc )
 	EXE_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 	/* TODO: add tests for libexe_section_io_handle_initialize */
 
@@ -114,7 +114,7 @@ int main(
 
 	/* TODO: add tests for libexe_section_io_handle_get_size */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 

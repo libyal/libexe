@@ -73,9 +73,9 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 /* The main program
  */
@@ -92,17 +92,17 @@ int main(
 	EXE_TEST_UNREFERENCED_PARAMETER( argc )
 	EXE_TEST_UNREFERENCED_PARAMETER( argv )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 	/* TODO: add tests for libexe_section_initialize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 	EXE_TEST_RUN(
 	 "libexe_section_free",
 	 exe_test_section_free );
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 	/* TODO: add tests for libexe_section_get_name_size */
 
@@ -132,7 +132,7 @@ int main(
 
 	/* TODO: add tests for libexe_section_get_data_file_io_handle */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );
 
