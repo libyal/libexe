@@ -55,9 +55,9 @@ int exe_test_section_free(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

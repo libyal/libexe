@@ -64,13 +64,13 @@ int exe_test_section_descriptor_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "section_descriptor",
-         section_descriptor );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "section_descriptor",
+	 section_descriptor );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libexe_section_descriptor_free(
 	          &section_descriptor,
@@ -81,13 +81,13 @@ int exe_test_section_descriptor_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "section_descriptor",
-         section_descriptor );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section_descriptor",
+	 section_descriptor );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int exe_test_section_descriptor_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int exe_test_section_descriptor_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int exe_test_section_descriptor_free(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

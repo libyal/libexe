@@ -64,13 +64,13 @@ int exe_test_export_table_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "export_table",
-         export_table );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "export_table",
+	 export_table );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libexe_export_table_free(
 	          &export_table,
@@ -81,13 +81,13 @@ int exe_test_export_table_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "export_table",
-         export_table );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "export_table",
+	 export_table );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int exe_test_export_table_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int exe_test_export_table_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int exe_test_export_table_free(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -291,13 +291,13 @@ int exe_test_export_table_read(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "export_table",
-         export_table );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "export_table",
+	 export_table );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -313,9 +313,9 @@ int exe_test_export_table_read(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -332,9 +332,9 @@ int exe_test_export_table_read(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -350,13 +350,13 @@ int exe_test_export_table_read(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "export_table",
-         export_table );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "export_table",
+	 export_table );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 

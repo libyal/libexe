@@ -64,13 +64,13 @@ int exe_test_debug_data_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "debug_data",
-         debug_data );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "debug_data",
+	 debug_data );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libexe_debug_data_free(
 	          &debug_data,
@@ -81,13 +81,13 @@ int exe_test_debug_data_initialize(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "debug_data",
-         debug_data );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "debug_data",
+	 debug_data );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -100,9 +100,9 @@ int exe_test_debug_data_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -118,9 +118,9 @@ int exe_test_debug_data_initialize(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -252,9 +252,9 @@ int exe_test_debug_data_free(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -291,13 +291,13 @@ int exe_test_debug_data_read(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "debug_data",
-         debug_data );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "debug_data",
+	 debug_data );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -313,9 +313,9 @@ int exe_test_debug_data_read(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -332,9 +332,9 @@ int exe_test_debug_data_read(
 	 result,
 	 -1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -350,13 +350,13 @@ int exe_test_debug_data_read(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "debug_data",
-         debug_data );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "debug_data",
+	 debug_data );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
