@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="exe_test_file"
-	ProjectGUID="{966037F1-7B83-4560-B351-2715B02B3841}"
-	RootNamespace="exe_test_file"
+	Name="exe_test_mz_header"
+	ProjectGUID="{9438BCB8-DA4E-417C-A2DB-067F927519CB}"
+	RootNamespace="exe_test_mz_header"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,19 +176,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\exe_test_file.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_functions.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_getopt.c"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\exe_test_memory.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\exe_test_mz_header.c"
 				>
 			</File>
 		</Filter>
@@ -198,35 +190,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\tests\exe_test_functions.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_getopt.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_libbfio.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\exe_test_libcerror.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\exe_test_libclocale.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_libcnotify.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\exe_test_libexe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\exe_test_libuna.h"
 				>
 			</File>
 			<File

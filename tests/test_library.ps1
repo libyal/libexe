@@ -6,7 +6,7 @@ $ExitSuccess = 0
 $ExitFailure = 1
 $ExitIgnore = 77
 
-$LibraryTests = "data_directory_descriptor debug_data error export_table import_table io_handle notify section section_descriptor section_io_handle"
+$LibraryTests = "data_directory_descriptor debug_data error export_table import_table io_handle le_header mz_header ne_header notify section section_descriptor section_io_handle"
 $LibraryTestsWithInput = "file support"
 
 Function GetTestToolDirectory

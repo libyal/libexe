@@ -7,7 +7,7 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-LIBRARY_TESTS="data_directory_descriptor debug_data error export_table import_table io_handle notify section section_descriptor section_io_handle";
+LIBRARY_TESTS="data_directory_descriptor debug_data error export_table import_table io_handle le_header mz_header ne_header notify section section_descriptor section_io_handle";
 LIBRARY_TESTS_WITH_INPUT="file support";
 OPTION_SETS="";
 

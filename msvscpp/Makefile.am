@@ -6,6 +6,9 @@ MSVSCPP_FILES = \
 	exe_test_file/exe_test_file.vcproj \
 	exe_test_import_table/exe_test_import_table.vcproj \
 	exe_test_io_handle/exe_test_io_handle.vcproj \
+	exe_test_le_header/exe_test_le_header.vcproj \
+	exe_test_mz_header/exe_test_mz_header.vcproj \
+	exe_test_ne_header/exe_test_ne_header.vcproj \
 	exe_test_notify/exe_test_notify.vcproj \
 	exe_test_section/exe_test_section.vcproj \
 	exe_test_section_descriptor/exe_test_section_descriptor.vcproj \

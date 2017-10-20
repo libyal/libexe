@@ -46,6 +46,9 @@ check_PROGRAMS = \
 	exe_test_file \
 	exe_test_import_table \
 	exe_test_io_handle \
+	exe_test_le_header \
+	exe_test_mz_header \
+	exe_test_ne_header \
 	exe_test_notify \
 	exe_test_section \
 	exe_test_section_descriptor \
@@ -99,17 +102,24 @@ exe_test_export_table_LDADD = \
 
 exe_test_file_SOURCES = \
 	exe_test_file.c \
+	exe_test_functions.c exe_test_functions.h \
 	exe_test_getopt.c exe_test_getopt.h \
+	exe_test_libbfio.h \
 	exe_test_libcerror.h \
 	exe_test_libclocale.h \
 	exe_test_libcnotify.h \
 	exe_test_libexe.h \
 	exe_test_libuna.h \
 	exe_test_macros.h \
-	exe_test_memory.c exe_test_memory.h
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_unused.h
 
 exe_test_file_LDADD = \
+	@LIBBFIO_LIBADD@ \
+	@LIBCPATH_LIBADD@ \
+	@LIBCFILE_LIBADD@ \
 	@LIBUNA_LIBADD@ \
+	@LIBCSPLIT_LIBADD@ \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
@@ -139,6 +149,42 @@ exe_test_io_handle_SOURCES = \
 	exe_test_unused.h
 
 exe_test_io_handle_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_le_header_SOURCES = \
+	exe_test_le_header.c \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_unused.h
+
+exe_test_le_header_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_mz_header_SOURCES = \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_mz_header.c \
+	exe_test_unused.h
+
+exe_test_mz_header_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_ne_header_SOURCES = \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_ne_header.c \
+	exe_test_unused.h
+
+exe_test_ne_header_LDADD = \
 	../libexe/libexe.la \
 	@LIBCERROR_LIBADD@
 
@@ -188,6 +234,7 @@ exe_test_section_io_handle_LDADD = \
 	@LIBCERROR_LIBADD@
 
 exe_test_support_SOURCES = \
+	exe_test_functions.c exe_test_functions.h \
 	exe_test_getopt.c exe_test_getopt.h \
 	exe_test_libbfio.h \
 	exe_test_libcerror.h \
@@ -196,7 +243,8 @@ exe_test_support_SOURCES = \
 	exe_test_libexe.h \
 	exe_test_libuna.h \
 	exe_test_macros.h \
-	exe_test_support.c
+	exe_test_support.c \
+	exe_test_unused.h
 
 exe_test_support_LDADD = \
 	@LIBBFIO_LIBADD@ \

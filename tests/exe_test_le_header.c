@@ -1,5 +1,5 @@
 /*
- * Library io_handle type test program
+ * Library le_header type test program
  *
  * Copyright (C) 2011-2017, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -33,18 +33,18 @@
 #include "exe_test_memory.h"
 #include "exe_test_unused.h"
 
-#include "../libexe/libexe_io_handle.h"
+#include "../libexe/libexe_le_header.h"
 
 #if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
-/* Tests the libexe_io_handle_initialize function
+/* Tests the libexe_le_header_initialize function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_io_handle_initialize(
+int exe_test_le_header_initialize(
      void )
 {
 	libcerror_error_t *error        = NULL;
-	libexe_io_handle_t *io_handle   = NULL;
+	libexe_le_header_t *le_header   = NULL;
 	int result                      = 0;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
@@ -55,8 +55,8 @@ int exe_test_io_handle_initialize(
 
 	/* Test regular cases
 	 */
-	result = libexe_io_handle_initialize(
-	          &io_handle,
+	result = libexe_le_header_initialize(
+	          &le_header,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
@@ -65,15 +65,15 @@ int exe_test_io_handle_initialize(
 	 1 );
 
 	EXE_TEST_ASSERT_IS_NOT_NULL(
-	 "io_handle",
-	 io_handle );
+	 "le_header",
+	 le_header );
 
 	EXE_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
 
-	result = libexe_io_handle_free(
-	          &io_handle,
+	result = libexe_le_header_free(
+	          &le_header,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
@@ -82,8 +82,8 @@ int exe_test_io_handle_initialize(
 	 1 );
 
 	EXE_TEST_ASSERT_IS_NULL(
-	 "io_handle",
-	 io_handle );
+	 "le_header",
+	 le_header );
 
 	EXE_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -91,7 +91,7 @@ int exe_test_io_handle_initialize(
 
 	/* Test error cases
 	 */
-	result = libexe_io_handle_initialize(
+	result = libexe_le_header_initialize(
 	          NULL,
 	          &error );
 
@@ -107,10 +107,10 @@ int exe_test_io_handle_initialize(
 	libcerror_error_free(
 	 &error );
 
-	io_handle = (libexe_io_handle_t *) 0x12345678UL;
+	le_header = (libexe_le_header_t *) 0x12345678UL;
 
-	result = libexe_io_handle_initialize(
-	          &io_handle,
+	result = libexe_le_header_initialize(
+	          &le_header,
 	          &error );
 
 	EXE_TEST_ASSERT_EQUAL_INT(
@@ -125,7 +125,7 @@ int exe_test_io_handle_initialize(
 	libcerror_error_free(
 	 &error );
 
-	io_handle = NULL;
+	le_header = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 
@@ -133,22 +133,22 @@ int exe_test_io_handle_initialize(
 	     test_number < number_of_malloc_fail_tests;
 	     test_number++ )
 	{
-		/* Test libexe_io_handle_initialize with malloc failing
+		/* Test libexe_le_header_initialize with malloc failing
 		 */
 		exe_test_malloc_attempts_before_fail = test_number;
 
-		result = libexe_io_handle_initialize(
-		          &io_handle,
+		result = libexe_le_header_initialize(
+		          &le_header,
 		          &error );
 
 		if( exe_test_malloc_attempts_before_fail != -1 )
 		{
 			exe_test_malloc_attempts_before_fail = -1;
 
-			if( io_handle != NULL )
+			if( le_header != NULL )
 			{
-				libexe_io_handle_free(
-				 &io_handle,
+				libexe_le_header_free(
+				 &le_header,
 				 NULL );
 			}
 		}
@@ -160,8 +160,8 @@ int exe_test_io_handle_initialize(
 			 -1 );
 
 			EXE_TEST_ASSERT_IS_NULL(
-			 "io_handle",
-			 io_handle );
+			 "le_header",
+			 le_header );
 
 			EXE_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -175,22 +175,22 @@ int exe_test_io_handle_initialize(
 	     test_number < number_of_memset_fail_tests;
 	     test_number++ )
 	{
-		/* Test libexe_io_handle_initialize with memset failing
+		/* Test libexe_le_header_initialize with memset failing
 		 */
 		exe_test_memset_attempts_before_fail = test_number;
 
-		result = libexe_io_handle_initialize(
-		          &io_handle,
+		result = libexe_le_header_initialize(
+		          &le_header,
 		          &error );
 
 		if( exe_test_memset_attempts_before_fail != -1 )
 		{
 			exe_test_memset_attempts_before_fail = -1;
 
-			if( io_handle != NULL )
+			if( le_header != NULL )
 			{
-				libexe_io_handle_free(
-				 &io_handle,
+				libexe_le_header_free(
+				 &le_header,
 				 NULL );
 			}
 		}
@@ -202,8 +202,8 @@ int exe_test_io_handle_initialize(
 			 -1 );
 
 			EXE_TEST_ASSERT_IS_NULL(
-			 "io_handle",
-			 io_handle );
+			 "le_header",
+			 le_header );
 
 			EXE_TEST_ASSERT_IS_NOT_NULL(
 			 "error",
@@ -223,19 +223,19 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-	if( io_handle != NULL )
+	if( le_header != NULL )
 	{
-		libexe_io_handle_free(
-		 &io_handle,
+		libexe_le_header_free(
+		 &le_header,
 		 NULL );
 	}
 	return( 0 );
 }
 
-/* Tests the libexe_io_handle_free function
+/* Tests the libexe_le_header_free function
  * Returns 1 if successful or 0 if not
  */
-int exe_test_io_handle_free(
+int exe_test_le_header_free(
      void )
 {
 	libcerror_error_t *error = NULL;
@@ -243,7 +243,7 @@ int exe_test_io_handle_free(
 
 	/* Test error cases
 	 */
-	result = libexe_io_handle_free(
+	result = libexe_le_header_free(
 	          NULL,
 	          &error );
 
@@ -266,104 +266,6 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
-	}
-	return( 0 );
-}
-
-/* Tests the libexe_io_handle_clear function
- * Returns 1 if successful or 0 if not
- */
-int exe_test_io_handle_clear(
-     void )
-{
-	libcerror_error_t *error      = NULL;
-	libexe_io_handle_t *io_handle = NULL;
-	int result                    = 0;
-
-	/* Initialize test
-	 */
-	result = libexe_io_handle_initialize(
-	          &io_handle,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	EXE_TEST_ASSERT_IS_NOT_NULL(
-	 "io_handle",
-	 io_handle );
-
-	EXE_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test regular cases
-	 */
-	result = libexe_io_handle_clear(
-	          io_handle,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	EXE_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test error cases
-	 */
-	result = libexe_io_handle_clear(
-	          NULL,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-	EXE_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
-
-	libcerror_error_free(
-	 &error );
-
-	/* Clean up
-	 */
-	result = libexe_io_handle_free(
-	          &io_handle,
-	          &error );
-
-	EXE_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	EXE_TEST_ASSERT_IS_NULL(
-	 "io_handle",
-	 io_handle );
-
-	EXE_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	if( io_handle != NULL )
-	{
-		libexe_io_handle_free(
-		 &io_handle,
-		 NULL );
 	}
 	return( 0 );
 }
@@ -388,36 +290,16 @@ int main(
 #if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
 
 	EXE_TEST_RUN(
-	 "libexe_io_handle_initialize",
-	 exe_test_io_handle_initialize );
+	 "libexe_le_header_initialize",
+	 exe_test_le_header_initialize );
 
 	EXE_TEST_RUN(
-	 "libexe_io_handle_free",
-	 exe_test_io_handle_free );
+	 "libexe_le_header_free",
+	 exe_test_le_header_free );
 
-	EXE_TEST_RUN(
-	 "libexe_io_handle_clear",
-	 exe_test_io_handle_clear );
+	/* TODO: add tests for libexe_le_header_read_data */
 
-	/* TODO: add tests for libexe_io_handle_read_file_header */
-
-	/* TODO: add tests for libexe_io_handle_read_extended_header */
-
-	/* TODO: add tests for libexe_io_handle_read_le_header */
-
-	/* TODO: add tests for libexe_io_handle_read_ne_header */
-
-	/* TODO: add tests for libexe_io_handle_read_pe_header */
-
-	/* TODO: add tests for libexe_io_handle_read_coff_header */
-
-	/* TODO: add tests for libexe_io_handle_read_coff_optional_header */
-
-	/* TODO: add tests for libexe_io_handle_read_section_table */
-
-	/* TODO: add tests for libexe_io_handle_read_segment_data */
-
-	/* TODO: add tests for libexe_io_handle_seek_segment_offset */
+	/* TODO: add tests for libexe_le_header_read_file_io_handle */
 
 #endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 

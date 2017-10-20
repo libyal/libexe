@@ -130,6 +130,9 @@ stamp-h[1-9]
 /tests/exe_test_file
 /tests/exe_test_import_table
 /tests/exe_test_io_handle
+/tests/exe_test_le_header
+/tests/exe_test_mz_header
+/tests/exe_test_ne_header
 /tests/exe_test_notify
 /tests/exe_test_section
 /tests/exe_test_section_descriptor
