@@ -220,8 +220,8 @@ int libexe_ne_header_read_data(
 		libcnotify_printf(
 		 "%s: signature\t\t\t\t: %c%c\n",
 		 function,
-		 ( (exe_mz_header_t *) data )->signature[ 0 ],
-		 ( (exe_mz_header_t *) data )->signature[ 1 ] );
+		 ( (exe_ne_header_t *) data )->signature[ 0 ],
+		 ( (exe_ne_header_t *) data )->signature[ 1 ] );
 /* TODO */
 
 		libcnotify_printf(
