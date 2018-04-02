@@ -96,6 +96,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exe_test_notify", "exe_test_notify\exe_test_notify.vcproj", "{5FB3EE6E-52CF-43FD-BB0A-609D92936963}"
 	ProjectSection(ProjectDependencies) = postProject
 		{4AAE05A4-4409-479A-8EBE-E6143142F5F2} = {4AAE05A4-4409-479A-8EBE-E6143142F5F2}
+		{BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C} = {BD3A95FA-A3DE-4B79-A889-A7E5ECA4B69C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "exe_test_section", "exe_test_section\exe_test_section.vcproj", "{809FE683-570F-442C-A471-922AE586DA20}"

@@ -189,13 +189,15 @@ exe_test_ne_header_LDADD = \
 	@LIBCERROR_LIBADD@
 
 exe_test_notify_SOURCES = \
+	exe_test_libcerror.h \
 	exe_test_libexe.h \
 	exe_test_macros.h \
 	exe_test_notify.c \
 	exe_test_unused.h
 
 exe_test_notify_LDADD = \
-	../libexe/libexe.la
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
 
 exe_test_section_SOURCES = \
 	exe_test_libcerror.h \
@@ -243,6 +245,7 @@ exe_test_support_SOURCES = \
 	exe_test_libexe.h \
 	exe_test_libuna.h \
 	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
 	exe_test_support.c \
 	exe_test_unused.h
 
