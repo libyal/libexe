@@ -59,7 +59,7 @@ PyTypeObject pyexe_sections_type_object = {
 	PyVarObject_HEAD_INIT( NULL, 0 )
 
 	/* tp_name */
-	"pyexe._sections",
+	"pyexe.sections",
 	/* tp_basicsize */
 	sizeof( pyexe_sections_t ),
 	/* tp_itemsize */
@@ -97,7 +97,7 @@ PyTypeObject pyexe_sections_type_object = {
 	/* tp_flags */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_HAVE_ITER,
 	/* tp_doc */
-	"pyexe internal sequence and iterator object of sections",
+	"pyexe sequence and iterator object of sections",
 	/* tp_traverse */
 	0,
 	/* tp_clear */
@@ -150,7 +150,7 @@ PyTypeObject pyexe_sections_type_object = {
 	0
 };
 
-/* Creates a new sections object
+/* Creates a new sections sequence and iterator object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_sections_new(
@@ -160,7 +160,7 @@ PyObject *pyexe_sections_new(
                         int index ),
            int number_of_items )
 {
-	pyexe_sections_t *sections_object = NULL;
+	pyexe_sections_t *sequence_object = NULL;
 	static char *function             = "pyexe_sections_new";
 
 	if( parent_object == NULL )
@@ -183,93 +183,98 @@ PyObject *pyexe_sections_new(
 	}
 	/* Make sure the sections values are initialized
 	 */
-	sections_object = PyObject_New(
+	sequence_object = PyObject_New(
 	                   struct pyexe_sections,
 	                   &pyexe_sections_type_object );
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to create sections object.",
+		 "%s: unable to create sequence object.",
 		 function );
 
 		goto on_error;
 	}
 	if( pyexe_sections_init(
-	     sections_object ) != 0 )
+	     sequence_object ) != 0 )
 	{
 		PyErr_Format(
 		 PyExc_MemoryError,
-		 "%s: unable to initialize sections object.",
+		 "%s: unable to initialize sequence object.",
 		 function );
 
 		goto on_error;
 	}
-	sections_object->parent_object     = parent_object;
-	sections_object->get_item_by_index = get_item_by_index;
-	sections_object->number_of_items   = number_of_items;
+	sequence_object->parent_object     = parent_object;
+	sequence_object->get_item_by_index = get_item_by_index;
+	sequence_object->number_of_items   = number_of_items;
 
 	Py_IncRef(
-	 (PyObject *) sections_object->parent_object );
+	 (PyObject *) sequence_object->parent_object );
 
-	return( (PyObject *) sections_object );
+	return( (PyObject *) sequence_object );
 
 on_error:
-	if( sections_object != NULL )
+	if( sequence_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) sections_object );
+		 (PyObject *) sequence_object );
 	}
 	return( NULL );
 }
 
-/* Intializes a sections object
+/* Intializes a sections sequence and iterator object
  * Returns 0 if successful or -1 on error
  */
 int pyexe_sections_init(
-     pyexe_sections_t *sections_object )
+     pyexe_sections_t *sequence_object )
 {
 	static char *function = "pyexe_sections_init";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( -1 );
 	}
 	/* Make sure the sections values are initialized
 	 */
-	sections_object->parent_object     = NULL;
-	sections_object->get_item_by_index = NULL;
-	sections_object->current_index     = 0;
-	sections_object->number_of_items   = 0;
+	sequence_object->parent_object     = NULL;
+	sequence_object->get_item_by_index = NULL;
+	sequence_object->current_index     = 0;
+	sequence_object->number_of_items   = 0;
+
+	PyErr_Format(
+	 PyExc_NotImplementedError,
+	 "%s: initialize of sections not supported.",
+	 function );
 
 	return( 0 );
 }
 
-/* Frees a sections object
+/* Frees a sections sequence object
  */
 void pyexe_sections_free(
-      pyexe_sections_t *sections_object )
+      pyexe_sections_t *sequence_object )
 {
 	struct _typeobject *ob_type = NULL;
 	static char *function       = "pyexe_sections_free";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return;
 	}
 	ob_type = Py_TYPE(
-	           sections_object );
+	           sequence_object );
 
 	if( ob_type == NULL )
 	{
@@ -289,72 +294,72 @@ void pyexe_sections_free(
 
 		return;
 	}
-	if( sections_object->parent_object != NULL )
+	if( sequence_object->parent_object != NULL )
 	{
 		Py_DecRef(
-		 (PyObject *) sections_object->parent_object );
+		 (PyObject *) sequence_object->parent_object );
 	}
 	ob_type->tp_free(
-	 (PyObject*) sections_object );
+	 (PyObject*) sequence_object );
 }
 
 /* The sections len() function
  */
 Py_ssize_t pyexe_sections_len(
-            pyexe_sections_t *sections_object )
+            pyexe_sections_t *sequence_object )
 {
 	static char *function = "pyexe_sections_len";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( -1 );
 	}
-	return( (Py_ssize_t) sections_object->number_of_items );
+	return( (Py_ssize_t) sequence_object->number_of_items );
 }
 
 /* The sections getitem() function
  */
 PyObject *pyexe_sections_getitem(
-           pyexe_sections_t *sections_object,
+           pyexe_sections_t *sequence_object,
            Py_ssize_t item_index )
 {
 	PyObject *section_object = NULL;
 	static char *function    = "pyexe_sections_getitem";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->get_item_by_index == NULL )
+	if( sequence_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object - missing get item by index function.",
+		 "%s: invalid sequence object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->number_of_items < 0 )
+	if( sequence_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object - invalid number of items.",
+		 "%s: invalid sequence object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
 	if( ( item_index < 0 )
-	 || ( item_index >= (Py_ssize_t) sections_object->number_of_items ) )
+	 || ( item_index >= (Py_ssize_t) sequence_object->number_of_items ) )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
@@ -363,8 +368,8 @@ PyObject *pyexe_sections_getitem(
 
 		return( NULL );
 	}
-	section_object = sections_object->get_item_by_index(
-	                  sections_object->parent_object,
+	section_object = sequence_object->get_item_by_index(
+	                  sequence_object->parent_object,
 	                  (int) item_index );
 
 	return( section_object );
@@ -373,83 +378,83 @@ PyObject *pyexe_sections_getitem(
 /* The sections iter() function
  */
 PyObject *pyexe_sections_iter(
-           pyexe_sections_t *sections_object )
+           pyexe_sections_t *sequence_object )
 {
 	static char *function = "pyexe_sections_iter";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
 	Py_IncRef(
-	 (PyObject *) sections_object );
+	 (PyObject *) sequence_object );
 
-	return( (PyObject *) sections_object );
+	return( (PyObject *) sequence_object );
 }
 
 /* The sections iternext() function
  */
 PyObject *pyexe_sections_iternext(
-           pyexe_sections_t *sections_object )
+           pyexe_sections_t *sequence_object )
 {
 	PyObject *section_object = NULL;
 	static char *function    = "pyexe_sections_iternext";
 
-	if( sections_object == NULL )
+	if( sequence_object == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object.",
+		 "%s: invalid sequence object.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->get_item_by_index == NULL )
+	if( sequence_object->get_item_by_index == NULL )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object - missing get item by index function.",
+		 "%s: invalid sequence object - missing get item by index function.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->current_index < 0 )
+	if( sequence_object->current_index < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object - invalid current index.",
+		 "%s: invalid sequence object - invalid current index.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->number_of_items < 0 )
+	if( sequence_object->number_of_items < 0 )
 	{
 		PyErr_Format(
 		 PyExc_ValueError,
-		 "%s: invalid sections object - invalid number of items.",
+		 "%s: invalid sequence object - invalid number of items.",
 		 function );
 
 		return( NULL );
 	}
-	if( sections_object->current_index >= sections_object->number_of_items )
+	if( sequence_object->current_index >= sequence_object->number_of_items )
 	{
 		PyErr_SetNone(
 		 PyExc_StopIteration );
 
 		return( NULL );
 	}
-	section_object = sections_object->get_item_by_index(
-	                  sections_object->parent_object,
-	                  sections_object->current_index );
+	section_object = sequence_object->get_item_by_index(
+	                  sequence_object->parent_object,
+	                  sequence_object->current_index );
 
 	if( section_object != NULL )
 	{
-		sections_object->current_index++;
+		sequence_object->current_index++;
 	}
 	return( section_object );
 }

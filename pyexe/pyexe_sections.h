@@ -69,23 +69,23 @@ PyObject *pyexe_sections_new(
            int number_of_items );
 
 int pyexe_sections_init(
-     pyexe_sections_t *sections_object );
+     pyexe_sections_t *sequence_object );
 
 void pyexe_sections_free(
-      pyexe_sections_t *sections_object );
+      pyexe_sections_t *sequence_object );
 
 Py_ssize_t pyexe_sections_len(
-            pyexe_sections_t *sections_object );
+            pyexe_sections_t *sequence_object );
 
 PyObject *pyexe_sections_getitem(
-           pyexe_sections_t *sections_object,
+           pyexe_sections_t *sequence_object,
            Py_ssize_t item_index );
 
 PyObject *pyexe_sections_iter(
-           pyexe_sections_t *sections_object );
+           pyexe_sections_t *sequence_object );
 
 PyObject *pyexe_sections_iternext(
-           pyexe_sections_t *sections_object );
+           pyexe_sections_t *sequence_object );
 
 #if defined( __cplusplus )
 }
