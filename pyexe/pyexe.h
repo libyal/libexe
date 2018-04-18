@@ -1,5 +1,5 @@
 /*
- * Python bindings for libexe (pyexe)
+ * Python bindings module for libexe (pyexe)
  *
  * Copyright (C) 2011-2018, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -45,15 +45,23 @@ PyObject *pyexe_check_file_signature_file_object(
            PyObject *arguments,
            PyObject *keywords );
 
+PyObject *pyexe_open_new_file(
+           PyObject *self,
+           PyObject *arguments,
+           PyObject *keywords );
+
+PyObject *pyexe_open_new_file_with_file_object(
+           PyObject *self,
+           PyObject *arguments,
+           PyObject *keywords );
+
 #if PY_MAJOR_VERSION >= 3
 PyMODINIT_FUNC PyInit_pyexe(
                 void );
-
 #else
 PyMODINIT_FUNC initpyexe(
                 void );
-
-#endif /* PY_MAJOR_VERSION >= 3 */
+#endif
 
 #if defined( __cplusplus )
 }

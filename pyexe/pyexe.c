@@ -72,14 +72,14 @@ PyMethodDef pyexe_module_methods[] = {
 	  "Checks if a file has an executable (EXE) signature using a file-like object." },
 
 	{ "open",
-	  (PyCFunction) pyexe_file_new_open,
+	  (PyCFunction) pyexe_open_new_file,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "open(filename, mode='r') -> Object\n"
 	  "\n"
 	  "Opens a file." },
 
 	{ "open_file_object",
-	  (PyCFunction) pyexe_file_new_open_file_object,
+	  (PyCFunction) pyexe_open_new_file_with_file_object,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "open_file_object(file_object, mode='r') -> Object\n"
 	  "\n"
@@ -122,7 +122,7 @@ PyObject *pyexe_get_version(
 	         errors ) );
 }
 
-/* Checks if the file has an executable (EXE) signature
+/* Checks if a file has an executable (EXE) signature
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature(
@@ -218,7 +218,9 @@ PyObject *pyexe_check_file_signature(
 
 		Py_DecRef(
 		 utf8_string_object );
-#endif
+
+#endif /* #if defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
+
 		if( result == -1 )
 		{
 			pyexe_error_raise(
@@ -316,7 +318,7 @@ PyObject *pyexe_check_file_signature(
 	return( NULL );
 }
 
-/* Checks if the file has an executable (EXE) signature using a file-like object
+/* Checks if a file has an executable (EXE) signature using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature_file_object(
@@ -416,6 +418,52 @@ on_error:
 	return( NULL );
 }
 
+/* Creates a new file object and opens it
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyexe_open_new_file(
+           PyObject *self PYEXE_ATTRIBUTE_UNUSED,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *pyexe_file = NULL;
+
+	PYEXE_UNREFERENCED_PARAMETER( self )
+
+	pyexe_file_init(
+	 (pyexe_file_t *) pyexe_file );
+
+	pyexe_file_open(
+	 (pyexe_file_t *) pyexe_file,
+	 arguments,
+	 keywords );
+
+	return( pyexe_file );
+}
+
+/* Creates a new file object and opens it using a file-like object
+ * Returns a Python object if successful or NULL on error
+ */
+PyObject *pyexe_open_new_file_with_file_object(
+           PyObject *self PYEXE_ATTRIBUTE_UNUSED,
+           PyObject *arguments,
+           PyObject *keywords )
+{
+	PyObject *pyexe_file = NULL;
+
+	PYEXE_UNREFERENCED_PARAMETER( self )
+
+	pyexe_file_init(
+	 (pyexe_file_t *) pyexe_file );
+
+	pyexe_file_open_file_object(
+	 (pyexe_file_t *) pyexe_file,
+	 arguments,
+	 keywords );
+
+	return( pyexe_file );
+}
+
 #if PY_MAJOR_VERSION >= 3
 
 /* The pyexe module definition
@@ -453,11 +501,8 @@ PyMODINIT_FUNC initpyexe(
                 void )
 #endif
 {
-	PyObject *module                   = NULL;
-	PyTypeObject *file_type_object     = NULL;
-	PyTypeObject *section_type_object  = NULL;
-	PyTypeObject *sections_type_object = NULL;
-	PyGILState_STATE gil_state         = 0;
+	PyObject *module           = NULL;
+	PyGILState_STATE gil_state = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	libexe_notify_set_stream(
@@ -502,33 +547,12 @@ PyMODINIT_FUNC initpyexe(
 		goto on_error;
 	}
 	Py_IncRef(
+	 (PyObject * ) &pyexe_file_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "file",
 	 (PyObject *) &pyexe_file_type_object );
-
-	file_type_object = &pyexe_file_type_object;
-
-	PyModule_AddObject(
-	 module,
-	"file",
-	(PyObject *) file_type_object );
-
-	/* Setup the sections type object
-	 */
-	pyexe_sections_type_object.tp_new = PyType_GenericNew;
-
-	if( PyType_Ready(
-	     &pyexe_sections_type_object ) < 0 )
-	{
-		goto on_error;
-	}
-	Py_IncRef(
-	 (PyObject *) &pyexe_sections_type_object );
-
-	sections_type_object = &pyexe_sections_type_object;
-
-	PyModule_AddObject(
-	 module,
-	 "_sections",
-	 (PyObject *) sections_type_object );
 
 	/* Setup the section type object
 	 */
@@ -540,14 +564,29 @@ PyMODINIT_FUNC initpyexe(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject *) &pyexe_section_type_object );
-
-	section_type_object = &pyexe_section_type_object;
+	 (PyObject * ) &pyexe_section_type_object );
 
 	PyModule_AddObject(
 	 module,
 	 "section",
-	 (PyObject *) section_type_object );
+	 (PyObject *) &pyexe_section_type_object );
+
+	/* Setup the sections type object
+	 */
+	pyexe_sections_type_object.tp_new = PyType_GenericNew;
+
+	if( PyType_Ready(
+	     &pyexe_sections_type_object ) < 0 )
+	{
+		goto on_error;
+	}
+	Py_IncRef(
+	 (PyObject * ) &pyexe_sections_type_object );
+
+	PyModule_AddObject(
+	 module,
+	 "sections",
+	 (PyObject *) &pyexe_sections_type_object );
 
 	PyGILState_Release(
 	 gil_state );

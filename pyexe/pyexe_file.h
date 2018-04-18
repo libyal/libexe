@@ -53,19 +53,6 @@ struct pyexe_file
 extern PyMethodDef pyexe_file_object_methods[];
 extern PyTypeObject pyexe_file_type_object;
 
-PyObject *pyexe_file_new(
-           void );
-
-PyObject *pyexe_file_new_open(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
-PyObject *pyexe_file_new_open_file_object(
-           PyObject *self,
-           PyObject *arguments,
-           PyObject *keywords );
-
 int pyexe_file_init(
      pyexe_file_t *pyexe_file );
 
