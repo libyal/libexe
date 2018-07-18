@@ -37,8 +37,11 @@
 
 #include <libexe/extern.h>
 
+#define LIBEXE_EXTERN_VARIABLE	LIBEXE_EXTERN
+
 #else
-#define LIBEXE_EXTERN	/* extern */
+#define LIBEXE_EXTERN		/* extern */
+#define LIBEXE_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBEXE ) */
 

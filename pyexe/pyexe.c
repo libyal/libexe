@@ -547,7 +547,7 @@ PyMODINIT_FUNC initpyexe(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject * ) &pyexe_file_type_object );
+	 (PyObject *) &pyexe_file_type_object );
 
 	PyModule_AddObject(
 	 module,
@@ -564,7 +564,7 @@ PyMODINIT_FUNC initpyexe(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject * ) &pyexe_section_type_object );
+	 (PyObject *) &pyexe_section_type_object );
 
 	PyModule_AddObject(
 	 module,
@@ -581,7 +581,7 @@ PyMODINIT_FUNC initpyexe(
 		goto on_error;
 	}
 	Py_IncRef(
-	 (PyObject * ) &pyexe_sections_type_object );
+	 (PyObject *) &pyexe_sections_type_object );
 
 	PyModule_AddObject(
 	 module,
