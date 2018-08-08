@@ -24,13 +24,6 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled and do not want to create static
- * executables set LIBEXE_DLL_IMPORT before including libexe.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT ) && !defined( HAVE_STATIC_EXECUTABLES )
-#define LIBEXE_DLL_IMPORT
-#endif
-
 #include <libexe.h>
 
 #endif /* !defined( _EXE_TEST_LIBEXE_H ) */

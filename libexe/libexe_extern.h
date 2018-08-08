@@ -28,13 +28,6 @@
  */
 #if !defined( HAVE_LOCAL_LIBEXE )
 
-/* If libtool DLL support is enabled set LIBEXE_DLL_EXPORT
- * before including libexe/extern.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBEXE_DLL_EXPORT
-#endif
-
 #include <libexe/extern.h>
 
 #define LIBEXE_EXTERN_VARIABLE	LIBEXE_EXTERN

@@ -24,14 +24,7 @@
 
 #include <common.h>
 
-/* If Cygwin libtool DLL support is enabled set LIBEXE_DLL_IMPORT
- * before including libexe.h
- */
-#if defined( _WIN32 ) && defined( DLL_EXPORT )
-#define LIBEXE_DLL_IMPORT
-#endif
-
 #include <libexe.h>
 
-#endif
+#endif /* !defined( _PYEXE_LIBEXE_H ) */
 
