@@ -233,7 +233,7 @@ int libexe_mz_header_read_data(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: signature\t\t\t\t: %c%c\n",
+		 "%s: signature\t\t\t\t\t: %c%c\n",
 		 function,
 		 ( (exe_mz_header_t *) data )->signature[ 0 ],
 		 ( (exe_mz_header_t *) data )->signature[ 1 ] );
@@ -250,7 +250,7 @@ int libexe_mz_header_read_data(
 		 ( (exe_mz_header_t *) data )->number_of_pages,
 		 value_16bit );
 		libcnotify_printf(
-		 "%s: number of pages\t\t\t: %" PRIu16 "\n",
+		 "%s: number of pages\t\t\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
 
@@ -263,7 +263,7 @@ int libexe_mz_header_read_data(
 		 ( (exe_mz_header_t *) data )->number_of_header_paragraphs,
 		 value_16bit );
 		libcnotify_printf(
-		 "%s: number of header paragraphs\t\t: %" PRIu16 "\n",
+		 "%s: number of header paragraphs\t\t\t: %" PRIu16 "\n",
 		 function,
 		 value_16bit );
 
@@ -303,7 +303,7 @@ int libexe_mz_header_read_data(
 		 ( (exe_mz_header_t *) data )->checksum,
 		 value_16bit );
 		libcnotify_printf(
-		 "%s: checksum\t\t\t\t: 0x%04" PRIx16 "\n",
+		 "%s: checksum\t\t\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
 
@@ -311,12 +311,12 @@ int libexe_mz_header_read_data(
 		 ( (exe_mz_header_t *) data )->entry_point,
 		 value_32bit );
 		libcnotify_printf(
-		 "%s: entry point\t\t\t\t: 0x%08" PRIx32 "\n",
+		 "%s: entry point\t\t\t\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
 
 		libcnotify_printf(
-		 "%s: relocation table offset\t\t: 0x%04" PRIx16 "\n",
+		 "%s: relocation table offset\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 relocation_table_offset );
 
