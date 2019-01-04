@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libexe
 Package: libexe
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libexe1
+Replaces: libexe1
 Suggests: libexe-dbg
 Description: Library to access the executable (EXE) format
  libexe is a library to access the executable (EXE) format.
@@ -31,6 +33,8 @@ Package: libexe-tools
 Section: utils
 Architecture: any
 Depends: libexe (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libexe-utils
+Replaces: libexe-utils
 Description: Several tools for reading executable (EXE) files
  Several tools for reading executable (EXE) files.
 
@@ -45,6 +49,8 @@ Package: libexe-python
 Section: python
 Architecture: any
 Depends: libexe (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python-libexe
+Replaces: python-libexe
 Suggests: libexe-python-dbg
 Description: Python 2 bindings for libexe
  Python 2 bindings for libexe.
@@ -60,6 +66,8 @@ Package: libexe-python3
 Section: python
 Architecture: any
 Depends: libexe (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Conflicts: python3-libexe
+Replaces: python3-libexe
 Suggests: libexe-python3-dbg
 Description: Python 3 bindings for libexe
  Python 3 bindings for libexe.
