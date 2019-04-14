@@ -13,6 +13,14 @@ BuildRequires: gcc @ax_libbfio_spec_build_requires@ @ax_libcdata_spec_build_requ
 %description -n libexe
 Library to access the executable (EXE) format
 
+%package -n libexe-static
+Summary: Library to access the executable (EXE) format
+Group: Development/Libraries
+Requires: libexe = %{version}-%{release}
+
+%description -n libexe-static
+Static library version of libexe.
+
 %package -n libexe-devel
 Summary: Header files and libraries for developing applications for libexe
 Group: Development/Libraries
@@ -73,11 +81,16 @@ rm -rf %{buildroot}
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
+%files -n libexe-static
+%defattr(644,root,root,755)
+%license COPYING
+%doc AUTHORS README
+%attr(755,root,root) %{_libdir}/*.a
+
 %files -n libexe-devel
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
-%{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libexe.pc

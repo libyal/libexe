@@ -1,11 +1,9 @@
-.Dd May 28, 2017
+.Dd April 14, 2019
 .Dt libexe 3
 .Os libexe
 .Sh NAME
 .Nm libexe.h
 .Nd Library to access the executable (EXE) format
-.Sh LIBRARY
-.Lb libexe
 .Sh SYNOPSIS
 .In libexe.h
 .Pp
@@ -15,27 +13,27 @@ Support functions
 .Ft int
 .Fn libexe_get_access_flags_read "void"
 .Ft int
-.Fn libexe_get_codepage "int *codepage, libexe_error_t **error"
+.Fn libexe_get_codepage "int *codepage" "libexe_error_t **error"
 .Ft int
-.Fn libexe_set_codepage "int codepage, libexe_error_t **error"
+.Fn libexe_set_codepage "int codepage" "libexe_error_t **error"
 .Ft int
-.Fn libexe_check_file_signature "const char *filename, libexe_error_t **error"
+.Fn libexe_check_file_signature "const char *filename" "libexe_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libexe_check_file_signature_wide "const wchar_t *filename, libexe_error_t **error"
+.Fn libexe_check_file_signature_wide "const wchar_t *filename" "libexe_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libexe_check_file_signature_file_io_handle "libbfio_handle_t *file_io_handle, libexe_error_t **error"
+.Fn libexe_check_file_signature_file_io_handle "libbfio_handle_t *file_io_handle" "libexe_error_t **error"
 .Pp
 Notify functions
 .Ft void
 .Fn libexe_notify_set_verbose "int verbose"
 .Ft int
-.Fn libexe_notify_set_stream "FILE *stream, libexe_error_t **error"
+.Fn libexe_notify_set_stream "FILE *stream" "libexe_error_t **error"
 .Ft int
-.Fn libexe_notify_stream_open "const char *filename, libexe_error_t **error"
+.Fn libexe_notify_stream_open "const char *filename" "libexe_error_t **error"
 .Ft int
 .Fn libexe_notify_stream_close "libexe_error_t **error"
 .Pp
@@ -43,77 +41,77 @@ Error functions
 .Ft void
 .Fn libexe_error_free "libexe_error_t **error"
 .Ft int
-.Fn libexe_error_fprint "libexe_error_t *error, FILE *stream"
+.Fn libexe_error_fprint "libexe_error_t *error" "FILE *stream"
 .Ft int
-.Fn libexe_error_sprint "libexe_error_t *error, char *string, size_t size"
+.Fn libexe_error_sprint "libexe_error_t *error" "char *string" "size_t size"
 .Ft int
-.Fn libexe_error_backtrace_fprint "libexe_error_t *error, FILE *stream"
+.Fn libexe_error_backtrace_fprint "libexe_error_t *error" "FILE *stream"
 .Ft int
-.Fn libexe_error_backtrace_sprint "libexe_error_t *error, char *string, size_t size"
+.Fn libexe_error_backtrace_sprint "libexe_error_t *error" "char *string" "size_t size"
 .Pp
 File functions
 .Ft int
-.Fn libexe_file_initialize "libexe_file_t **file, libexe_error_t **error"
+.Fn libexe_file_initialize "libexe_file_t **file" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_free "libexe_file_t **file, libexe_error_t **error"
+.Fn libexe_file_free "libexe_file_t **file" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_signal_abort "libexe_file_t *file, libexe_error_t **error"
+.Fn libexe_file_signal_abort "libexe_file_t *file" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_open "libexe_file_t *file, const char *filename, int access_flags, libexe_error_t **error"
+.Fn libexe_file_open "libexe_file_t *file" "const char *filename" "int access_flags" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_close "libexe_file_t *file, libexe_error_t **error"
+.Fn libexe_file_close "libexe_file_t *file" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_ascii_codepage "libexe_file_t *file, int *ascii_codepage, libexe_error_t **error"
+.Fn libexe_file_get_ascii_codepage "libexe_file_t *file" "int *ascii_codepage" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_set_ascii_codepage "libexe_file_t *file, int ascii_codepage, libexe_error_t **error"
+.Fn libexe_file_set_ascii_codepage "libexe_file_t *file" "int ascii_codepage" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_number_of_sections "libexe_file_t *file, int *number_of_sections, libexe_error_t **error"
+.Fn libexe_file_get_number_of_sections "libexe_file_t *file" "int *number_of_sections" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_section_by_index "libexe_file_t *file, int section_index, libexe_section_t **section, libexe_error_t **error"
+.Fn libexe_file_get_section_by_index "libexe_file_t *file" "int section_index" "libexe_section_t **section" "libexe_error_t **error"
 .Ft int
-.Fn libexe_file_get_section_by_name "libexe_file_t *file, const char *string, size_t string_length, libexe_section_t **section, libexe_error_t **error"
+.Fn libexe_file_get_section_by_name "libexe_file_t *file" "const char *string" "size_t string_length" "libexe_section_t **section" "libexe_error_t **error"
 .Pp
 Available when compiled with wide character string support:
 .Ft int
-.Fn libexe_file_open_wide "libexe_file_t *file, const wchar_t *filename, int access_flags, libexe_error_t **error"
+.Fn libexe_file_open_wide "libexe_file_t *file" "const wchar_t *filename" "int access_flags" "libexe_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libexe_file_open_file_io_handle "libexe_file_t *file, libbfio_handle_t *file_io_handle, int access_flags, libexe_error_t **error"
+.Fn libexe_file_open_file_io_handle "libexe_file_t *file" "libbfio_handle_t *file_io_handle" "int access_flags" "libexe_error_t **error"
 .Pp
 Section functions
 .Ft int
-.Fn libexe_section_free "libexe_section_t **section, libexe_error_t **error"
+.Fn libexe_section_free "libexe_section_t **section" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_name_size "libexe_section_t *section, size_t *string_size, libexe_error_t **error"
+.Fn libexe_section_get_name_size "libexe_section_t *section" "size_t *string_size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_name "libexe_section_t *section, char *string, size_t string_size, libexe_error_t **error"
+.Fn libexe_section_get_name "libexe_section_t *section" "char *string" "size_t string_size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf8_name_size "libexe_section_t *section, size_t *utf8_string_size, libexe_error_t **error"
+.Fn libexe_section_get_utf8_name_size "libexe_section_t *section" "size_t *utf8_string_size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf8_name "libexe_section_t *section, uint8_t *utf8_string, size_t utf8_string_size, libexe_error_t **error"
+.Fn libexe_section_get_utf8_name "libexe_section_t *section" "uint8_t *utf8_string" "size_t utf8_string_size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf16_name_size "libexe_section_t *section, size_t *utf16_string_size, libexe_error_t **error"
+.Fn libexe_section_get_utf16_name_size "libexe_section_t *section" "size_t *utf16_string_size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_utf16_name "libexe_section_t *section, uint16_t *utf16_string, size_t utf16_string_size, libexe_error_t **error"
+.Fn libexe_section_get_utf16_name "libexe_section_t *section" "uint16_t *utf16_string" "size_t utf16_string_size" "libexe_error_t **error"
 .Ft ssize_t
-.Fn libexe_section_read_buffer "libexe_section_t *section, void *buffer, size_t buffer_size, libexe_error_t **error"
+.Fn libexe_section_read_buffer "libexe_section_t *section" "void *buffer" "size_t buffer_size" "libexe_error_t **error"
 .Ft ssize_t
-.Fn libexe_section_read_buffer_at_offset "libexe_section_t *section, void *buffer, size_t buffer_size, off64_t offset, libexe_error_t **error"
+.Fn libexe_section_read_buffer_at_offset "libexe_section_t *section" "void *buffer" "size_t buffer_size" "off64_t offset" "libexe_error_t **error"
 .Ft off64_t
-.Fn libexe_section_seek_offset "libexe_section_t *section, off64_t offset, int whence, libexe_error_t **error"
+.Fn libexe_section_seek_offset "libexe_section_t *section" "off64_t offset" "int whence" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_offset "libexe_section_t *section, off64_t *offset, libexe_error_t **error"
+.Fn libexe_section_get_offset "libexe_section_t *section" "off64_t *offset" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_size "libexe_section_t *section, size64_t *size, libexe_error_t **error"
+.Fn libexe_section_get_size "libexe_section_t *section" "size64_t *size" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_start_offset "libexe_section_t *section, off64_t *start_offset, libexe_error_t **error"
+.Fn libexe_section_get_start_offset "libexe_section_t *section" "off64_t *start_offset" "libexe_error_t **error"
 .Ft int
-.Fn libexe_section_get_virtual_address "libexe_section_t *section, uint32_t *virtual_address, libexe_error_t **error"
+.Fn libexe_section_get_virtual_address "libexe_section_t *section" "uint32_t *virtual_address" "libexe_error_t **error"
 .Pp
 Available when compiled with libbfio support:
 .Ft int
-.Fn libexe_section_get_data_file_io_handle "libexe_section_t *section, libbfio_handle_t **file_io_handle, libexe_error_t **error"
+.Fn libexe_section_get_data_file_io_handle "libexe_section_t *section" "libbfio_handle_t **file_io_handle" "libexe_error_t **error"
 .Sh DESCRIPTION
 The
 .Fn libexe_get_version
@@ -126,8 +124,8 @@ None
 .Sh FILES
 None
 .Sh NOTES
-libexe allows to be compiled with wide character support (wchar_t).
-
+libexe can be compiled with wide character support (wchar_t).
+.sp
 To compile libexe with wide character support use:
 .Ar ./configure --enable-wide-character-type=yes
  or define:
@@ -135,7 +133,7 @@ To compile libexe with wide character support use:
  or
 .Ar UNICODE
  during compilation.
-
+.sp
 .Ar LIBEXE_WIDE_CHARACTER_TYPE
  in libexe/features.h can be used to determine if libexe was compiled with wide character support.
 .Sh BUGS
@@ -144,7 +142,7 @@ Please report bugs of any kind on the project issue tracker: https://github.com/
 These man pages are generated from "libexe.h".
 .Sh COPYRIGHT
 Copyright (C) 2011-2019, Joachim Metz <joachim.metz@gmail.com>.
-
+.sp
 This is free software; see the source for copying conditions.
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO

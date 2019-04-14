@@ -32,6 +32,7 @@ check_SCRIPTS = \
 	pyexe_test_support.py \
 	test_exeinfo.sh \
 	test_library.sh \
+	test_manpage.sh \
 	test_python_module.sh \
 	test_runner.sh
 

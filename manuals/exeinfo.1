@@ -1,4 +1,4 @@
-.Dd January 5, 2014
+.Dd April 14, 2019
 .Dt exeinfo
 .Os libexe
 .Sh NAME
@@ -8,7 +8,7 @@
 .Nm exeinfo
 .Op Fl c Ar codepage
 .Op Fl hvV
-.Va Ar source
+.Ar source
 .Sh DESCRIPTION
 .Nm exeinfo
 is a utility to determine information about an executable (EXE) file
@@ -42,35 +42,35 @@ None
 .Bd -literal
 # exeinfo WUDFPlatform.dll
 exeinfo 20130303
-
+.sp
 Executable (EXE) information:
 	Number of sections	: 5
-
+.sp
 Section: 0
 	Name			: .text
 	Size			: 137216
 	Virtual address		: 0x00001000
-
+.sp
 Section: 1
 	Name			: .data
 	Size			: 2048
 	Virtual address		: 0x00023000
-
+.sp
 Section: 2
 	Name			: .pdata
 	Size			: 3584
 	Virtual address		: 0x00024000
-
+.sp
 Section: 3
 	Name			: .rsrc
 	Size			: 37376
 	Virtual address		: 0x00025000
-
+.sp
 Section: 4
 	Name			: .reloc
 	Size			: 1536
 	Virtual address		: 0x0002f000
-
+.sp
 .Ed
 .Sh DIAGNOSTICS
 Errors, verbose and debug output are printed to stderr when verbose output \-v is enabled.
