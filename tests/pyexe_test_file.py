@@ -39,7 +39,7 @@ class FileTypeTests(unittest.TestCase):
   def test_open(self):
     """Tests the open function."""
     if not unittest.source:
-      return
+      raise unittest.SkipTest("missing source")
 
     exe_file = pyexe.file()
 
@@ -59,30 +59,33 @@ class FileTypeTests(unittest.TestCase):
   def test_open_file_object(self):
     """Tests the open_file_object function."""
     if not unittest.source:
-      return
+      raise unittest.SkipTest("missing source")
 
-    file_object = open(unittest.source, "rb")
+    if not os.path.isfile(unittest.source):
+      raise unittest.SkipTest("source not a regular file")
 
     exe_file = pyexe.file()
 
-    exe_file.open_file_object(file_object)
+    with open(unittest.source, "rb") as file_object:
 
-    with self.assertRaises(IOError):
       exe_file.open_file_object(file_object)
 
-    exe_file.close()
+      with self.assertRaises(IOError):
+        exe_file.open_file_object(file_object)
 
-    # TODO: change IOError into TypeError
-    with self.assertRaises(IOError):
-      exe_file.open_file_object(None)
+      exe_file.close()
 
-    with self.assertRaises(ValueError):
-      exe_file.open_file_object(file_object, mode="w")
+      # TODO: change IOError into TypeError
+      with self.assertRaises(IOError):
+        exe_file.open_file_object(None)
+
+      with self.assertRaises(ValueError):
+        exe_file.open_file_object(file_object, mode="w")
 
   def test_close(self):
     """Tests the close function."""
     if not unittest.source:
-      return
+      raise unittest.SkipTest("missing source")
 
     exe_file = pyexe.file()
 
@@ -104,20 +107,21 @@ class FileTypeTests(unittest.TestCase):
     exe_file.open(unittest.source)
     exe_file.close()
 
-    file_object = open(unittest.source, "rb")
+    if os.path.isfile(unittest.source):
+      with open(unittest.source, "rb") as file_object:
 
-    # Test open_file_object and close.
-    exe_file.open_file_object(file_object)
-    exe_file.close()
+        # Test open_file_object and close.
+        exe_file.open_file_object(file_object)
+        exe_file.close()
 
-    # Test open_file_object and close a second time to validate clean up on close.
-    exe_file.open_file_object(file_object)
-    exe_file.close()
+        # Test open_file_object and close a second time to validate clean up on close.
+        exe_file.open_file_object(file_object)
+        exe_file.close()
 
-    # Test open_file_object and close and dereferencing file_object.
-    exe_file.open_file_object(file_object)
-    del file_object
-    exe_file.close()
+        # Test open_file_object and close and dereferencing file_object.
+        exe_file.open_file_object(file_object)
+        del file_object
+        exe_file.close()
 
   def test_set_ascii_codepage(self):
     """Tests the set_ascii_codepage function."""
@@ -141,13 +145,45 @@ class FileTypeTests(unittest.TestCase):
       with self.assertRaises(RuntimeError):
         exe_file.set_ascii_codepage(codepage)
 
+  def test_get_ascii_codepage(self):
+    """Tests the get_ascii_codepage function and ascii_codepage property."""
+    if not unittest.source:
+      raise unittest.SkipTest("missing source")
+
+    exe_file = pyexe.file()
+
+    exe_file.open(unittest.source)
+
+    ascii_codepage = exe_file.get_ascii_codepage()
+    self.assertIsNotNone(ascii_codepage)
+
+    self.assertIsNotNone(exe_file.ascii_codepage)
+
+    exe_file.close()
+
+  def test_get_number_of_sections(self):
+    """Tests the get_number_of_sections function and number_of_sections property."""
+    if not unittest.source:
+      raise unittest.SkipTest("missing source")
+
+    exe_file = pyexe.file()
+
+    exe_file.open(unittest.source)
+
+    number_of_sections = exe_file.get_number_of_sections()
+    self.assertIsNotNone(number_of_sections)
+
+    self.assertIsNotNone(exe_file.number_of_sections)
+
+    exe_file.close()
+
 
 if __name__ == "__main__":
   argument_parser = argparse.ArgumentParser()
 
   argument_parser.add_argument(
       "source", nargs="?", action="store", metavar="PATH",
-      default=None, help="The path of the source file.")
+      default=None, help="path of the source file.")
 
   options, unknown_options = argument_parser.parse_known_args()
   unknown_options.insert(0, sys.argv[0])

@@ -31,6 +31,7 @@
 #include "pyexe_error.h"
 #include "pyexe_file.h"
 #include "pyexe_file_object_io_handle.h"
+#include "pyexe_libbfio.h"
 #include "pyexe_libcerror.h"
 #include "pyexe_libexe.h"
 #include "pyexe_python.h"
@@ -62,14 +63,14 @@ PyMethodDef pyexe_module_methods[] = {
 	  METH_VARARGS | METH_KEYWORDS,
 	  "check_file_signature(filename) -> Boolean\n"
 	  "\n"
-	  "Checks if a file has an executable (EXE) signature." },
+	  "Checks if a file has a executable (EXE) file signature." },
 
 	{ "check_file_signature_file_object",
 	  (PyCFunction) pyexe_check_file_signature_file_object,
 	  METH_VARARGS | METH_KEYWORDS,
 	  "check_file_signature_file_object(file_object) -> Boolean\n"
 	  "\n"
-	  "Checks if a file has an executable (EXE) signature using a file-like object." },
+	  "Checks if a file has a executable (EXE) file signature using a file-like object." },
 
 	{ "open",
 	  (PyCFunction) pyexe_open_new_file,
@@ -122,7 +123,7 @@ PyObject *pyexe_get_version(
 	         errors ) );
 }
 
-/* Checks if a file has an executable (EXE) signature
+/* Checks if a file has a executable (EXE) file signature
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature(
@@ -153,7 +154,7 @@ PyObject *pyexe_check_file_signature(
 	if( PyArg_ParseTupleAndKeywords(
 	     arguments,
 	     keywords,
-	     "|O",
+	     "O|",
 	     keyword_list,
 	     &string_object ) == 0 )
 	{
@@ -169,7 +170,7 @@ PyObject *pyexe_check_file_signature(
 	{
 		pyexe_error_fetch_and_raise(
 	         PyExc_RuntimeError,
-		 "%s: unable to determine if string object is of type unicode.",
+		 "%s: unable to determine if string object is of type Unicode.",
 		 function );
 
 		return( NULL );
@@ -196,7 +197,7 @@ PyObject *pyexe_check_file_signature(
 		{
 			pyexe_error_fetch_and_raise(
 			 PyExc_RuntimeError,
-			 "%s: unable to convert unicode string to UTF-8.",
+			 "%s: unable to convert Unicode string to UTF-8.",
 			 function );
 
 			return( NULL );
@@ -219,7 +220,7 @@ PyObject *pyexe_check_file_signature(
 		Py_DecRef(
 		 utf8_string_object );
 
-#endif /* #if defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
+#endif /* defined( HAVE_WIDE_SYSTEM_CHARACTER ) */
 
 		if( result == -1 )
 		{
@@ -318,7 +319,7 @@ PyObject *pyexe_check_file_signature(
 	return( NULL );
 }
 
-/* Checks if a file has an executable (EXE) signature using a file-like object
+/* Checks if a file has a executable (EXE) file signature using a file-like object
  * Returns a Python object if successful or NULL on error
  */
 PyObject *pyexe_check_file_signature_file_object(

@@ -196,18 +196,9 @@ PyObject *pyexe_sections_new(
 
 		goto on_error;
 	}
-	if( pyexe_sections_init(
-	     sequence_object ) != 0 )
-	{
-		PyErr_Format(
-		 PyExc_MemoryError,
-		 "%s: unable to initialize sequence object.",
-		 function );
-
-		goto on_error;
-	}
 	sequence_object->parent_object     = parent_object;
 	sequence_object->get_item_by_index = get_item_by_index;
+	sequence_object->current_index     = 0;
 	sequence_object->number_of_items   = number_of_items;
 
 	Py_IncRef(
@@ -253,7 +244,7 @@ int pyexe_sections_init(
 	 "%s: initialize of sections not supported.",
 	 function );
 
-	return( 0 );
+	return( -1 );
 }
 
 /* Frees a sections sequence object

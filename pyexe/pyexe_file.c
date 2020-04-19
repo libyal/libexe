@@ -266,6 +266,8 @@ int pyexe_file_init(
 
 		return( -1 );
 	}
+	/* Make sure libexe file is set to NULL
+	 */
 	pyexe_file->file           = NULL;
 	pyexe_file->file_io_handle = NULL;
 
@@ -306,15 +308,6 @@ void pyexe_file_free(
 
 		return;
 	}
-	if( pyexe_file->file == NULL )
-	{
-		PyErr_Format(
-		 PyExc_ValueError,
-		 "%s: invalid file - missing libexe file.",
-		 function );
-
-		return;
-	}
 	ob_type = Py_TYPE(
 	           pyexe_file );
 
@@ -336,24 +329,27 @@ void pyexe_file_free(
 
 		return;
 	}
-	Py_BEGIN_ALLOW_THREADS
-
-	result = libexe_file_free(
-	          &( pyexe_file->file ),
-	          &error );
-
-	Py_END_ALLOW_THREADS
-
-	if( result != 1 )
+	if( pyexe_file->file != NULL )
 	{
-		pyexe_error_raise(
-		 error,
-		 PyExc_MemoryError,
-		 "%s: unable to free libexe file.",
-		 function );
+		Py_BEGIN_ALLOW_THREADS
 
-		libcerror_error_free(
-		 &error );
+		result = libexe_file_free(
+		          &( pyexe_file->file ),
+		          &error );
+
+		Py_END_ALLOW_THREADS
+
+		if( result != 1 )
+		{
+			pyexe_error_raise(
+			 error,
+			 PyExc_MemoryError,
+			 "%s: unable to free libexe file.",
+			 function );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
 	ob_type->tp_free(
 	 (PyObject*) pyexe_file );

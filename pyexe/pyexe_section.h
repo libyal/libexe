@@ -102,5 +102,5 @@ PyObject *pyexe_section_get_name(
 }
 #endif
 
-#endif
+#endif /* !defined( _PYEXE_SECTION_H ) */
 
