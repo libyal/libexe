@@ -126,6 +126,8 @@ stamp-h[1-9]
 /exetools/*.exe
 /exetools/exeinfo
 /tests/*.exe
+/tests/exe_test_coff_header
+/tests/exe_test_coff_optional_header
 /tests/exe_test_data_directory_descriptor
 /tests/exe_test_debug_data
 /tests/exe_test_error

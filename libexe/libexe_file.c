@@ -903,193 +903,196 @@ int libexe_file_open_read(
 			goto on_error;
 		}
 	}
-	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
-
-	if( data_directory_descriptor->size > 0 )
+	if( internal_file->io_handle->coff_optional_header != NULL )
 	{
-		if( libexe_file_get_offset_by_relative_virtual_address(
-		     internal_file,
-		     data_directory_descriptor->virtual_address,
-		     &file_offset,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
-			 function,
-			 data_directory_descriptor->virtual_address );
+		data_directory_descriptor = &( internal_file->io_handle->coff_optional_header->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
 
-			goto on_error;
+		if( data_directory_descriptor->size > 0 )
+		{
+			if( libexe_file_get_offset_by_relative_virtual_address(
+			     internal_file,
+			     data_directory_descriptor->virtual_address,
+			     &file_offset,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+				 function,
+				 data_directory_descriptor->virtual_address );
+
+				goto on_error;
+			}
+			if( libexe_export_table_initialize(
+			     &export_table,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create export table.",
+				 function );
+
+				goto on_error;
+			}
+			if( libexe_export_table_read(
+			     export_table,
+			     file_io_handle,
+			     file_offset,
+			     data_directory_descriptor->size,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read export table.",
+				 function );
+
+				goto on_error;
+			}
+			if( libexe_export_table_free(
+			     &export_table,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free export table.",
+				 function );
+
+				goto on_error;
+			}
 		}
-		if( libexe_export_table_initialize(
-		     &export_table,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create export table.",
-			 function );
+		data_directory_descriptor = &( internal_file->io_handle->coff_optional_header->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
 
-			goto on_error;
+		if( data_directory_descriptor->size > 0 )
+		{
+			if( libexe_file_get_offset_by_relative_virtual_address(
+			     internal_file,
+			     data_directory_descriptor->virtual_address,
+			     &file_offset,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+				 function,
+				 data_directory_descriptor->virtual_address );
+
+				goto on_error;
+			}
+			if( libexe_import_table_initialize(
+			     &import_table,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create import table.",
+				 function );
+
+				goto on_error;
+			}
+			if( libexe_import_table_read(
+			     import_table,
+			     file_io_handle,
+			     file_offset,
+			     data_directory_descriptor->size,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read import table.",
+				 function );
+
+				goto on_error;
+			}
+			if( libexe_import_table_free(
+			     &import_table,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free import table.",
+				 function );
+
+				goto on_error;
+			}
 		}
-		if( libexe_export_table_read(
-		     export_table,
-		     file_io_handle,
-		     file_offset,
-		     data_directory_descriptor->size,
-		     error ) != 1 )
+		data_directory_descriptor = &( internal_file->io_handle->coff_optional_header->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
+
+		if( data_directory_descriptor->size > 0 )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read export table.",
-			 function );
+			if( libexe_file_get_offset_by_relative_virtual_address(
+			     internal_file,
+			     data_directory_descriptor->virtual_address,
+			     &file_offset,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
+				 function,
+				 data_directory_descriptor->virtual_address );
 
-			goto on_error;
-		}
-		if( libexe_export_table_free(
-		     &export_table,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free export table.",
-			 function );
+				goto on_error;
+			}
+			if( libexe_debug_data_initialize(
+			     &debug_data,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create debug data.",
+				 function );
 
-			goto on_error;
-		}
-	}
-	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
+				goto on_error;
+			}
+			if( libexe_debug_data_read(
+			     debug_data,
+			     file_io_handle,
+			     file_offset,
+			     data_directory_descriptor->size,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_IO,
+				 LIBCERROR_IO_ERROR_READ_FAILED,
+				 "%s: unable to read debug data.",
+				 function );
 
-	if( data_directory_descriptor->size > 0 )
-	{
-		if( libexe_file_get_offset_by_relative_virtual_address(
-		     internal_file,
-		     data_directory_descriptor->virtual_address,
-		     &file_offset,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
-			 function,
-			 data_directory_descriptor->virtual_address );
+				goto on_error;
+			}
+			if( libexe_debug_data_free(
+			     &debug_data,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free debug data.",
+				 function );
 
-			goto on_error;
-		}
-		if( libexe_import_table_initialize(
-		     &import_table,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create import table.",
-			 function );
-
-			goto on_error;
-		}
-		if( libexe_import_table_read(
-		     import_table,
-		     file_io_handle,
-		     file_offset,
-		     data_directory_descriptor->size,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read import table.",
-			 function );
-
-			goto on_error;
-		}
-		if( libexe_import_table_free(
-		     &import_table,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free import table.",
-			 function );
-
-			goto on_error;
-		}
-	}
-	data_directory_descriptor = &( internal_file->io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
-
-	if( data_directory_descriptor->size > 0 )
-	{
-		if( libexe_file_get_offset_by_relative_virtual_address(
-		     internal_file,
-		     data_directory_descriptor->virtual_address,
-		     &file_offset,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve offset for relative virtual address: 0x%08" PRIx32 ".",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			goto on_error;
-		}
-		if( libexe_debug_data_initialize(
-		     &debug_data,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create debug data.",
-			 function );
-
-			goto on_error;
-		}
-		if( libexe_debug_data_read(
-		     debug_data,
-		     file_io_handle,
-		     file_offset,
-		     data_directory_descriptor->size,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_IO,
-			 LIBCERROR_IO_ERROR_READ_FAILED,
-			 "%s: unable to read debug data.",
-			 function );
-
-			goto on_error;
-		}
-		if( libexe_debug_data_free(
-		     &debug_data,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free debug data.",
-			 function );
-
-			goto on_error;
+				goto on_error;
+			}
 		}
 	}
 	return( 1 );

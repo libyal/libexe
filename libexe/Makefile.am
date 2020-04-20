@@ -28,6 +28,8 @@ libexe_la_SOURCES = \
 	exe_section_table.h \
 	libexe.c \
 	libexe_codepage.h \
+	libexe_coff_header.c libexe_coff_header.h \
+	libexe_coff_optional_header.c libexe_coff_optional_header.h \
 	libexe_data_directory_descriptor.h \
 	libexe_debug.c libexe_debug.h \
 	libexe_debug_data.c libexe_debug_data.h \

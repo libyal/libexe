@@ -40,6 +40,8 @@ EXTRA_DIST = \
 	$(check_SCRIPTS)
 
 check_PROGRAMS = \
+	exe_test_coff_header \
+	exe_test_coff_optional_header \
 	exe_test_data_directory_descriptor \
 	exe_test_debug_data \
 	exe_test_error \
@@ -55,6 +57,30 @@ check_PROGRAMS = \
 	exe_test_section_descriptor \
 	exe_test_section_io_handle \
 	exe_test_support
+
+exe_test_coff_header_SOURCES = \
+	exe_test_coff_header.c \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_unused.h
+
+exe_test_coff_header_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_coff_optional_header_SOURCES = \
+	exe_test_coff_optional_header.c \
+	exe_test_libcerror.h \
+	exe_test_libexe.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_unused.h
+
+exe_test_coff_optional_header_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
 
 exe_test_data_directory_descriptor_SOURCES = \
 	exe_test_data_directory_descriptor.c \

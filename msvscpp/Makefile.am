@@ -1,4 +1,6 @@
 MSVSCPP_FILES = \
+	exe_test_coff_header/exe_test_coff_header.vcproj \
+	exe_test_coff_optional_header/exe_test_coff_optional_header.vcproj \
 	exe_test_data_directory_descriptor/exe_test_data_directory_descriptor.vcproj \
 	exe_test_debug_data/exe_test_debug_data.vcproj \
 	exe_test_error/exe_test_error.vcproj \

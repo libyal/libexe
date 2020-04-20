@@ -25,6 +25,8 @@
 #include <common.h>
 #include <types.h>
 
+#include "libexe_coff_header.h"
+#include "libexe_coff_optional_header.h"
 #include "libexe_data_directory_descriptor.h"
 #include "libexe_definitions.h"
 #include "libexe_libbfio.h"
@@ -43,13 +45,13 @@ struct libexe_io_handle
 	 */
 	uint8_t executable_type;
 
-	/* The creation time
+	/* The COFF header
 	 */
-	uint32_t creation_time;
+	libexe_coff_header_t *coff_header;
 
-	/* The data directory
+	/* The COFF optional header
 	 */
-        libexe_data_directory_descriptor_t data_directories[ LIBEXE_NUMBER_OF_DATA_DIRECTORIES ];
+	libexe_coff_optional_header_t *coff_optional_header;
 
 	/* The codepage of the extended ASCII strings
 	 */
@@ -104,18 +106,6 @@ int libexe_io_handle_read_pe_header(
      libbfio_handle_t *file_io_handle,
      uint32_t pe_header_offset,
      uint16_t *number_of_sections,
-     libcerror_error_t **error );
-
-int libexe_io_handle_read_coff_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint16_t *number_of_sections,
-     libcerror_error_t **error );
-
-int libexe_io_handle_read_coff_optional_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint16_t optional_header_size,
      libcerror_error_t **error );
 
 int libexe_io_handle_read_section_table(

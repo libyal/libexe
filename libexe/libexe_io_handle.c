@@ -27,6 +27,8 @@
 #include <types.h>
 
 #include "libexe_codepage.h"
+#include "libexe_coff_header.h"
+#include "libexe_coff_optional_header.h"
 #include "libexe_data_directory_descriptor.h"
 #include "libexe_debug.h"
 #include "libexe_definitions.h"
@@ -166,6 +168,38 @@ int libexe_io_handle_free(
 
 			result = -1;
 		}
+		if( ( *io_handle )->coff_header != NULL )
+		{
+			if( libexe_coff_header_free(
+			     &( ( *io_handle )->coff_header ),
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free COFF header.",
+				 function );
+
+				result = -1;
+			}
+		}
+		if( ( *io_handle )->coff_optional_header != NULL )
+		{
+			if( libexe_coff_optional_header_free(
+			     &( ( *io_handle )->coff_optional_header ),
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free COFF optional header.",
+				 function );
+
+				result = -1;
+			}
+		}
 		memory_free(
 		 *io_handle );
 
@@ -194,6 +228,7 @@ int libexe_io_handle_clear(
 
 		return( -1 );
 	}
+/* TODO refactor
 	if( memory_set(
 	     io_handle,
 	     0,
@@ -207,6 +242,39 @@ int libexe_io_handle_clear(
 		 function );
 
 		return( -1 );
+	}
+*/
+	if( io_handle->coff_header != NULL )
+	{
+		if( libexe_coff_header_free(
+		     &( io_handle->coff_header ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free COFF header.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	if( io_handle->coff_optional_header != NULL )
+	{
+		if( libexe_coff_optional_header_free(
+		     &( io_handle->coff_optional_header ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free COFF optional header.",
+			 function );
+
+			return( -1 );
+		}
 	}
 	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_MZ;
 	io_handle->ascii_codepage  = LIBEXE_CODEPAGE_WINDOWS_1252;
@@ -667,6 +735,17 @@ int libexe_io_handle_read_pe_header(
 
 		return( -1 );
 	}
+	if( number_of_sections == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid number of sections.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{
@@ -751,79 +830,26 @@ int libexe_io_handle_read_pe_header(
 		 "\n" );
 	}
 #endif
-	if( libexe_io_handle_read_coff_header(
-	     io_handle,
-	     file_io_handle,
-	     number_of_sections,
+	if( libexe_coff_header_initialize(
+	     &( io_handle->coff_header ),
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read COFF header.",
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create COFF header.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_PE_COFF;
+	off64_t file_offset = pe_header_offset + sizeof( exe_pe_header_t );
 
-	return( 1 );
-}
-
-/* Reads the COFF header
- * Returns 1 if successful or -1 on error
- */
-int libexe_io_handle_read_coff_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint16_t *number_of_sections,
-     libcerror_error_t **error )
-{
-	exe_coff_header_t coff_header;
-
-	static char *function                 = "libexe_io_handle_read_coff_header";
-	ssize_t read_count                    = 0;
-	uint16_t optional_header_size         = 0;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	system_character_t posix_time_string[ 32 ];
-
-	libfdatetime_posix_time_t *posix_time = NULL;
-	uint32_t value_32bit                  = 0;
-	uint16_t value_16bit                  = 0;
-	int result                            = 0;
-#endif
-
-	if( io_handle == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
-
-		return( -1 );
-	}
-	if( number_of_sections == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid number of sections.",
-		 function );
-
-		return( -1 );
-	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              (uint8_t *) &coff_header,
-	              sizeof( exe_coff_header_t ),
-	              error );
-
-	if( read_count != (ssize_t) sizeof( exe_coff_header_t ) )
+	if( libexe_coff_header_read_file_io_handle(
+	     io_handle->coff_header,
+	     file_io_handle,
+	     file_offset,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
@@ -834,1146 +860,58 @@ int libexe_io_handle_read_coff_header(
 
 		goto on_error;
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
+	file_offset += sizeof( exe_coff_header_t );
+
+	*number_of_sections = io_handle->coff_header->number_of_sections;
+
+	if( io_handle->coff_header->optional_header_size > 0 )
 	{
-		libcnotify_printf(
-		 "%s: COFF header:\n",
-		 function );
-		libcnotify_print_data(
-		 (uint8_t *) &coff_header,
-		 sizeof( exe_coff_header_t ),
-		 0 );
-	}
-#endif
-	byte_stream_copy_to_uint16_little_endian(
-	 coff_header.number_of_sections,
-	 *number_of_sections );
-
-	byte_stream_copy_to_uint32_little_endian(
-	 coff_header.creation_time,
-	 io_handle->creation_time );
-
-	byte_stream_copy_to_uint16_little_endian(
-	 coff_header.optional_header_size,
-	 optional_header_size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		byte_stream_copy_to_uint16_little_endian(
-		 coff_header.target_architecture_type,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: target architecture type\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 value_16bit );
-
-		libcnotify_printf(
-		 "%s: number of sections\t\t\t: %" PRIu16 "\n",
-		 function,
-		 *number_of_sections );
-
-		if( libfdatetime_posix_time_initialize(
-		     &posix_time,
+		if( libexe_coff_optional_header_initialize(
+		     &( io_handle->coff_optional_header ),
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create POSIX time.",
+			 "%s: unable to create COFF optional header.",
 			 function );
 
 			goto on_error;
 		}
-		if( libfdatetime_posix_time_copy_from_byte_stream(
-		     posix_time,
-		     coff_header.creation_time,
-		     4,
-		     LIBFDATETIME_ENDIAN_LITTLE,
-		     LIBFDATETIME_POSIX_TIME_VALUE_TYPE_SECONDS_32BIT_SIGNED,
+		if( libexe_coff_optional_header_read_file_io_handle(
+		     io_handle->coff_optional_header,
+		     file_io_handle,
+		     file_offset,
+		     io_handle->coff_header->optional_header_size,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy POSIX time from byte stream.",
+			 LIBCERROR_ERROR_DOMAIN_IO,
+			 LIBCERROR_IO_ERROR_READ_FAILED,
+			 "%s: unable to read COFF optional header.",
 			 function );
 
 			goto on_error;
 		}
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libfdatetime_posix_time_copy_to_utf16_string(
-			  posix_time,
-			  (uint16_t *) posix_time_string,
-			  32,
-			  LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME,
-			  error );
-#else
-		result = libfdatetime_posix_time_copy_to_utf8_string(
-			  posix_time,
-			  (uint8_t *) posix_time_string,
-			  32,
-			  LIBFDATETIME_STRING_FORMAT_TYPE_CTIME | LIBFDATETIME_STRING_FORMAT_FLAG_DATE_TIME,
-			  error );
-#endif
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to copy POSIX time to string.",
-			 function );
-
-			goto on_error;
-		}
-		libcnotify_printf(
-		 "%s: creation time\t\t\t: %" PRIs_SYSTEM " UTC\n",
-		 function,
-		 posix_time_string );
-
-		if( libfdatetime_posix_time_free(
-		     &posix_time,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free POSIX time.",
-			 function );
-
-			goto on_error;
-		}
-		byte_stream_copy_to_uint32_little_endian(
-		 coff_header.symbol_table_offset,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: symbol table offset\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 coff_header.number_of_symbols,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: number of symbols\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		libcnotify_printf(
-		 "%s: optional header size\t\t\t: %" PRIu16 "\n",
-		 function,
-		 optional_header_size );
-
-		byte_stream_copy_to_uint16_little_endian(
-		 coff_header.characteristic_flags,
-		 value_16bit );
-		libcnotify_printf(
-		 "%s: characteristic flags\t\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 value_16bit );
-		libexe_debug_print_file_characteristic_flags(
-		 value_16bit );
-		libcnotify_printf(
-		 "\n" );
 	}
-#endif
-	if( libexe_io_handle_read_coff_optional_header(
-	     io_handle,
-	     file_io_handle,
-	     optional_header_size,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read COFF optional header.",
-		 function );
+	io_handle->executable_type = LIBEXE_EXECUTABLE_TYPE_PE_COFF;
 
-		goto on_error;
-	}
 	return( 1 );
 
 on_error:
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( posix_time != NULL )
+	if( io_handle->coff_optional_header != NULL )
 	{
-		libfdatetime_posix_time_free(
-		 &posix_time,
+		libexe_coff_optional_header_free(
+		 &( io_handle->coff_optional_header ),
 		 NULL );
 	}
-#endif
-	return( -1 );
-}
-
-/* Reads the COFF optional header
- * Returns 1 if successful or -1 on error
- */
-int libexe_io_handle_read_coff_optional_header(
-     libexe_io_handle_t *io_handle,
-     libbfio_handle_t *file_io_handle,
-     uint16_t optional_header_size,
-     libcerror_error_t **error )
-{
-	libexe_data_directory_descriptor_t *data_directory_descriptor = NULL;
-	uint8_t *coff_optional_header                                 = NULL;
-	uint8_t *coff_optional_header_data                            = NULL;
-	static char *function                                         = "libexe_io_handle_read_coff_optional_header";
-	ssize_t read_count                                            = 0;
-	uint32_t number_of_data_directories_entries                   = 0;
-	uint16_t signature                                            = 0;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	uint64_t value_64bit                                          = 0;
-	uint32_t value_32bit                                          = 0;
-	uint16_t value_16bit                                          = 0;
-#endif
-
-	if( io_handle == NULL )
+	if( io_handle->coff_header != NULL )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid IO handle.",
-		 function );
-
-		return( -1 );
-	}
-	coff_optional_header = (uint8_t *) memory_allocate(
-	                                    sizeof( uint8_t ) * optional_header_size );
-
-	if( coff_optional_header == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_MEMORY,
-		 LIBCERROR_MEMORY_ERROR_INSUFFICIENT,
-		 "%s: unable to create COFF optional header.",
-		 function );
-
-		goto on_error;
-	}
-	read_count = libbfio_handle_read_buffer(
-	              file_io_handle,
-	              coff_optional_header,
-	              (size_t) optional_header_size,
-	              error );
-
-	if( read_count != (ssize_t) optional_header_size )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read COFF optional header.",
-		 function );
-
-		goto on_error;
-	}
-	coff_optional_header_data = coff_optional_header;
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: COFF optional header:\n",
-		 function );
-		libcnotify_print_data(
-		 coff_optional_header_data,
-		 (size_t) optional_header_size,
-		 0 );
-	}
-#endif
-	byte_stream_copy_to_uint16_little_endian(
-	 ( (exe_coff_optional_header_t *) coff_optional_header_data )->signature,
-	 signature );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: signature\t\t\t\t: 0x%04" PRIx16 "\n",
-		 function,
-		 signature );
-
-		libcnotify_printf(
-		 "%s: major linker version\t\t: %" PRIu8 "\n",
-		 function,
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->major_linker_version );
-
-		libcnotify_printf(
-		 "%s: minor linker version\t\t: %" PRIu8 "\n",
-		 function,
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->minor_linker_version );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->text_section_size,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: text section size\t\t\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->initialized_data_section_size,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: initialized data section size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->uninitialized_data_section_size,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: uninitialized data section size\t: %" PRIu32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->entry_point_offset,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: entry point offset\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_t *) coff_optional_header_data )->code_base_offset,
-		 value_32bit );
-		libcnotify_printf(
-		 "%s: code base offset\t\t\t: 0x%08" PRIx32 "\n",
-		 function,
-		 value_32bit );
-
-		if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
-		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_t *) coff_optional_header_data )->data_base_offset,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: data base offset\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-		}
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
-	if( ( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
-	 && ( signature != LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32_PLUS ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported signature.",
-		 function );
-
-		goto on_error;
-	}
-	coff_optional_header_data += sizeof( exe_coff_optional_header_t );
-
-	if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
-	{
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->number_of_data_directories_entries,
-		 number_of_data_directories_entries );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_base_offset,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: image base offset\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->section_alignment_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: section alignment size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->file_alignment_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_operating_system_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major operating system version\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_operating_system_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor operating system version\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_image_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major image version\t\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_image_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->major_subsystem_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->minor_subsystem_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown1,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: unknown1\t\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->image_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->headers_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: headers size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->checksum,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->subsystem,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->dll_characteristic_flags,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
-			 function,
-			 value_16bit );
-			libexe_debug_print_dll_characteristic_flags(
-			 value_16bit );
-			libcnotify_printf(
-			 "\n" );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_reservation_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: stack reservation size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->stack_commit_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: stack commit size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_reservation_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: heap reservation size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->heap_commit_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: heap commit size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_t *) coff_optional_header_data )->unknown2,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: unknown2\t\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			libcnotify_printf(
-			 "%s: number of data directory entries\t: %" PRIu32 "\n",
-			 function,
-			 number_of_data_directories_entries );
-		}
-#endif
-		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_t );
-	}
-	else if( signature == LIBEXE_COFF_OPTIONAL_HEADER_SIGNATURE_PE32 )
-	{
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->number_of_data_directories_entries,
-		 number_of_data_directories_entries );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_base_offset,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: image base offset\t\t\t: 0x%08" PRIx64 "\n",
-			 function,
-			 value_64bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->section_alignment_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: section alignment size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->file_alignment_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_operating_system_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major operating system version\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_operating_system_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor operating system version\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_image_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major image version\t\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_image_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->major_subsystem_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: major subsystem version\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->minor_subsystem_version,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: minor subsystem version\t\t: %" PRIu16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown1,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: unknown1\t\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->image_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->headers_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: headers size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->checksum,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: checksum\t\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->subsystem,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
-			 function,
-			 value_16bit );
-
-			byte_stream_copy_to_uint16_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->dll_characteristic_flags,
-			 value_16bit );
-			libcnotify_printf(
-			 "%s: DLL characteristic flags\t\t: 0x%04" PRIx16 "\n",
-			 function,
-			 value_16bit );
-			libexe_debug_print_dll_characteristic_flags(
-			 value_16bit );
-			libcnotify_printf(
-			 "\n" );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_reservation_size,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: stack reservation size\t\t: %" PRIu64 "\n",
-			 function,
-			 value_64bit );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->stack_commit_size,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: stack commit size\t\t\t: %" PRIu64 "\n",
-			 function,
-			 value_64bit );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_reservation_size,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: heap reservation size\t\t: %" PRIu64 "\n",
-			 function,
-			 value_64bit );
-
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->heap_commit_size,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: heap commit size\t\t\t: %" PRIu64 "\n",
-			 function,
-			 value_64bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_pe32_plus_t *) coff_optional_header_data )->unknown2,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: unknown2\t\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			libcnotify_printf(
-			 "%s: number of data directory entries\t: %" PRIu32 "\n",
-			 function,
-			 number_of_data_directories_entries );
-		}
-#endif
-		coff_optional_header_data += sizeof( exe_coff_optional_header_pe32_plus_t );
-	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "\n" );
-	}
-#endif
-	if( number_of_data_directories_entries > 16 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported number of data directory entries: %" PRIu32 ".",
-		 function,
-		 number_of_data_directories_entries );
-
-		goto on_error;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXPORT_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->export_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: export table RVA\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: export table size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: import table RVA\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: import table size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_RESOURCE_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->resource_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: resource table size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_EXCEPTION_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->exception_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: exception table size\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_CERTIFICATE_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->certificate_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: certificate table RVA\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			libcnotify_printf(
-			 "%s: certificate table size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_BASE_RELOCATION_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->base_relocation_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			libcnotify_printf(
-			 "%s: base relocation table size\t\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DEBUG_DATA ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->debug_data_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: debug data RVA\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: debug data size\t\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_rva,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: architecture-specific data RVA\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->architecture_specific_data_size,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: architecture-specific data size\t: %" PRIu32 "\n",
-			 function,
-			 value_32bit );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->global_pointer_register,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: global pointer register\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-
-			byte_stream_copy_to_uint32_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown3,
-			 value_32bit );
-			libcnotify_printf(
-			 "%s: unknown3\t\t\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 value_32bit );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_THREAD_LOCAL_STORAGE_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->thread_local_storage_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: thread local storage table RVA\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: thread local storage table size\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_LOAD_CONFIGURATION_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->load_configuration_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: load configuration table RVA\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: load configuration table size\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_ADDRESS_TABLE ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->import_address_table_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: import address table RVA\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: import address table size\t\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_DELAY_IMPORT_DESCRIPTOR ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->delay_import_descriptor_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: delay import descriptor size\t: %" PRIu32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-		data_directory_descriptor = &( io_handle->data_directories[ LIBEXE_DATA_DIRECTORY_COM_PLUS_RUNTIME_HEADER ] );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_rva,
-		 data_directory_descriptor->virtual_address );
-
-		byte_stream_copy_to_uint32_little_endian(
-		 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->com_plus_runtime_header_size,
-		 data_directory_descriptor->size );
-
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			libcnotify_printf(
-			 "%s: COM+ runtime header RVA\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->virtual_address );
-
-			libcnotify_printf(
-			 "%s: COM+ runtime header size\t\t: 0x%08" PRIx32 "\n",
-			 function,
-			 data_directory_descriptor->size );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	if( number_of_data_directories_entries > 0 )
-	{
-#if defined( HAVE_DEBUG_OUTPUT )
-		if( libcnotify_verbose != 0 )
-		{
-			byte_stream_copy_to_uint64_little_endian(
-			 ( (exe_coff_optional_header_data_directories_t *) coff_optional_header_data )->unknown4,
-			 value_64bit );
-			libcnotify_printf(
-			 "%s: unknown4\t\t\t\t: 0x%08" PRIx64 "\n",
-			 function,
-			 value_64bit );
-
-			libcnotify_printf(
-			 "\n" );
-		}
-#endif
-		number_of_data_directories_entries--;
-	}
-	memory_free(
-	 coff_optional_header );
-
-	return( 1 );
-
-on_error:
-	if( coff_optional_header != NULL )
-	{
-		memory_free(
-		 coff_optional_header );
+		libexe_coff_header_free(
+		 &( io_handle->coff_header ),
+		 NULL );
 	}
 	return( -1 );
 }

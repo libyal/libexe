@@ -174,6 +174,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\libexe\libexe_coff_header.c"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libexe\libexe_coff_optional_header.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\libexe\libexe_debug.c"
 				>
 			</File>
@@ -265,6 +273,14 @@
 			</File>
 			<File
 				RelativePath="..\..\libexe\libexe_codepage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libexe\libexe_coff_header.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\libexe\libexe_coff_optional_header.h"
 				>
 			</File>
 			<File

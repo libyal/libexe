@@ -284,7 +284,7 @@ int libexe_le_header_read_file_io_handle(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read LE header at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+		 "%s: unable to read LE header data at offset: %" PRIi64 " (0x%08" PRIx64 ").",
 		 function,
 		 file_offset,
 		 file_offset );

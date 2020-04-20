@@ -331,7 +331,8 @@ int libexe_mz_header_read_data(
 		libcnotify_printf(
 		 "\n" );
 	}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 	if( relocation_table_offset >= 0x40 )
 	{
 /* TODO read data */
@@ -363,7 +364,7 @@ int libexe_mz_header_read_data(
 			 112,
 			 0 );
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
 	}
 /* TODO print data between realloc and current offset */
 	if( number_of_relocation_entries > 0 )
@@ -426,7 +427,7 @@ int libexe_mz_header_read_file_io_handle(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read MZ header at offset: %" PRIi64 " (0x%08" PRIx64 ").",
+		 "%s: unable to read MZ header data at offset: %" PRIi64 " (0x%08" PRIx64 ").",
 		 function,
 		 file_offset,
 		 file_offset );
