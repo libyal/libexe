@@ -1,6 +1,6 @@
 # Tests library functions and types.
 #
-# Version: 20200413
+# Version: 20200427
 
 $ExitSuccess = 0
 $ExitFailure = 1
@@ -8,7 +8,7 @@ $ExitIgnore = 77
 
 $LibraryTests = "data_directory_descriptor debug_data error export_table import_table io_handle le_header mz_header ne_header notify section section_descriptor section_io_handle"
 $LibraryTestsWithInput = "file support"
-$OptionSets = "";
+$OptionSets = ""
 
 $InputGlob = "*"
 

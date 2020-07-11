@@ -439,10 +439,6 @@ int main(
 
 	/* TODO: add tests for libexe_io_handle_read_pe_header */
 
-	/* TODO: add tests for libexe_io_handle_read_coff_header */
-
-	/* TODO: add tests for libexe_io_handle_read_coff_optional_header */
-
 	/* TODO: add tests for libexe_io_handle_read_section_table */
 
 	/* TODO: add tests for libexe_io_handle_read_segment_data */

@@ -427,19 +427,47 @@ PyObject *pyexe_open_new_file(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *pyexe_file = NULL;
+	pyexe_file_t *pyexe_file = NULL;
+	static char *function    = "pyexe_open_new_file";
 
 	PYEXE_UNREFERENCED_PARAMETER( self )
 
-	pyexe_file_init(
-	 (pyexe_file_t *) pyexe_file );
+	/* PyObject_New does not invoke tp_init
+	 */
+	pyexe_file = PyObject_New(
+	              struct pyexe_file,
+	              &pyexe_file_type_object );
 
-	pyexe_file_open(
-	 (pyexe_file_t *) pyexe_file,
-	 arguments,
-	 keywords );
+	if( pyexe_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create file.",
+		 function );
 
-	return( pyexe_file );
+		goto on_error;
+	}
+	if( pyexe_file_init(
+	     pyexe_file ) != 0 )
+	{
+		goto on_error;
+	}
+	if( pyexe_file_open(
+	     pyexe_file,
+	     arguments,
+	     keywords ) == NULL )
+	{
+		goto on_error;
+	}
+	return( (PyObject *) pyexe_file );
+
+on_error:
+	if( pyexe_file != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyexe_file );
+	}
+	return( NULL );
 }
 
 /* Creates a new file object and opens it using a file-like object
@@ -450,19 +478,47 @@ PyObject *pyexe_open_new_file_with_file_object(
            PyObject *arguments,
            PyObject *keywords )
 {
-	PyObject *pyexe_file = NULL;
+	pyexe_file_t *pyexe_file = NULL;
+	static char *function    = "pyexe_open_new_file_with_file_object";
 
 	PYEXE_UNREFERENCED_PARAMETER( self )
 
-	pyexe_file_init(
-	 (pyexe_file_t *) pyexe_file );
+	/* PyObject_New does not invoke tp_init
+	 */
+	pyexe_file = PyObject_New(
+	              struct pyexe_file,
+	              &pyexe_file_type_object );
 
-	pyexe_file_open_file_object(
-	 (pyexe_file_t *) pyexe_file,
-	 arguments,
-	 keywords );
+	if( pyexe_file == NULL )
+	{
+		PyErr_Format(
+		 PyExc_MemoryError,
+		 "%s: unable to create file.",
+		 function );
 
-	return( pyexe_file );
+		goto on_error;
+	}
+	if( pyexe_file_init(
+	     pyexe_file ) != 0 )
+	{
+		goto on_error;
+	}
+	if( pyexe_file_open_file_object(
+	     pyexe_file,
+	     arguments,
+	     keywords ) == NULL )
+	{
+		goto on_error;
+	}
+	return( (PyObject *) pyexe_file );
+
+on_error:
+	if( pyexe_file != NULL )
+	{
+		Py_DecRef(
+		 (PyObject *) pyexe_file );
+	}
+	return( NULL );
 }
 
 #if PY_MAJOR_VERSION >= 3
