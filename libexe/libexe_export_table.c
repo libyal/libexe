@@ -162,19 +162,18 @@ int libexe_export_table_read(
 
 		return( -1 );
 	}
-#if SIZEOF_SIZE_T <= 4
-	if( size > (uint32_t) SSIZE_MAX )
+	if( ( size == 0 )
+	 || ( size > MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid size value exceeds maximum.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid size value out of bounds.",
 		 function );
 
 		return( -1 );
 	}
-#endif
 #if defined( HAVE_DEBUG_OUTPUT )
 	if( libcnotify_verbose != 0 )
 	{

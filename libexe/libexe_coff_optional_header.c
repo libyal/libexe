@@ -179,24 +179,14 @@ int libexe_coff_optional_header_read_data(
 
 		return( -1 );
 	}
-	if( data_size > (size_t) SSIZE_MAX )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid data size value exceeds maximum.",
-		 function );
-
-		return( -1 );
-	}
-	if( data_size < sizeof( exe_coff_optional_header_t ) )
+	if( ( data_size < sizeof( exe_coff_optional_header_t ) )
+	 || ( data_size > (size_t) SSIZE_MAX ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid data size value too small.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid data size value out of bounds.",
 		 function );
 
 		return( -1 );
@@ -221,7 +211,7 @@ int libexe_coff_optional_header_read_data(
 	if( libcnotify_verbose != 0 )
 	{
 		libcnotify_printf(
-		 "%s: signature\t\t\t\t: 0x%04" PRIx16 "\n",
+		 "%s: signature\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 signature );
 
@@ -239,7 +229,7 @@ int libexe_coff_optional_header_read_data(
 		 ( (exe_coff_optional_header_t *) data )->text_section_size,
 		 value_32bit );
 		libcnotify_printf(
-		 "%s: text section size\t\t\t: %" PRIu32 "\n",
+		 "%s: text section size\t\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
 
@@ -263,7 +253,7 @@ int libexe_coff_optional_header_read_data(
 		 ( (exe_coff_optional_header_t *) data )->entry_point_offset,
 		 value_32bit );
 		libcnotify_printf(
-		 "%s: entry point offset\t\t\t: 0x%08" PRIx32 "\n",
+		 "%s: entry point offset\t\t: 0x%08" PRIx32 "\n",
 		 function,
 		 value_32bit );
 
@@ -328,7 +318,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->image_base_offset,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: image base offset\t\t\t: 0x%08" PRIx32 "\n",
+			 "%s: image base offset\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
@@ -344,7 +334,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->file_alignment_size,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
+			 "%s: file alignment size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
@@ -368,7 +358,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->major_image_version,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: major image version\t\t\t: %" PRIu16 "\n",
+			 "%s: major image version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
 
@@ -376,7 +366,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->minor_image_version,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
+			 "%s: minor image version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
 
@@ -408,7 +398,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->image_size,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
+			 "%s: image size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
@@ -432,7 +422,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->subsystem,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
+			 "%s: subsystem\t\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
 
@@ -460,7 +450,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_t *) &( data[ data_offset ] ) )->stack_commit_size,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: stack commit size\t\t\t: %" PRIu32 "\n",
+			 "%s: stack commit size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
@@ -521,7 +511,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->image_base_offset,
 			 value_64bit );
 			libcnotify_printf(
-			 "%s: image base offset\t\t\t: 0x%08" PRIx64 "\n",
+			 "%s: image base offset\t\t: 0x%08" PRIx64 "\n",
 			 function,
 			 value_64bit );
 
@@ -537,7 +527,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->file_alignment_size,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: file alignment size\t\t\t: %" PRIu32 "\n",
+			 "%s: file alignment size\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
@@ -561,7 +551,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->major_image_version,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: major image version\t\t\t: %" PRIu16 "\n",
+			 "%s: major image version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
 
@@ -569,7 +559,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->minor_image_version,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: minor image version\t\t\t: %" PRIu16 "\n",
+			 "%s: minor image version\t\t: %" PRIu16 "\n",
 			 function,
 			 value_16bit );
 
@@ -601,7 +591,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->image_size,
 			 value_32bit );
 			libcnotify_printf(
-			 "%s: image size\t\t\t\t: %" PRIu32 "\n",
+			 "%s: image size\t\t\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 
@@ -625,7 +615,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->subsystem,
 			 value_16bit );
 			libcnotify_printf(
-			 "%s: subsystem\t\t\t\t: 0x%04" PRIx16 "\n",
+			 "%s: subsystem\t\t\t: 0x%04" PRIx16 "\n",
 			 function,
 			 value_16bit );
 
@@ -653,7 +643,7 @@ int libexe_coff_optional_header_read_data(
 			 ( (exe_coff_optional_header_pe32_plus_t *) &( data[ data_offset ] ) )->stack_commit_size,
 			 value_64bit );
 			libcnotify_printf(
-			 "%s: stack commit size\t\t\t: %" PRIu64 "\n",
+			 "%s: stack commit size\t\t: %" PRIu64 "\n",
 			 function,
 			 value_64bit );
 
@@ -741,7 +731,7 @@ int libexe_coff_optional_header_read_data(
 			 data_directory_descriptor->virtual_address );
 
 			libcnotify_printf(
-			 "%s: export table size\t\t\t: %" PRIu32 "\n",
+			 "%s: export table size\t\t: %" PRIu32 "\n",
 			 function,
 			 data_directory_descriptor->size );
 		}
@@ -769,7 +759,7 @@ int libexe_coff_optional_header_read_data(
 			 data_directory_descriptor->virtual_address );
 
 			libcnotify_printf(
-			 "%s: import table size\t\t\t: %" PRIu32 "\n",
+			 "%s: import table size\t\t: %" PRIu32 "\n",
 			 function,
 			 data_directory_descriptor->size );
 		}
@@ -792,12 +782,12 @@ int libexe_coff_optional_header_read_data(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: resource table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 "%s: resource table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 data_directory_descriptor->virtual_address );
 
 			libcnotify_printf(
-			 "%s: resource table size\t\t\t: %" PRIu32 "\n",
+			 "%s: resource table size\t\t: %" PRIu32 "\n",
 			 function,
 			 data_directory_descriptor->size );
 		}
@@ -820,7 +810,7 @@ int libexe_coff_optional_header_read_data(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: exception table RVA\t\t\t: 0x%08" PRIx32 "\n",
+			 "%s: exception table RVA\t\t: 0x%08" PRIx32 "\n",
 			 function,
 			 data_directory_descriptor->virtual_address );
 
@@ -876,12 +866,12 @@ int libexe_coff_optional_header_read_data(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: base relocation table RVA\t\t: 0x%08" PRIx32 "\n",
+			 "%s: base relocation table RVA\t: 0x%08" PRIx32 "\n",
 			 function,
 			 value_32bit );
 
 			libcnotify_printf(
-			 "%s: base relocation table size\t\t: %" PRIu32 "\n",
+			 "%s: base relocation table size\t: %" PRIu32 "\n",
 			 function,
 			 value_32bit );
 		}
@@ -1022,6 +1012,34 @@ int libexe_coff_optional_header_read_data(
 	}
 	if( number_of_data_directories_entries > 0 )
 	{
+		data_directory_descriptor = &( coff_optional_header->data_directories[ LIBEXE_DATA_DIRECTORY_BOUND_IMPORT_TABLE ] );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) &( data[ data_offset ] ) )->bound_import_table_rva,
+		 data_directory_descriptor->virtual_address );
+
+		byte_stream_copy_to_uint32_little_endian(
+		 ( (exe_coff_optional_header_data_directories_t *) &( data[ data_offset ] ) )->bound_import_table_size,
+		 data_directory_descriptor->size );
+
+#if defined( HAVE_DEBUG_OUTPUT )
+		if( libcnotify_verbose != 0 )
+		{
+			libcnotify_printf(
+			 "%s: bound import table RVA\t\t: 0x%08" PRIx32 "\n",
+			 function,
+			 data_directory_descriptor->virtual_address );
+
+			libcnotify_printf(
+			 "%s: bound import table size\t\t: %" PRIu32 "\n",
+			 function,
+			 data_directory_descriptor->size );
+		}
+#endif
+		number_of_data_directories_entries--;
+	}
+	if( number_of_data_directories_entries > 0 )
+	{
 		data_directory_descriptor = &( coff_optional_header->data_directories[ LIBEXE_DATA_DIRECTORY_IMPORT_ADDRESS_TABLE ] );
 
 		byte_stream_copy_to_uint32_little_endian(
@@ -1041,7 +1059,7 @@ int libexe_coff_optional_header_read_data(
 			 data_directory_descriptor->virtual_address );
 
 			libcnotify_printf(
-			 "%s: import address table size\t\t: %" PRIu32 "\n",
+			 "%s: import address table size\t: %" PRIu32 "\n",
 			 function,
 			 data_directory_descriptor->size );
 		}
@@ -1064,7 +1082,7 @@ int libexe_coff_optional_header_read_data(
 		if( libcnotify_verbose != 0 )
 		{
 			libcnotify_printf(
-			 "%s: delay import descriptor RVA\t\t: 0x%08" PRIx32 "\n",
+			 "%s: delay import descriptor RVA\t: 0x%08" PRIx32 "\n",
 			 function,
 			 data_directory_descriptor->virtual_address );
 
@@ -1145,8 +1163,8 @@ int libexe_coff_optional_header_read_file_io_handle(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_TOO_SMALL,
-		 "%s: invalid optional header size value too small.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid optional header size value out of bounds.",
 		 function );
 
 		return( -1 );

@@ -226,7 +226,7 @@ int libexe_coff_header_read_data(
 		 ( (exe_coff_header_t *) data )->target_architecture_type,
 		 value_16bit );
 		libcnotify_printf(
-		 "%s: target architecture type\t\t: 0x%04" PRIx16 "\n",
+		 "%s: target architecture type\t\t\t: 0x%04" PRIx16 "\n",
 		 function,
 		 value_16bit );
 
@@ -237,7 +237,7 @@ int libexe_coff_header_read_data(
 
 		if( libexe_debug_print_posix_time_value(
 		     function,
-		     "creation time\t\t\t",
+		     "creation time\t\t\t\t",
 		     ( (exe_coff_header_t *) data )->creation_time,
 		     4,
 		     LIBFDATETIME_ENDIAN_LITTLE,
@@ -266,7 +266,7 @@ int libexe_coff_header_read_data(
 		 ( (exe_coff_header_t *) data )->number_of_symbols,
 		 value_32bit );
 		libcnotify_printf(
-		 "%s: number of symbols\t\t\t: %" PRIu32 "\n",
+		 "%s: number of symbols\t\t\t\t: %" PRIu32 "\n",
 		 function,
 		 value_32bit );
 
@@ -284,9 +284,6 @@ int libexe_coff_header_read_data(
 		 value_16bit );
 		libexe_debug_print_file_characteristic_flags(
 		 value_16bit );
-		libcnotify_printf(
-		 "\n" );
-
 		libcnotify_printf(
 		 "\n" );
 	}

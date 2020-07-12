@@ -956,7 +956,8 @@ int libexe_io_handle_read_section_table(
 	section_table_size = sizeof( exe_section_table_entry_t )
 	                   * number_of_sections;
 
-	if( section_table_size > (size_t) SSIZE_MAX )
+	if( ( section_table_size == 0 )
+	 || ( section_table_size > MEMORY_MAXIMUM_ALLOCATION_SIZE ) )
 	{
 		libcerror_error_set(
 		 error,
