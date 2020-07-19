@@ -27,6 +27,15 @@
 #include <stdlib.h>
 #endif
 
+#if defined( TIME_WITH_SYS_TIME )
+#include <sys/time.h>
+#include <time.h>
+#elif defined( HAVE_SYS_TIME_H )
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
+
 #include "exe_test_libcerror.h"
 #include "exe_test_libexe.h"
 #include "exe_test_macros.h"
@@ -34,6 +43,14 @@
 #include "exe_test_unused.h"
 
 #include "../libexe/libexe_section.h"
+
+#define EXE_TEST_SECTION_READ_BUFFER_SIZE	4096
+
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
+
+	/* TODO: add tests for libexe_section_initialize */
+
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 
 /* Tests the libexe_section_free function
  * Returns 1 if successful or 0 if not
@@ -74,6 +91,8 @@ on_error:
 }
 
 #if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
+
+	/* TODO: add tests */
 
 #endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 

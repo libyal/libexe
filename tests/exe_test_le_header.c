@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #endif
 
+#include "exe_test_functions.h"
+#include "exe_test_libbfio.h"
 #include "exe_test_libcerror.h"
 #include "exe_test_libexe.h"
 #include "exe_test_macros.h"
@@ -113,6 +115,8 @@ int exe_test_le_header_initialize(
 	          &le_header,
 	          &error );
 
+	le_header = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +128,6 @@ int exe_test_le_header_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	le_header = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 

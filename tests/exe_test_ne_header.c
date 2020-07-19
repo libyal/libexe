@@ -113,6 +113,8 @@ int exe_test_ne_header_initialize(
 	          &ne_header,
 	          &error );
 
+	ne_header = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int exe_test_ne_header_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	ne_header = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 

@@ -37,20 +37,8 @@
 #include "exe_test_libexe.h"
 #include "exe_test_macros.h"
 #include "exe_test_memory.h"
-#include "exe_test_unused.h"
 
 #include "../libexe/libexe_file.h"
-
-#if !defined( LIBEXE_HAVE_BFIO )
-
-extern \
-int libexe_file_open_file_io_handle(
-     libexe_file_t *file,
-     libbfio_handle_t *file_io_handle,
-     int access_flags,
-     libexe_error_t **error );
-
-#endif /* !defined( LIBEXE_HAVE_BFIO ) */
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER ) && SIZEOF_WCHAR_T != 2 && SIZEOF_WCHAR_T != 4
 #error Unsupported size of wchar_t
@@ -59,6 +47,22 @@ int libexe_file_open_file_io_handle(
 /* Define to make exe_test_file generate verbose output
 #define EXE_TEST_FILE_VERBOSE
  */
+
+#if !defined( LIBEXE_HAVE_BFIO )
+
+LIBEXE_EXTERN \
+int libexe_check_file_signature_file_io_handle(
+     libbfio_handle_t *file_io_handle,
+     libcerror_error_t **error );
+
+LIBEXE_EXTERN \
+int libexe_file_open_file_io_handle(
+     libexe_file_t *file,
+     libbfio_handle_t *file_io_handle,
+     int access_flags,
+     libexe_error_t **error );
+
+#endif /* !defined( LIBEXE_HAVE_BFIO ) */
 
 /* Creates and opens a source file
  * Returns 1 if successful or -1 on error
@@ -261,6 +265,8 @@ int exe_test_file_initialize(
 	          &file,
 	          &error );
 
+	file = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -272,8 +278,6 @@ int exe_test_file_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	file = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 
@@ -781,7 +785,7 @@ int exe_test_file_open_file_io_handle(
 	libbfio_handle_t *file_io_handle = NULL;
 	libcerror_error_t *error         = NULL;
 	libexe_file_t *file              = NULL;
-	size_t source_length             = 0;
+	size_t string_length             = 0;
 	int result                       = 0;
 
 	/* Initialize test
@@ -795,28 +799,28 @@ int exe_test_file_open_file_io_handle(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NOT_NULL(
-         "file_io_handle",
-         file_io_handle );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "file_io_handle",
+	 file_io_handle );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
-	source_length = system_string_length(
+	string_length = system_string_length(
 	                 source );
 
 #if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 	result = libbfio_file_set_name_wide(
 	          file_io_handle,
 	          source,
-	          source_length,
+	          string_length,
 	          &error );
 #else
 	result = libbfio_file_set_name(
 	          file_io_handle,
 	          source,
-	          source_length,
+	          string_length,
 	          &error );
 #endif
 	EXE_TEST_ASSERT_EQUAL_INT(
@@ -824,9 +828,9 @@ int exe_test_file_open_file_io_handle(
 	 result,
 	 1 );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libexe_file_initialize(
 	          &file,
@@ -967,12 +971,12 @@ int exe_test_file_open_file_io_handle(
 	 1 );
 
 	EXE_TEST_ASSERT_IS_NULL(
-         "file_io_handle",
-         file_io_handle );
+	 "file_io_handle",
+	 file_io_handle );
 
-        EXE_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	return( 1 );
 
@@ -1451,10 +1455,9 @@ on_error:
 int exe_test_file_get_number_of_sections(
      libexe_file_t *file )
 {
-	libcerror_error_t *error      = NULL;
-	int number_of_sections        = 0;
-	int number_of_sections_is_set = 0;
-	int result                    = 0;
+	libcerror_error_t *error = NULL;
+	int number_of_sections   = 0;
+	int result               = 0;
 
 	/* Test regular cases
 	 */
@@ -1463,16 +1466,14 @@ int exe_test_file_get_number_of_sections(
 	          &number_of_sections,
 	          &error );
 
-	EXE_TEST_ASSERT_NOT_EQUAL_INT(
+	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	EXE_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	number_of_sections_is_set = result;
 
 	/* Test error cases
 	 */
@@ -1493,25 +1494,23 @@ int exe_test_file_get_number_of_sections(
 	libcerror_error_free(
 	 &error );
 
-	if( number_of_sections_is_set != 0 )
-	{
-		result = libexe_file_get_number_of_sections(
-		          file,
-		          NULL,
-		          &error );
+	result = libexe_file_get_number_of_sections(
+	          file,
+	          NULL,
+	          &error );
 
-		EXE_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		EXE_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -1519,6 +1518,264 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libexe_file_get_section function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_file_get_section(
+     libexe_file_t *file )
+{
+	libcerror_error_t *error  = NULL;
+	libexe_section_t *section = NULL;
+	int result                = 0;
+
+	/* Test regular cases
+	 */
+	result = libexe_file_get_section(
+	          file,
+	          0,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "section",
+	 section );
+
+	result = libexe_section_free(
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libexe_file_get_section(
+	          NULL,
+	          0,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_file_get_section(
+	          file,
+	          -1,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_file_get_section(
+	          file,
+	          0,
+	          NULL,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( section != NULL )
+	{
+		libexe_section_free(
+		 &section,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libexe_file_get_section_by_index function
+ * Returns 1 if successful or 0 if not
+ */
+int exe_test_file_get_section_by_index(
+     libexe_file_t *file )
+{
+	libcerror_error_t *error  = NULL;
+	libexe_section_t *section = NULL;
+	int result                = 0;
+
+	/* Test regular cases
+	 */
+	result = libexe_file_get_section_by_index(
+	          file,
+	          0,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "section",
+	 section );
+
+	result = libexe_section_free(
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libexe_file_get_section_by_index(
+	          NULL,
+	          0,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_file_get_section_by_index(
+	          file,
+	          -1,
+	          &section,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libexe_file_get_section_by_index(
+	          file,
+	          0,
+	          NULL,
+	          &error );
+
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	EXE_TEST_ASSERT_IS_NULL(
+	 "section",
+	 section );
+
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( section != NULL )
+	{
+		libexe_section_free(
+		 &section,
+		 NULL );
 	}
 	return( 0 );
 }
@@ -1583,57 +1840,6 @@ int main(
 #if !defined( __BORLANDC__ ) || ( __BORLANDC__ >= 0x0560 )
 	if( source != NULL )
 	{
-#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
-		result = libexe_check_file_signature_wide(
-		          source,
-		          &error );
-#else
-		result = libexe_check_file_signature(
-		          source,
-		          &error );
-#endif
-
-		EXE_TEST_ASSERT_NOT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		EXE_TEST_ASSERT_IS_NULL(
-		 "error",
-		 error );
-	}
-	if( result != 0 )
-	{
-		EXE_TEST_RUN_WITH_ARGS(
-		 "libexe_file_open",
-		 exe_test_file_open,
-		 source );
-
-#if defined( HAVE_WIDE_CHARACTER_TYPE )
-
-		EXE_TEST_RUN_WITH_ARGS(
-		 "libexe_file_open_wide",
-		 exe_test_file_open_wide,
-		 source );
-
-#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
-
-		EXE_TEST_RUN_WITH_ARGS(
-		 "libexe_file_open_file_io_handle",
-		 exe_test_file_open_file_io_handle,
-		 source );
-
-		EXE_TEST_RUN(
-		 "libexe_file_close",
-		 exe_test_file_close );
-
-		EXE_TEST_RUN_WITH_ARGS(
-		 "libexe_file_open_close",
-		 exe_test_file_open_close,
-		 source );
-
-		/* Initialize test
-		 */
 		result = libbfio_file_initialize(
 		          &file_io_handle,
 		          &error );
@@ -1676,6 +1882,51 @@ int main(
 	         "error",
 	         error );
 
+		result = libexe_check_file_signature_file_io_handle(
+		          file_io_handle,
+		          &error );
+
+		EXE_TEST_ASSERT_NOT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		EXE_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	if( result != 0 )
+	{
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_open",
+		 exe_test_file_open,
+		 source );
+
+#if defined( HAVE_WIDE_CHARACTER_TYPE )
+
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_open_wide",
+		 exe_test_file_open_wide,
+		 source );
+
+#endif /* defined( HAVE_WIDE_CHARACTER_TYPE ) */
+
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_open_file_io_handle",
+		 exe_test_file_open_file_io_handle,
+		 source );
+
+		EXE_TEST_RUN(
+		 "libexe_file_close",
+		 exe_test_file_close );
+
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_open_close",
+		 exe_test_file_open_close,
+		 source );
+
+		/* Initialize file for tests
+		 */
 		result = exe_test_file_open_source(
 		          &file,
 		          file_io_handle,
@@ -1726,9 +1977,15 @@ int main(
 		 exe_test_file_get_number_of_sections,
 		 file );
 
-		/* TODO: add tests for libexe_file_get_section */
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_get_section",
+		 exe_test_file_get_section,
+		 file );
 
-		/* TODO: add tests for libexe_file_get_section_by_index */
+		EXE_TEST_RUN_WITH_ARGS(
+		 "libexe_file_get_section_by_index",
+		 exe_test_file_get_section_by_index,
+		 file );
 
 		/* TODO: add tests for libexe_file_get_section_by_name */
 
@@ -1750,7 +2007,9 @@ int main(
 		EXE_TEST_ASSERT_IS_NULL(
 		 "error",
 		 error );
-
+	}
+	if( file_io_handle != NULL )
+	{
 		result = libbfio_handle_free(
 		          &file_io_handle,
 		          &error );

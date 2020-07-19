@@ -113,6 +113,8 @@ int exe_test_export_table_initialize(
 	          &export_table,
 	          &error );
 
+	export_table = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int exe_test_export_table_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	export_table = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 

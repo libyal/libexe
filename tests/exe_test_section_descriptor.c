@@ -113,6 +113,8 @@ int exe_test_section_descriptor_initialize(
 	          &section_descriptor,
 	          &error );
 
+	section_descriptor = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int exe_test_section_descriptor_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	section_descriptor = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 
@@ -279,7 +279,6 @@ int exe_test_section_descriptor_get_data_size(
 	libcerror_error_t *error                        = NULL;
 	libexe_section_descriptor_t *section_descriptor = NULL;
 	size64_t data_size                              = 0;
-	int data_size_is_set                            = 0;
 	int result                                      = 0;
 
 	/* Initialize test
@@ -308,16 +307,14 @@ int exe_test_section_descriptor_get_data_size(
 	          &data_size,
 	          &error );
 
-	EXE_TEST_ASSERT_NOT_EQUAL_INT(
+	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
-	 -1 );
+	 1 );
 
 	EXE_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
-
-	data_size_is_set = result;
 
 	/* Test error cases
 	 */
@@ -338,25 +335,23 @@ int exe_test_section_descriptor_get_data_size(
 	libcerror_error_free(
 	 &error );
 
-	if( data_size_is_set != 0 )
-	{
-		result = libexe_section_descriptor_get_data_size(
-		          section_descriptor,
-		          NULL,
-		          &error );
+	result = libexe_section_descriptor_get_data_size(
+	          section_descriptor,
+	          NULL,
+	          &error );
 
-		EXE_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+	EXE_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		EXE_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+	EXE_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
-		libcerror_error_free(
-		 &error );
-	}
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libexe_section_descriptor_free(
@@ -420,13 +415,11 @@ int main(
 	 "libexe_section_descriptor_free",
 	 exe_test_section_descriptor_free );
 
-#if defined( TODO )
-
+/* TODO implement
 	EXE_TEST_RUN(
 	 "libexe_section_descriptor_get_data_size",
 	 exe_test_section_descriptor_get_data_size );
-
-#endif /* defined( TODO ) */
+*/
 
 	/* TODO: add tests for libexe_section_descriptor_get_data_range */
 

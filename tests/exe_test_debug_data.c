@@ -113,6 +113,8 @@ int exe_test_debug_data_initialize(
 	          &debug_data,
 	          &error );
 
+	debug_data = NULL;
+
 	EXE_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -124,8 +126,6 @@ int exe_test_debug_data_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	debug_data = NULL;
 
 #if defined( HAVE_EXE_TEST_MEMORY )
 

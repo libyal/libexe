@@ -723,6 +723,7 @@ int libexe_io_handle_read_pe_header(
 
 	static char *function = "libexe_io_handle_read_pe_header";
 	ssize_t read_count    = 0;
+	off64_t file_offset   = 0;
 
 	if( io_handle == NULL )
 	{
@@ -843,7 +844,7 @@ int libexe_io_handle_read_pe_header(
 
 		goto on_error;
 	}
-	off64_t file_offset = pe_header_offset + sizeof( exe_pe_header_t );
+	file_offset = pe_header_offset + sizeof( exe_pe_header_t );
 
 	if( libexe_coff_header_read_file_io_handle(
 	     io_handle->coff_header,
