@@ -309,7 +309,7 @@ on_error:
 	return( NULL );
 }
 
-/* Intializes an section object
+/* Initializes an section object
  * Returns 0 if successful or -1 on error
  */
 int pyexe_section_init(
