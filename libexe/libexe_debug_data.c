@@ -174,32 +174,6 @@ int libexe_debug_data_read(
 
 		return( -1 );
 	}
-#if defined( HAVE_DEBUG_OUTPUT )
-	if( libcnotify_verbose != 0 )
-	{
-		libcnotify_printf(
-		 "%s: reading debug data at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
-		 function,
-		 file_offset,
-		 file_offset );
-	}
-#endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) file_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek debug data offset: %" PRIx32 ".",
-		 function,
-		 file_offset );
-
-		goto on_error;
-	}
 	data = (uint8_t *) memory_allocate(
 	                    sizeof( uint8_t ) * size );
 
@@ -214,10 +188,21 @@ int libexe_debug_data_read(
 
 		goto on_error;
 	}
-	read_count = libbfio_handle_read_buffer(
+#if defined( HAVE_DEBUG_OUTPUT )
+	if( libcnotify_verbose != 0 )
+	{
+		libcnotify_printf(
+		 "%s: reading debug data at offset: %" PRIu32 " (0x%08" PRIx32 ")\n",
+		 function,
+		 file_offset,
+		 file_offset );
+	}
+#endif
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              data,
 	              size,
+	              (off64_t) file_offset,
 	              error );
 
 	if( read_count != (ssize_t) size )

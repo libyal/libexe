@@ -405,26 +405,11 @@ int libexe_io_handle_read_extended_header(
 		 extended_header_offset );
 	}
 #endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) extended_header_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek extended header offset: %" PRIu32 ".",
-		 function,
-		 extended_header_offset );
-
-		return( -1 );
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              extended_header_data,
 	              2,
+	              (off64_t) extended_header_offset,
 	              error );
 
 	if( read_count != 2 )
@@ -433,8 +418,10 @@ int libexe_io_handle_read_extended_header(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read first 2 bytes of extended header.",
-		 function );
+		 "%s: unable to read first 2 bytes of extended header data at offset: %" PRIu32 " (0x%08" PRIx32 ").",
+		 function,
+		 extended_header_offset,
+		 extended_header_offset );
 
 		return( -1 );
 	}
@@ -757,26 +744,11 @@ int libexe_io_handle_read_pe_header(
 		 pe_header_offset );
 	}
 #endif
-	if( libbfio_handle_seek_offset(
-	     file_io_handle,
-	     (off64_t) pe_header_offset,
-	     SEEK_SET,
-	     error ) == -1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_IO,
-		 LIBCERROR_IO_ERROR_SEEK_FAILED,
-		 "%s: unable to seek PE header offset: %" PRIu32 ".",
-		 function,
-		 pe_header_offset );
-
-		return( -1 );
-	}
-	read_count = libbfio_handle_read_buffer(
+	read_count = libbfio_handle_read_buffer_at_offset(
 	              file_io_handle,
 	              (uint8_t *) &pe_header,
 	              sizeof( exe_pe_header_t ),
+	              (off64_t) pe_header_offset,
 	              error );
 
 	if( read_count != (ssize_t) sizeof( exe_pe_header_t ) )
@@ -785,8 +757,10 @@ int libexe_io_handle_read_pe_header(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_IO,
 		 LIBCERROR_IO_ERROR_READ_FAILED,
-		 "%s: unable to read PE header.",
-		 function );
+		 "%s: unable to read PE header data at offset: %" PRIu32 " (0x%08" PRIx32 ").",
+		 function,
+		 pe_header_offset,
+		 pe_header_offset );
 
 		return( -1 );
 	}

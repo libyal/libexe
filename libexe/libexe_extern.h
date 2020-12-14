@@ -30,7 +30,7 @@
 
 #include <libexe/extern.h>
 
-#if defined( __CYGWIN__ )
+#if defined( __CYGWIN__ ) || defined( __MINGW32__ )
 #define LIBEXE_EXTERN_VARIABLE	extern
 #else
 #define LIBEXE_EXTERN_VARIABLE	LIBEXE_EXTERN
