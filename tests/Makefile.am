@@ -24,6 +24,7 @@ endif
 
 TESTS = \
 	test_library.sh \
+	test_tools.sh \
 	test_exeinfo.sh \
 	$(TESTS_PYEXE)
 
@@ -34,7 +35,8 @@ check_SCRIPTS = \
 	test_library.sh \
 	test_manpage.sh \
 	test_python_module.sh \
-	test_runner.sh
+	test_runner.sh \
+	test_tools.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
@@ -56,7 +58,10 @@ check_PROGRAMS = \
 	exe_test_section \
 	exe_test_section_descriptor \
 	exe_test_section_io_handle \
-	exe_test_support
+	exe_test_support \
+	exe_test_tools_info_handle \
+	exe_test_tools_output \
+	exe_test_tools_signal
 
 exe_test_coff_header_SOURCES = \
 	exe_test_coff_header.c \
@@ -285,6 +290,41 @@ exe_test_support_LDADD = \
 	@LIBCNOTIFY_LIBADD@ \
 	@LIBCLOCALE_LIBADD@ \
 	@LIBCDATA_LIBADD@ \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_tools_info_handle_SOURCES = \
+	../exetools/info_handle.c ../exetools/info_handle.h \
+	exe_test_libcerror.h \
+	exe_test_macros.h \
+	exe_test_memory.c exe_test_memory.h \
+	exe_test_tools_info_handle.c \
+	exe_test_unused.h
+
+exe_test_tools_info_handle_LDADD = \
+	@LIBCLOCALE_LIBADD@ \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_tools_output_SOURCES = \
+	../exetools/exetools_output.c ../exetools/exetools_output.h \
+	exe_test_libcerror.h \
+	exe_test_macros.h \
+	exe_test_tools_output.c \
+	exe_test_unused.h
+
+exe_test_tools_output_LDADD = \
+	../libexe/libexe.la \
+	@LIBCERROR_LIBADD@
+
+exe_test_tools_signal_SOURCES = \
+	../exetools/exetools_signal.c ../exetools/exetools_signal.h \
+	exe_test_libcerror.h \
+	exe_test_macros.h \
+	exe_test_tools_signal.c \
+	exe_test_unused.h
+
+exe_test_tools_signal_LDADD = \
 	../libexe/libexe.la \
 	@LIBCERROR_LIBADD@
 

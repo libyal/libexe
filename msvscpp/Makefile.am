@@ -16,6 +16,9 @@ MSVSCPP_FILES = \
 	exe_test_section_descriptor/exe_test_section_descriptor.vcproj \
 	exe_test_section_io_handle/exe_test_section_io_handle.vcproj \
 	exe_test_support/exe_test_support.vcproj \
+	exe_test_tools_info_handle/exe_test_tools_info_handle.vcproj \
+	exe_test_tools_output/exe_test_tools_output.vcproj \
+	exe_test_tools_signal/exe_test_tools_signal.vcproj \
 	exeinfo/exeinfo.vcproj \
 	libbfio/libbfio.vcproj \
 	libcdata/libcdata.vcproj \
