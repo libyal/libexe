@@ -7,21 +7,22 @@ Analysis of EXE
 :numbered!:
 [abstract]
 == Summary
+
 The Executable (EXE) format is collection of different formats supported used 
 by various operating systems like DOS, Windows, OS/2 and emulator like Wine. 
 The Executable (EXE) format began with MZ format and was later extended with 
-formats like PE/COFF.
+formats like PE/COFF. This specification is based on publicly available work
+on the format and was enhanced by analyzing test data.
 
-This document is intended as a working document for the Executable (EXE) 
-specification in particular the Windows Resource format with respect to 
-EventLog messages. Which should allow existing Open Source forensic tooling to 
-be able to process this file type.
+This document is intended as a working document of the data format specification
+for the libexe project.
 
 Special thanks to A. Schuster for his excellent work on the WEVT_TEMPLATE 
 resource format.
 
 [preface]
 == Document information
+
 [cols="1,5"]
 |===
 | Author(s): | Joachim Metz <joachim.metz@gmail.com>
@@ -32,8 +33,9 @@ resource format.
 
 [preface]
 == License
+
 ....
-Copyright (C) 2011-2014, Joachim Metz <joachim.metz@gmail.com>.
+Copyright (C) 2011-2021, Joachim Metz <joachim.metz@gmail.com>.
 Permission is granted to copy, distribute and/or modify this document under the 
 terms of the GNU Free Documentation License, Version 1.3 or any later version 
 published by the Free Software Foundation; with no Invariant Sections, no 
@@ -43,6 +45,7 @@ in the section entitled "GNU Free Documentation License".
 
 [preface]
 == Revision history
+
 [cols="1,1,1,5",options="header"]
 |===
 | Version | Author | Date | Comments
@@ -59,10 +62,12 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.11 | J.B. Metz | February 2014 | Additional information about PDB information in PE/COFF.
 | 0.0.12 | J.B. Metz | May 2014 | Additional information about rich signature header.
 | 0.0.13 | J.B. Metz | December 2014 | Switched to asccidoc format.
+| 0.0.14 | J.B. Metz | May 2021 | Changes to formatting.
 |===
 
 :numbered:
 == Overview
+
 The Executable (EXE) format is collection of different formats supported used 
 by various operating systems like DOS, Windows, OS/2 and emulator like Wine. 
 The Executable (EXE) format began with MZ format and was later extended with 
@@ -100,7 +105,9 @@ dumpbin.exe /HEADERS file.exe
 This tool is part of the Windows SDK.
 
 == File header
+
 === The MZ file header
+
 The MZ file header is 28 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -143,6 +150,7 @@ The offset value is relative to the start of the file
 [yellow-background]*Relocation entry is 16-bit?*
 
 === LE extended header
+
 The mixed 16/32-bit Linear Executable was introduced in OS/2 2.0. It can be 
 identifier by the "LE" signature in the extended header.
 
@@ -151,6 +159,7 @@ The LE extended header is X bytes of size and consists of:
 [yellow-background]*TODO add text*
 
 === LX extended header
+
 The 32-bit Linear Executable was introduced in OS/2 2.0. It can be identifier 
 by the "LX" signature in the extended header.
 
@@ -159,6 +168,7 @@ The LX extended header is X bytes of size and consists of:
 [yellow-background]*TODO add text*
 
 === NE extended header
+
 The 16-bit New Executable was introduced in MS-DOS 4.0. It can be identifier by 
 the "NE" signature in the extended header.
 
@@ -261,6 +271,7 @@ Contains an array of counted strings, terminated with a string of length 0
 |===
 
 === PE/COFF extended header
+
 The 32-bit Portable Executable (PE) was introduced in Windows NT. In later 
 versions of Windows a 64-bit extension (PE32+) was added. PE is based on the 
 Unix Common Object File Format (COFF) and therefore often referred to as 
@@ -269,6 +280,7 @@ PE/COFF.
 The PE/COFF extended header consist of a PE signature followed by a COFF header.
 
 ==== The PE signature
+
 The PE signature is 4 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -278,6 +290,7 @@ The PE signature is 4 bytes of size and consists of:
 |===
 
 ==== COFF header
+
 The COFF header is 20 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -359,6 +372,7 @@ See section: <<file_characteristic_flags,File characteristic flags>>
 |===
 
 ==== The COFF optional (PE) header
+
 The COFF optional header or PE header is variable of size and consists of:
 
 * the standard part
@@ -366,6 +380,7 @@ The COFF optional header or PE header is variable of size and consists of:
 * the data directories part
 
 ===== The COFF optional header - standard part
+
 The COFF optional header - standard part is 24 or 28 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -394,6 +409,7 @@ Contains the offset is relative to the start of the file of the start of the ini
 |===
 
 ===== The PE32 COFF optional header - Windows NT part
+
 The PE32 COFF optional header - Windows NT part is 68 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -456,6 +472,7 @@ The algorithm for computing is incorporated into IMAGHELP.DLL.
 ....
 
 ===== The PE32+ COFF optional header - Windows NT part
+
 The PE32+ COFF optional header - Windows NT part is 88 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -525,6 +542,7 @@ Device drivers or native Windows NT process
 |===
 
 ===== The COFF optional header - the data directories part
+
 Most entries in the data directories consists of a data directory descriptor. 
 Each data directory descriptor contains a Relative virtual address (RVA) and a 
 size. The RVA is a Virtual address relative to the image base. Also see 
@@ -572,6 +590,7 @@ consists of:
 |===
 
 ====== [[coff_data_directory_descriptor]]The COFF data directory descriptor
+
 The data directory descriptor is 8 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -618,6 +637,7 @@ Visual Studio C++ linker tool information
 |===
 
 == PE/COFF section table
+
 === Section header
 
 [cols="1,1,1,5",options="header"]
@@ -724,6 +744,7 @@ Common corresponding section name: .bss or BSS
 |===
 
 == [[data_directories]]Data directories
+
 To calculate the data directory offset from the RVA first find the section that 
 contains the corresponding virtual address (VA) and then apply:
 ....
@@ -731,6 +752,7 @@ data directory offset = ( RVA - section start VA ) + section start offset
 ....
 
 === Export table directory
+
 The export table directory consists of:
 
 * Export directory table
@@ -782,12 +804,14 @@ Contains a POSIX timestamp
 [yellow-background]*TODO add text*
 
 === Debug data directory
+
 The debug data directory consists of:
 
 * one or more debug data directory entries
 * debug type data
 
 ==== Debug data directory entry
+
 The debug data directory entry is 28 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -828,7 +852,9 @@ See section: <<codeview_debug_information,Codeview debug information>>
 |===
 
 ==== Debug type data
+
 ===== [[codeview_debug_information]]Codeview debug information
+
 The codeview debug information is variable in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -842,6 +868,7 @@ The codeview debug information is variable in size and consists of:
 |===
 
 ===== IMAGE_DEBUG_TYPE_RESERVED10 data
+
 The IMAGE_DEBUG_TYPE_RESERVED10 debug information is 4 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -851,11 +878,13 @@ The IMAGE_DEBUG_TYPE_RESERVED10 debug information is 4 bytes in size and consist
 |===
 
 == Resource section data
+
 The resources are stored in the resource section (.rsrc) of a PE/COFF 
 executable. The resources consists of a tree of resource nodes. The identifiers 
 of the first level of sub nodes contain the resource data types.
 
 === Resource node header
+
 The resource node header is 16 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -891,6 +920,7 @@ DISCARDABLE (0x1000)
 ....
 
 === Resource node entry
+
 The resource node entry is 8 bytes of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -909,6 +939,7 @@ If the identifier of the resource node entry has name flag set the value points
 to a name string.
 
 ==== Resource node name string
+
 The resource node name string is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -920,6 +951,7 @@ UTF-16 little-endian without end-of-string character.
 |===
 
 ==== Branch resource node entry identifier
+
 The branch resource node entry identifier of the string resource contain the 
 string group identifier, which is ( string identifier / 16 ) + 1. The 
 corresponding string identifier can be determined by:
@@ -928,6 +960,7 @@ corresponding string identifier can be determined by:
 ....
 
 ==== Leaf resource node entry identifier
+
 The leaf resource node entry identifier of the following resources contains the 
 LCID of the language stored in the resource data.
 
@@ -943,6 +976,7 @@ It is possible for the LCID to be 0 (not set).
 For more information see `[NTLCID]`.
 
 === Resource data descriptor
+
 The resource data descriptor is 8 bytes of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -998,6 +1032,7 @@ does not seems to be packed by UPX.
 ....
 
 === Named resources
+
 The following information is a list of common named resources found in samples.
 
 [cols="1,5",options="header"]
@@ -1016,12 +1051,15 @@ Seen in Windows 98 kernel32.dll
 |===
 
 == Resource type data
+
 ==== String resource data
+
 The string resource data consists of 16 string descriptors per section. Strings 
 whose identifiers differ only in the bottom 4 bits are placed in the same 
 section.
 
 ==== String descriptor
+
 The string descriptor is variable of size and consist of.
 
 [cols="1,1,1,5",options="header"]
@@ -1045,6 +1083,7 @@ The string descriptor is variable of size and consist of.
 |===
 
 === Message-table resource data
+
 The message-table resource data contains several structures that make up a 
 message-table. A message-table consists of:
 
@@ -1053,6 +1092,7 @@ message-table. A message-table consists of:
 * message-table strings
 
 ==== Message-table header
+
 The message-table header (MESSAGE_RESOURCE_DATA) is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1063,6 +1103,7 @@ The message-table header (MESSAGE_RESOURCE_DATA) is variable of size and consist
 |===
 
 ===== Message-table entry descriptor
+
 The message-table entry descriptor (MESSAGE_RESOURCE_BLOCK) is 12 bytes of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1077,6 +1118,7 @@ A single message-table entry descriptor can refer to multiple message-table
 strings.
 
 ==== Message-table string
+
 The message-table string entry (MESSAGE_RESOURCE_ENTRY) is variable of size and 
 consists of:
 
@@ -1094,6 +1136,7 @@ Note that the string can contain trailing 0-byte values.
 |===
 
 ==== Message string conversion specifiers
+
 The message string conversion specifiers seem to be related to those of the 
 WINAPI FormatMessage function.
 
@@ -1119,6 +1162,7 @@ Where # is a numeric value from 1 up-to 99 and +
 |===
 
 ===== Format specifier
+
 The format specifier (or format string) must be surrounded by exclamation 
 marks. The format specifier is optional and will default to string (!s!).
 ....
@@ -1159,6 +1203,7 @@ Restrictions:
 * Inserts that use the I64 type prefix are treated as two 32-bit arguments
 
 === Version resource data
+
 The version resource data contains several structures that contain the version 
 information values. The version resource data consists of:
 
@@ -1169,6 +1214,7 @@ information values. The version resource data consists of:
 ** Version file information strings
 
 ==== Version information
+
 The version information (VS_VERSIONINFO) is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1190,6 +1236,7 @@ See section: <<version_sub_values,Version sub values>>
 |===
 
 ==== [[version_fixed_file_information]]Version fixed file information
+
 The version fixed file information (VS_FIXEDFILEINFO) is 52 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1289,6 +1336,7 @@ The file sub type contains a more specific description of the driver.
 |===
 
 ===== Version file sub type
+
 According to `[MSDN_RC]` all non-listed version file sub types are are reserved.
 
 ====== Driver
@@ -1323,22 +1371,26 @@ According to `[MSDN_RC]` all non-listed version file sub types are are reserved.
 |===
 
 ====== Virtual device
+
 The sub file type contains the virtual device identifier included in the 
 virtual device control block.
 
 ==== [[version_sub_values]]Version sub values
+
 The sub values are stored as  version file information values and consist of:
 
 * Version file information strings (zero or one)
 * Version file information variables (zero or one)
 
 ===== Version file information variables
+
 The version file information variables consists of:
 
 * version file information variables header
 * array of variables
 
 ====== Version file information variables header (VarFileInfo)
+
 The version file information variables header (VarFileInfo) is variable of size 
 and consists of:
 
@@ -1358,6 +1410,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 ====== Version file information value variable (Var)
+
 The version file information value variables (Var) is variable of size and 
 consists of:
 
@@ -1379,6 +1432,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 ====== Version file information value variable identifiers
+
 [yellow-background]*TODO*
 
 [cols="1,5",options="header"]
@@ -1391,6 +1445,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 ===== Version file information strings
+
 The version file information strings consists of:
 
 * version file information strings header
@@ -1398,6 +1453,7 @@ The version file information strings consists of:
 * array of value strings
 
 ====== Version file information strings header (StringFileInfo)
+
 The version file information strings header (StringFileInfo) is variable of 
 size and consists of:
 
@@ -1417,6 +1473,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 ====== Version file information string table header (StringTable)
+
 The version file information string table header (StringTable) is variable of 
 size and consists of:
 
@@ -1437,6 +1494,7 @@ E.g. 040904E0 which look like 2 LCIDs
 |===
 
 ====== Version file information value string (String)
+
 The version file information value string (String) is variable of size and 
 consists of:
 
@@ -1459,6 +1517,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 ====== Version file information value string identifiers
+
 [yellow-background]*TODO: integrate notes in text*
 
 [cols="1,5",options="header"]
@@ -1479,6 +1538,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 |===
 
 === Manifest resource data
+
 The manifest resource data is variable of size and consist of.
 
 [cols="1,1,1,5",options="header"]
@@ -1493,6 +1553,7 @@ The manifest resource data is variable of size and consist of.
 ....
 
 === Multilingual User Interface (MUI) resource data
+
 The Multilingual User Interface (MUI) resource data was introduce in Windows 
 Vista. It has the name "MUI".
 
@@ -1563,6 +1624,7 @@ the root resource nodes in the file.
 |===
 
 ==== System attributes
+
 [yellow-background]*TODO: add text*
 
 [cols="1,1,5",options="header"]
@@ -1571,6 +1633,7 @@ the root resource nodes in the file.
 |===
 
 ==== MUI name type
+
 [yellow-background]*TODO: add text*
 
 [cols="1,5",options="header"]
@@ -1582,10 +1645,12 @@ the root resource nodes in the file.
 |===
 
 === Windows Event template resource data
+
 The Windows Event template resource data was introduce in Windows Vista. It has 
 the name "WEVT_TEMPLATE".
 
 ==== Instrumentation manifest
+
 The instrumentation manifest is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1605,6 +1670,7 @@ but it could also be short for Crimson, which was the codename for the event
 logging service in Windows Longhorn.
 
 ===== Event provider descriptor
+
 The event provider is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1617,6 +1683,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ==== Event provider
+
 The event provider is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1634,6 +1701,7 @@ or 0xffffffff (-1) if not set
 |===
 
 ===== Provider element descriptor
+
 The provider element descriptor is 8 bytes is size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1647,6 +1715,7 @@ The offset is relative to the start of the instrumentation manifest
 [yellow-background]*The provider element type is determined by its signature?*
 
 ==== Keyword definitions
+
 The keyword definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1661,6 +1730,7 @@ Including the keyword definitions header
 |===
 
 ===== Keyword definition
+
 A keyword definition is 16 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1674,6 +1744,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Keyword data
+
 The keyword data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1688,6 +1759,7 @@ The data is 8-byte aligned
 |===
 
 ==== Level definitions
+
 The level definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1702,6 +1774,7 @@ The value includes the size of the header or is 0 if empty
 |===
 
 ===== Level definition
+
 A level definition is 12 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1715,6 +1788,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Level data
+
 The level data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1729,6 +1803,7 @@ The data is 8-byte aligned
 |===
 
 ==== Maps definitions
+
 The maps definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1746,6 +1821,7 @@ The offset is relative to the start of the instrumentation manifest +
 |===
 
 ===== Bitmap definition
+
 A bitmap definition is [yellow-background]*Unknown* bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1757,6 +1833,7 @@ A bitmap definition is [yellow-background]*Unknown* bytes of size and consists o
 [yellow-background]*TODO: BMAPS are used to define flags*
 
 ===== Value map definition
+
 Value maps are used to define enumeration types. 
 
 A value map definition is variable of size and consists of:
@@ -1774,6 +1851,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ====== Value map entry
+
 A value map entry is 8 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1785,6 +1863,7 @@ or 0xffffffff (-1) if not set
 |===
 
 ===== Map string
+
 The map string data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1797,6 +1876,7 @@ The string is formatted as UTF-16 little-endian with an end-of-string character
 |===
 
 ==== Channel definitions
+
 The channel definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1811,6 +1891,7 @@ Including the channel definitions header
 |===
 
 ===== Channel definition
+
 A channel definition is 16 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1825,6 +1906,7 @@ or 0xffffffff (-1) if not set
 |===
 
 ===== Channel data
+
 The channel data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1839,6 +1921,7 @@ The data is 8-byte aligned
 |===
 
 ==== Event definitions
+
 The event definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1854,6 +1937,7 @@ Including the event definitions header
 |===
 
 ===== Event definition
+
 An event definition is 48 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1888,6 +1972,7 @@ The offset is relative to the start of the instrumentation manifest or 0 if not 
 |===
 
 ==== Keyword definitions
+
 The keyword definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1902,6 +1987,7 @@ Including the keyword definitions header
 |===
 
 ===== Keyword definition
+
 A keyword definition is 16 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1915,6 +2001,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Keyword data
+
 The keyword data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1929,6 +2016,7 @@ The data is 8-byte aligned
 |===
 
 ==== Opcode definitions
+
 The opcode definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1942,6 +2030,7 @@ The value includes the size of the header or is 0 if empty
 |===
 
 ===== Opcode definition
+
 A opcode definition is 12 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1955,6 +2044,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Opcode data
+
 The opcode data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1969,6 +2059,7 @@ The data is 8-byte aligned
 |===
 
 ==== Task
+
 The task definitions are variable of size and consist of:
 
 [cols="1,1,1,5",options="header"]
@@ -1983,6 +2074,7 @@ Including the task definitions header
 |===
 
 ===== Task definition
+
 A task definition is 28 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1998,6 +2090,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Task data
+
 The task data is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -2012,6 +2105,7 @@ The data is 8-byte aligned
 |===
 
 ==== Template table
+
 The template table is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -2026,6 +2120,7 @@ Including the template table header
 |===
 
 ===== Template definition
+
 A template definition is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -2051,6 +2146,7 @@ If the number of variable descriptors (and number of variable names) the
 instance variables offset is either 0 or contains the template size.
 
 ===== Template binary XML fragment
+
 The binary XML is slightly different to that of EVTX.
 
 * the name offset is not used
@@ -2058,6 +2154,7 @@ The binary XML is slightly different to that of EVTX.
 * the template instance variables are stored outside the template
 
 ===== Template instance variable descriptor
+
 The template instance variable descriptor is 20 bytes of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -2074,6 +2171,7 @@ The offset is relative to the start of the instrumentation manifest
 |===
 
 ===== Template instance variable name
+
 The template instance variable name is variable of size and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -2089,6 +2187,7 @@ The data is 8-byte aligned +
 |===
 
 == Notes
+
 === Export directory table
 
 [cols="1,1,1,5",options="header"]
@@ -2154,6 +2253,7 @@ The contents of this table are identical to the contents of the import lookup ta
 |===
 
 === FPO debug information
+
 ....
 #define FRAME_FPO   0
 #define FRAME_TRAP  1
@@ -2312,6 +2412,7 @@ http://en.wikipedia.org/wiki/Portable_Executable
 
 [appendix]
 == GNU Free Documentation License
+
 Version 1.3, 3 November 2008
 Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc. 
 <http://fsf.org/>
@@ -2320,6 +2421,7 @@ Everyone is permitted to copy and distribute verbatim copies of this license
 document, but changing it is not allowed.
 
 === 0. PREAMBLE
+
 The purpose of this License is to make a manual, textbook, or other functional 
 and useful document "free" in the sense of freedom: to assure everyone the 
 effective freedom to copy and redistribute it, with or without modifying it, 
@@ -2340,6 +2442,7 @@ recommend this License principally for works whose purpose is instruction or
 reference.
 
 === 1. APPLICABILITY AND DEFINITIONS
+
 This License applies to any manual or other work, in any medium, that contains 
 a notice placed by the copyright holder saying it can be distributed under the 
 terms of this License. Such a notice grants a world-wide, royalty-free license, 
@@ -2418,6 +2521,7 @@ disclaiming warranties: any other implication that these Warranty Disclaimers
 may have is void and has no effect on the meaning of this License.
 
 === 2. VERBATIM COPYING
+
 You may copy and distribute the Document in any medium, either commercially or 
 noncommercially, provided that this License, the copyright notices, and the 
 license notice saying this License applies to the Document are reproduced in 
@@ -2431,6 +2535,7 @@ You may also lend copies, under the same conditions stated above, and you may
 publicly display copies.
 
 === 3. COPYING IN QUANTITY
+
 If you publish printed copies (or copies in media that commonly have printed 
 covers) of the Document, numbering more than 100, and the Document's license 
 notice requires Cover Texts, you must enclose the copies in covers that carry, 
@@ -2464,6 +2569,7 @@ well before redistributing any large number of copies, to give them a chance to
 provide you with an updated version of the Document.
 
 === 4. MODIFICATIONS
+
 You may copy and distribute a Modified Version of the Document under the 
 conditions of sections 2 and 3 above, provided that you release the Modified 
 Version under precisely this License, with the Modified Version filling the 
@@ -2556,6 +2662,7 @@ permission to use their names for publicity for or to assert or imply
 endorsement of any Modified Version.
 
 === 5. COMBINING DOCUMENTS
+
 You may combine the Document with other documents released under this License, 
 under the terms defined in section 4 above for modified versions, provided that 
 you include in the combination all of the Invariant Sections of all of the 
@@ -2577,6 +2684,7 @@ combine any sections Entitled "Acknowledgements", and any sections Entitled
 "Dedications". You must delete all sections Entitled "Endorsements".
 
 === 6. COLLECTIONS OF DOCUMENTS
+
 You may make a collection consisting of the Document and other documents 
 released under this License, and replace the individual copies of this License 
 in the various documents with a single copy that is included in the collection, 
@@ -2589,6 +2697,7 @@ into the extracted document, and follow this License in all other respects
 regarding verbatim copying of that document.
 
 === 7. AGGREGATION WITH INDEPENDENT WORKS
+
 A compilation of the Document or its derivatives with other separate and 
 independent documents or works, in or on a volume of a storage or distribution 
 medium, is called an "aggregate" if the copyright resulting from the 
@@ -2605,6 +2714,7 @@ in electronic form. Otherwise they must appear on printed covers that bracket
 the whole aggregate.
 
 === 8. TRANSLATION
+
 Translation is considered a kind of modification, so you may distribute 
 translations of the Document under the terms of section 4. Replacing Invariant 
 Sections with translations requires special permission from their copyright 
@@ -2622,6 +2732,7 @@ If a section in the Document is Entitled "Acknowledgements", "Dedications", or
 typically require changing the actual title.
 
 === 9. TERMINATION
+
 You may not copy, modify, sublicense, or distribute the Document except as 
 expressly provided under this License. Any attempt otherwise to copy, modify, 
 sublicense, or distribute it is void, and will automatically terminate your 
@@ -2645,6 +2756,7 @@ your rights have been terminated and not permanently reinstated, receipt of a
 copy of some or all of the same material does not give you any rights to use it.
 
 === 10. FUTURE REVISIONS OF THIS LICENSE
+
 The Free Software Foundation may publish new, revised versions of the GNU Free 
 Documentation License from time to time. Such new versions will be similar in 
 spirit to the present version, but may differ in detail to address new problems 
@@ -2662,6 +2774,7 @@ License can be used, that proxy's public statement of acceptance of a version
 permanently authorizes you to choose that version for the Document.
 
 === 11. RELICENSING
+
 "Massive Multiauthor Collaboration Site" (or "MMC Site") means any World Wide 
 Web server that publishes copyrightable works and also provides prominent 
 facilities for anybody to edit those works. A public wiki that anybody can edit 

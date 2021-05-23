@@ -39,78 +39,78 @@ void libexe_debug_print_file_characteristic_flags(
 	if( ( characteristic_flags & 0x0001 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0001 (IMAGE_FILE_RELOCS_STRIPPEDD)\n" );
+		 "\t0x0001 (IMAGE_FILE_RELOCS_STRIPPED)\n" );
 	}
 	if( ( characteristic_flags & 0x0002 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0002 (IMAGE_FILE_EXECUTABLE_IMAGED)\n" );
+		 "\t0x0002 (IMAGE_FILE_EXECUTABLE_IMAGE)\n" );
 	}
 	if( ( characteristic_flags & 0x0004 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0004 (IMAGE_FILE_LINE_NUMS_STRIPPEDD)\n" );
+		 "\t0x0004 (IMAGE_FILE_LINE_NUMS_STRIPPED)\n" );
 	}
 	if( ( characteristic_flags & 0x0008 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0008 (IMAGE_FILE_LOCAL_SYMS_STRIPPEDD)\n" );
+		 "\t0x0008 (IMAGE_FILE_LOCAL_SYMS_STRIPPED)\n" );
 	}
 	if( ( characteristic_flags & 0x0010 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0010 (IMAGE_FILE_AGGRESSIVE_WS_TRIMD)\n" );
+		 "\t0x0010 (IMAGE_FILE_AGGRESSIVE_WS_TRIM)\n" );
 	}
 	if( ( characteristic_flags & 0x0020 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0020 (IMAGE_FILE_LARGE_ADDRESS_AWARED)\n" );
+		 "\t0x0020 (IMAGE_FILE_LARGE_ADDRESS_AWARE)\n" );
 	}
 	if( ( characteristic_flags & 0x0040 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0040 (IMAGE_FILE_16BIT_MACHINED)\n" );
+		 "\t0x0040 (IMAGE_FILE_16BIT_MACHINE)\n" );
 	}
 	if( ( characteristic_flags & 0x0080 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0080 (IMAGE_FILE_BYTES_REVERSED_LOD)\n" );
+		 "\t0x0080 (IMAGE_FILE_BYTES_REVERSED_LO)\n" );
 	}
 	if( ( characteristic_flags & 0x0100 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0100 (IMAGE_FILE_32BIT_MACHINED)\n" );
+		 "\t0x0100 (IMAGE_FILE_32BIT_MACHINE)\n" );
 	}
 	if( ( characteristic_flags & 0x0200 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0200 (IMAGE_FILE_DEBUG_STRIPPEDD)\n" );
+		 "\t0x0200 (IMAGE_FILE_DEBUG_STRIPPED)\n" );
 	}
 	if( ( characteristic_flags & 0x0400 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x0400 (IMAGE_FILE_REMOVABLE_RUN_FROM_SWAPD)\n" );
+		 "\t0x0400 (IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP)\n" );
 	}
 
 	if( ( characteristic_flags & 0x1000 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x1000 (IMAGE_FILE_SYSTEMD)\n" );
+		 "\t0x1000 (IMAGE_FILE_SYSTEM)\n" );
 	}
 	if( ( characteristic_flags & 0x2000 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x2000 (IMAGE_FILE_DLLD)\n" );
+		 "\t0x2000 (IMAGE_FILE_DLL)\n" );
 	}
 	if( ( characteristic_flags & 0x4000 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x4000 (IMAGE_FILE_UP_SYSTEM_ONLYD)\n" );
+		 "\t0x4000 (IMAGE_FILE_UP_SYSTEM_ONLY)\n" );
 	}
 	if( ( characteristic_flags & 0x8000 ) != 0 )
 	{
 		libcnotify_printf(
-		 "\t0x8000 (IMAGE_FILE_BYTES_REVERSED_HID)\n" );
+		 "\t0x8000 (IMAGE_FILE_BYTES_REVERSED_HI)\n" );
 	}
 }
 
