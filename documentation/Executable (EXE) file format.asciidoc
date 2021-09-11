@@ -63,6 +63,7 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.12 | J.B. Metz | May 2014 | Additional information about rich signature header.
 | 0.0.13 | J.B. Metz | December 2014 | Switched to asccidoc format.
 | 0.0.14 | J.B. Metz | May 2021 | Changes to formatting.
+| 0.0.15 | J.B. Metz | September 2021 | Textual changes and corrected errors.
 |===
 
 :numbered:
@@ -98,6 +99,7 @@ Unicode strings are stored in UTF-16 little-endian without the byte order mark (
 
 On a Windows system "dumpbin" be used to determine more about the metadata of 
 an executable. E.g.
+
 ....
 dumpbin.exe /HEADERS file.exe
 ....
@@ -443,6 +445,7 @@ Obsolete must be 0
 |===
 
 [yellow-background]*TODO: integrate notes in text*
+
 ....
 ImageBase
 Preferred address of first byte of image when loaded into memory; must be a 
@@ -582,8 +585,8 @@ consists of:
 | 92 | 4 | | Bound Import Table size
 | 96 | 4 | | Import Address Table RVA
 | 100 | 4 | | Import Address Table size
-| 104 | 4 | | Delay Import Descriptor RVA
-| 108 | 4 | | Delay Import Descriptor size
+| 104 | 4 | | Delay Import Table RVA
+| 108 | 4 | | Delay Import Table size
 | 112 | 4 | | COM+ Runtime Header RVA
 | 116 | 4 | | COM+ Runtime Header size
 | 120 | 8 | | [yellow-background]*Unknown (Reserved)*
@@ -661,6 +664,7 @@ See section: <<section_characteristic_flags,Section characteristic flags>>
 |===
 
 [yellow-background]*TODO: integrate notes in text*
+
 ....
 VirtualSize
 Total size of the section when loaded into memory. If this value is greater 
@@ -747,6 +751,7 @@ Common corresponding section name: .bss or BSS
 
 To calculate the data directory offset from the RVA first find the section that 
 contains the corresponding virtual address (VA) and then apply:
+
 ....
 data directory offset = ( RVA - section start VA ) + section start offset
 ....
@@ -906,6 +911,7 @@ resource node entries.
 === Resource node flags
 
 [yellow-background]*TODO: integrate notes in text*
+
 ....
 Suspected to be:
 http://msdn.microsoft.com/en-us/library/windows/desktop/ms648027(v=vs.85).aspx
@@ -955,6 +961,7 @@ UTF-16 little-endian without end-of-string character.
 The branch resource node entry identifier of the string resource contain the 
 string group identifier, which is ( string identifier / 16 ) + 1. The 
 corresponding string identifier can be determined by:
+
 ....
 ( ( string group identifier - 1 ) x 16 ) + string index in group
 ....
@@ -1026,6 +1033,7 @@ does not seems to be packed by UPX.
 |===
 
 [yellow-background]*TODO: integrate notes in text*
+
 ....
 #define RT_DLGINIT MAKEINTRESOURCE(240);
 #define RT_TOOLBAR MAKEINTRESOURCE(241);
@@ -1165,6 +1173,7 @@ Where # is a numeric value from 1 up-to 99 and +
 
 The format specifier (or format string) must be surrounded by exclamation 
 marks. The format specifier is optional and will default to string (!s!).
+
 ....
 %[flags] [width] [.precision] [type prefix] type
 ....
@@ -1180,6 +1189,7 @@ Unsure if the flags are supported the MSDN FormatMessage documentation is
 unclear about this.
 
 The asterisk (*) is used to specify the width and precision. E.g.
+
 ....
 %1!*.*s!
 %1!*u!
@@ -1188,11 +1198,13 @@ The asterisk (*) is used to specify the width and precision. E.g.
 If a width and precision specifier is used then the insert numbers (%#) do no 
 longer directly correspond to the input arguments. Since the width and 
 precision themselves are arguments, e.g. The arguments:
+
 ....
 4 2 TEST
 ....
 
 Would result in the string:
+
 ....
   TE
 ....
@@ -1548,6 +1560,7 @@ The manifest resource data is variable of size and consist of.
 |===
 
 [yellow-background]*TODO is this always UTF8 or are other values possible?*
+
 ....
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 ....
@@ -1559,6 +1572,7 @@ Vista. It has the name "MUI".
 
 On a Windows system "muirct" be used to determine more about the MUI resource 
 of an executable. E.g.
+
 ....
 muirct.exe -d file.exe
 ....
@@ -1927,12 +1941,12 @@ The event definitions are variable of size and consist of:
 [cols="1,1,1,5",options="header"]
 |===
 | Offset | Size | Value | Description
-| 0 | 4 | "EVTN" | Signature
+| 0 | 4 | "EVNT" | Signature
 | 4 | 4 | | Size +
 Including the event definitions header
 | 8 | 4 | | Number of event definitions
 | 12 | 4 | | [yellow-background]*Unknown (Empty values)*
-| 12 | ... | | Array of event definitions
+| 16 | ... | | Array of event definitions
 | ... | [yellow-background]*28& | | [yellow-background]*Unknown*
 |===
 
@@ -2225,7 +2239,7 @@ This string gives the DLL name and the name of the export (for example, "MYDLL.e
 | Offset | Size | Value | Description
 | 0 | 4 | Import Lookup Table RVA (Characteristics) | The RVA of the import lookup table. This table contains a name or ordinal for each import. +
 (The name "Characteristics" is used in Winnt.h, but no longer describes this field.)
-| 4 | 4 | Time/Date Stamp | The stamp that is set to zero until the image is bound. After the image is bound, this field is set to the time/data stamp of the DLL.
+| 4 | 4 | Time/Date Stamp | The timestamp that is set to zero until the image is bound. After the image is bound, this field is set to the timestamp of the DLL.
 | 8 | 4 | Forwarder Chain | The index of the first forwarder reference.
 | 12 | 4 | Name RVA | The address of an ASCII string that contains the name of the DLL. This address is relative to the image base.
 | 16 | 4 | Import Address Table RVA (Thunk Table) | The RVA of the import address table. +
