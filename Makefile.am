@@ -36,7 +36,6 @@ DPKG_FILES = \
 	dpkg/rules \
 	dpkg/libexe.install \
 	dpkg/libexe-dev.install \
-	dpkg/libexe-python.install \
 	dpkg/libexe-python3.install \
 	dpkg/libexe-tools.install \
 	dpkg/source/format
