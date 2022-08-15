@@ -35,7 +35,7 @@ resource format.
 == License
 
 ....
-Copyright (C) 2011-2021, Joachim Metz <joachim.metz@gmail.com>.
+Copyright (C) 2011-2022, Joachim Metz <joachim.metz@gmail.com>.
 Permission is granted to copy, distribute and/or modify this document under the
 terms of the GNU Free Documentation License, Version 1.3 or any later version
 published by the Free Software Foundation; with no Invariant Sections, no
@@ -65,6 +65,7 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.14 | J.B. Metz | May 2021 | Changes to formatting.
 | 0.0.15 | J.B. Metz | September 2021 | Textual changes and corrected errors.
 | 0.0.16 | J.B. Metz | November 2021 | Changes to formatting.
+| 0.0.17 | J.B. Metz | August 2022 | Additional information regarding WEVT_TEMPLATE resource.
 |===
 
 :numbered:
@@ -1711,7 +1712,7 @@ Including the Windows event template header
 or 0xffffffff (-1) if not set
 | 12 | 4 | | Number of provider element descriptors
 | 16 | 4 | | Number of [yellow-background]*Unknown 32-bit values*
-| 20 | ... | | Provider element descriptors
+| 20 | 8 x number | | Provider element descriptors
 | ... | ... | | [yellow-background]*Unknown 32-bit values (Empty value)*
 |===
 
@@ -1948,7 +1949,7 @@ Including the event definitions header
 | 8 | 4 | | Number of event definitions
 | 12 | 4 | | [yellow-background]*Unknown (Empty values)*
 | 16 | ... | | Array of event definitions
-| ... | [yellow-background]*28& | | [yellow-background]*Unknown*
+| ... | [yellow-background]*28* | | [yellow-background]*Unknown*
 |===
 
 ===== Event definition
@@ -1959,18 +1960,12 @@ An event definition is 48 bytes of size and consists of:
 |===
 | Offset | Size | Value | Description
 | 0 | 2 | | Identifier +
-The event identifier without Customer flags and Severity. +
-4+| _If flag 0x00000080 is not set_ ([yellow-background]*does this hold?*)
-| 2 | 2 | | [yellow-background]*Unknown*
-| 4 | 2 | | Qualifiers
-| 6 | 2 | | [yellow-background]*Unknown*
-4+| _If flag 0x00000080 is set_ ([yellow-background]*does this hold?*)
+The event identifier without Customer flags and Severity.
 | 2 | 1 | | Version
 | 3 | 1 | | Channel
 | 4 | 1 | | Level
 | 5 | 1 | | Opcode
 | 6 | 2 | | Task
-4+| _Common_
 | 8 | 8 | | Keywords
 | 16 | 4 | | Message identifier
 | 20 | 4 | | Template definition offset +
