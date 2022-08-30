@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libexe],
- [20220712],
+ [20220830],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
