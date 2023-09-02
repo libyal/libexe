@@ -927,7 +927,6 @@ PyObject *pyexe_section_get_name(
 	libcerror_error_t *error = NULL;
 	PyObject *string_object  = NULL;
 	static char *function    = "pyexe_section_get_name";
-	const char *errors       = NULL;
 	char *name               = NULL;
 	size_t name_size         = 0;
 	int result               = 0;
@@ -1029,7 +1028,7 @@ PyObject *pyexe_section_get_name(
 	string_object = PyUnicode_DecodeUTF8(
 	                 name,
 	                 (Py_ssize_t) name_size - 1,
-	                 errors );
+	                 NULL );
 
 	if( string_object == NULL )
 	{
