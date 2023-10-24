@@ -2,13 +2,14 @@ AC_PREREQ([2.71])
 
 AC_INIT(
  [libexe],
- [20230903],
+ [20231024],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
  [include/libexe.h.in])
 
 AM_INIT_AUTOMAKE([gnu 1.6 tar-ustar])
+AM_EXTRA_RECURSIVE_TARGETS([sources splint])
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -195,6 +196,7 @@ AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([libexe/libexe.rc])
 AC_CONFIG_FILES([libexe.pc])
 AC_CONFIG_FILES([libexe.spec])
+AC_CONFIG_FILES([setup.cfg])
 dnl Generate a source configuration file
 AC_CONFIG_HEADERS([common/config.h])
 

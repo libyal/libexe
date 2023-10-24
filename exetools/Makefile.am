@@ -48,9 +48,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f Makefile
+	-rm -f Makefile
 
-splint:
+splint-local:
 	@echo "Running splint on exeinfo ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(exeinfo_SOURCES)
 

@@ -19,9 +19,9 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libexe.h
-	/bin/rm -f libexe/definitions.h
-	/bin/rm -f libexe/features.h
-	/bin/rm -f libexe/types.h
-	/bin/rm -f Makefile
+	-rm -f libexe.h
+	-rm -f libexe/definitions.h
+	-rm -f libexe/features.h
+	-rm -f libexe/types.h
+	-rm -f Makefile
 

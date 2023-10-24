@@ -87,11 +87,13 @@ MAINTAINERCLEANFILES = \
 	Makefile.in
 
 distclean: clean
-	/bin/rm -f libexe_definitions.h
-	/bin/rm -f libexe.rc
-	/bin/rm -f Makefile
+	-rm -f libexe_definitions.h
+	-rm -f libexe.rc
+	-rm -f Makefile
 
-splint:
+sources-local: $(BUILT_SOURCES)
+
+splint-local:
 	@echo "Running splint on libexe ..."
 	-splint -preproc -redef $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(libexe_la_SOURCES)
 
