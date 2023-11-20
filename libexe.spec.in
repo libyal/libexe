@@ -32,7 +32,7 @@ Header files and libraries for developing applications for libexe.
 Summary: Python 3 bindings for libexe
 Group: System Environment/Libraries
 Requires: libexe = %{version}-%{release} python3
-BuildRequires: python3-devel
+BuildRequires: python3-devel python3-setuptools
 
 %description -n libexe-python3
 Python 3 bindings for libexe
@@ -49,7 +49,7 @@ Several tools for reading executable (EXE) files
 %setup -q
 
 %build
-%configure --prefix=/usr --libdir=%{_libdir} --mandir=%{_mandir} --enable-python3
+%configure --prefix=/usr --libdir=%{_libdir} --mandir=%{_mandir} --enable-python
 make %{?_smp_mflags}
 
 %install

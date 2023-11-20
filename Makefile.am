@@ -19,8 +19,6 @@ SUBDIRS = \
 	libexe \
 	exetools \
 	pyexe \
-	pyexe-python2 \
-	pyexe-python3 \
 	po \
 	manuals \
 	tests \

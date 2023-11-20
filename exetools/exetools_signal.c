@@ -40,7 +40,7 @@ void (*exetools_signal_signal_handler)( exetools_signal_t ) = NULL;
 /* Signal handler for Ctrl+C or Ctrl+Break signals
  */
 BOOL WINAPI exetools_signal_handler(
-             unsigned long signal )
+             exetools_signal_t signal )
 {
 	static char *function = "exetools_signal_handler";
 
@@ -112,7 +112,7 @@ int exetools_signal_attach(
 	exetools_signal_signal_handler = signal_handler;
 
 	if( SetConsoleCtrlHandler(
-	     exetools_signal_handler,
+	     (PHANDLER_ROUTINE) exetools_signal_handler,
 	     TRUE ) == 0 )
 	{
 		libcerror_error_set(
@@ -179,7 +179,7 @@ int exetools_signal_detach(
 	static char *function = "exetools_signal_detach";
 
 	if( SetConsoleCtrlHandler(
-	     exetools_signal_handler,
+	     (PHANDLER_ROUTINE) exetools_signal_handler,
 	     FALSE ) == 0 )
 	{
 		libcerror_error_set(
