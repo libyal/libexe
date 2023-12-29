@@ -35,7 +35,7 @@ resource format.
 == License
 
 ....
-Copyright (C) 2011-2022, Joachim Metz <joachim.metz@gmail.com>.
+Copyright (C) 2011-2023, Joachim Metz <joachim.metz@gmail.com>.
 Permission is granted to copy, distribute and/or modify this document under the
 terms of the GNU Free Documentation License, Version 1.3 or any later version
 published by the Free Software Foundation; with no Invariant Sections, no
@@ -66,6 +66,7 @@ in the section entitled "GNU Free Documentation License".
 | 0.0.15 | J.B. Metz | September 2021 | Textual changes and corrected errors.
 | 0.0.16 | J.B. Metz | November 2021 | Changes to formatting.
 | 0.0.17 | J.B. Metz | August 2022 | Additional information regarding WEVT_TEMPLATE resource.
+| 0.0.18 | J.B. Metz | December 2023 | Additional information regarding WEVT_TEMPLATE resource.
 |===
 
 :numbered:
@@ -112,7 +113,7 @@ This tool is part of the Windows SDK.
 
 === The MZ file header
 
-The MZ file header is 28 bytes of size and consists of:
+The MZ file header is 28 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -158,7 +159,7 @@ The offset value is relative to the start of the file
 The mixed 16/32-bit Linear Executable was introduced in OS/2 2.0. It can be
 identifier by the "LE" signature in the extended header.
 
-The LE extended header is X bytes of size and consists of:
+The LE extended header is X bytes in size and consists of:
 
 [yellow-background]*TODO add text*
 
@@ -167,7 +168,7 @@ The LE extended header is X bytes of size and consists of:
 The 32-bit Linear Executable was introduced in OS/2 2.0. It can be identifier
 by the "LX" signature in the extended header.
 
-The LX extended header is X bytes of size and consists of:
+The LX extended header is X bytes in size and consists of:
 
 [yellow-background]*TODO add text*
 
@@ -176,7 +177,7 @@ The LX extended header is X bytes of size and consists of:
 The 16-bit New Executable was introduced in MS-DOS 4.0. It can be identifier by
 the "NE" signature in the extended header.
 
-The NE (extended) header is 64 bytes of size and consists of:
+The NE (extended) header is 64 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -285,7 +286,7 @@ The PE/COFF extended header consist of a PE signature followed by a COFF header.
 
 ==== The PE signature
 
-The PE signature is 4 bytes of size and consists of:
+The PE signature is 4 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -377,7 +378,7 @@ See section: <<file_characteristic_flags,File characteristic flags>>
 
 ==== The COFF optional (PE) header
 
-The COFF optional header or PE header is variable of size and consists of:
+The COFF optional header or PE header is of variable size and consists of:
 
 * the standard part
 * the Windows NT part
@@ -892,7 +893,7 @@ of the first level of sub nodes contain the resource data types.
 
 === Resource node header
 
-The resource node header is 16 bytes of size and consists of:
+The resource node header is 16 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -929,7 +930,7 @@ DISCARDABLE (0x1000)
 
 === Resource node entry
 
-The resource node entry is 8 bytes of size and consist of:
+The resource node entry is 8 bytes in size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -948,7 +949,7 @@ to a name string.
 
 ==== Resource node name string
 
-The resource node name string is variable of size and consists of:
+The resource node name string is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -986,7 +987,7 @@ For more information see `[NTLCID]`.
 
 === Resource data descriptor
 
-The resource data descriptor is 8 bytes of size and consist of:
+The resource data descriptor is 8 bytes in size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1070,7 +1071,7 @@ section.
 
 ==== String descriptor
 
-The string descriptor is variable of size and consist of.
+The string descriptor is of variable size and consist of.
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1103,7 +1104,7 @@ message-table. A message-table consists of:
 
 ==== Message-table header
 
-The message-table header (MESSAGE_RESOURCE_DATA) is variable of size and consists of:
+The message-table header (MESSAGE_RESOURCE_DATA) is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1114,7 +1115,7 @@ The message-table header (MESSAGE_RESOURCE_DATA) is variable of size and consist
 
 ===== Message-table entry descriptor
 
-The message-table entry descriptor (MESSAGE_RESOURCE_BLOCK) is 12 bytes of size and consist of:
+The message-table entry descriptor (MESSAGE_RESOURCE_BLOCK) is 12 bytes in size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1129,7 +1130,7 @@ strings.
 
 ==== Message-table string
 
-The message-table string entry (MESSAGE_RESOURCE_ENTRY) is variable of size and
+The message-table string entry (MESSAGE_RESOURCE_ENTRY) is of variable size and
 consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1229,7 +1230,7 @@ information values. The version resource data consists of:
 
 ==== Version information
 
-The version information (VS_VERSIONINFO) is variable of size and consists of:
+The version information (VS_VERSIONINFO) is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1251,7 +1252,7 @@ See section: <<version_sub_values,Version sub values>>
 
 ==== [[version_fixed_file_information]]Version fixed file information
 
-The version fixed file information (VS_FIXEDFILEINFO) is 52 bytes of size and consists of:
+The version fixed file information (VS_FIXEDFILEINFO) is 52 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1405,7 +1406,7 @@ The version file information variables consists of:
 
 ====== Version file information variables header (VarFileInfo)
 
-The version file information variables header (VarFileInfo) is variable of size
+The version file information variables header (VarFileInfo) is of variable size
 and consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1425,7 +1426,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 
 ====== Version file information value variable (Var)
 
-The version file information value variables (Var) is variable of size and
+The version file information value variables (Var) is of variable size and
 consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1509,7 +1510,7 @@ E.g. 040904E0 which look like 2 LCIDs
 
 ====== Version file information value string (String)
 
-The version file information value string (String) is variable of size and
+The version file information value string (String) is of variable size and
 consists of:
 
 [cols="1,1,1,5",options="header"]
@@ -1553,7 +1554,7 @@ Contains an UTF-16 little-endian string with an end-of-string character
 
 === Manifest resource data
 
-The manifest resource data is variable of size and consist of.
+The manifest resource data is of variable size and consist of.
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1581,7 +1582,7 @@ muirct.exe -d file.exe
 
 This tool is part of the Windows SDK as of Vista.
 
-The MUI resource data is variable of size and consists of:
+The MUI resource data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1667,7 +1668,7 @@ the name "WEVT_TEMPLATE".
 
 ==== Instrumentation manifest
 
-The instrumentation manifest is variable of size and consists of:
+The instrumentation manifest is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1687,7 +1688,7 @@ logging service in Windows Longhorn.
 
 ===== Event provider descriptor
 
-The event provider is variable of size and consists of:
+The event provider is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1700,7 +1701,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ==== Event provider
 
-The event provider is variable of size and consists of:
+The event provider is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1732,7 +1733,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ==== Keyword definitions
 
-The keyword definitions are variable of size and consist of:
+The keyword definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1747,7 +1748,7 @@ Including the keyword definitions header
 
 ===== Keyword definition
 
-A keyword definition is 16 bytes of size and consists of:
+A keyword definition is 16 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1761,7 +1762,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ===== Keyword data
 
-The keyword data is variable of size and consists of:
+The keyword data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1776,7 +1777,7 @@ The data is 8-byte aligned
 
 ==== Level definitions
 
-The level definitions are variable of size and consist of:
+The level definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1791,7 +1792,7 @@ The value includes the size of the header or is 0 if empty
 
 ===== Level definition
 
-A level definition is 12 bytes of size and consists of:
+A level definition is 12 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1805,7 +1806,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ===== Level data
 
-The level data is variable of size and consists of:
+The level data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1820,7 +1821,7 @@ The data is 8-byte aligned
 
 ==== Maps definitions
 
-The maps definitions are variable of size and consist of:
+The maps definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1838,7 +1839,7 @@ The offset is relative to the start of the instrumentation manifest +
 
 ===== Bitmap definition
 
-A bitmap definition is [yellow-background]*Unknown* bytes of size and consists of:
+A bitmap definition is [yellow-background]*Unknown* bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1852,7 +1853,7 @@ A bitmap definition is [yellow-background]*Unknown* bytes of size and consists o
 
 Value maps are used to define enumeration types.
 
-A value map definition is variable of size and consists of:
+A value map definition is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1868,7 +1869,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ====== Value map entry
 
-A value map entry is 8 bytes of size and consists of:
+A value map entry is 8 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1880,7 +1881,7 @@ or 0xffffffff (-1) if not set
 
 ===== Map string
 
-The map string data is variable of size and consists of:
+The map string data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1893,7 +1894,7 @@ The string is formatted as UTF-16 little-endian with an end-of-string character
 
 ==== Channel definitions
 
-The channel definitions are variable of size and consist of:
+The channel definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1908,7 +1909,7 @@ Including the channel definitions header
 
 ===== Channel definition
 
-A channel definition is 16 bytes of size and consists of:
+A channel definition is 16 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1921,9 +1922,20 @@ The offset is relative to the start of the instrumentation manifest
 or 0xffffffff (-1) if not set
 |===
 
+===== [[channel_types]]Channel types
+
+[cols="1,1,5",options="header"]
+|===
+| Value | Identifier | Description
+| | | Admin
+| | | Analytic
+| | | Debug
+| | | Operational
+|===
+
 ===== Channel data
 
-The channel data is variable of size and consists of:
+The channel data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1938,7 +1950,7 @@ The data is 8-byte aligned
 
 ==== Event definitions
 
-The event definitions are variable of size and consist of:
+The event definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1954,7 +1966,7 @@ Including the event definitions header
 
 ===== Event definition
 
-An event definition is 48 bytes of size and consists of:
+An event definition is 48 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1983,7 +1995,7 @@ The offset is relative to the start of the instrumentation manifest or 0 if not 
 
 ==== Keyword definitions
 
-The keyword definitions are variable of size and consist of:
+The keyword definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -1998,7 +2010,7 @@ Including the keyword definitions header
 
 ===== Keyword definition
 
-A keyword definition is 16 bytes of size and consists of:
+A keyword definition is 16 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2012,7 +2024,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ===== Keyword data
 
-The keyword data is variable of size and consists of:
+The keyword data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2027,7 +2039,7 @@ The data is 8-byte aligned
 
 ==== Opcode definitions
 
-The opcode definitions are variable of size and consist of:
+The opcode definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2041,7 +2053,7 @@ The value includes the size of the header or is 0 if empty
 
 ===== Opcode definition
 
-A opcode definition is 12 bytes of size and consists of:
+A opcode definition is 12 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2055,7 +2067,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ===== Opcode data
 
-The opcode data is variable of size and consists of:
+The opcode data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2070,7 +2082,7 @@ The data is 8-byte aligned
 
 ==== Task
 
-The task definitions are variable of size and consist of:
+The task definitions are of variable size and consist of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2085,7 +2097,7 @@ Including the task definitions header
 
 ===== Task definition
 
-A task definition is 28 bytes of size and consists of:
+A task definition is 28 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2101,7 +2113,7 @@ The offset is relative to the start of the instrumentation manifest
 
 ===== Task data
 
-The task data is variable of size and consists of:
+The task data is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2116,7 +2128,7 @@ The data is 8-byte aligned
 
 ==== Template table
 
-The template table is variable of size and consists of:
+The template table is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2131,7 +2143,7 @@ Including the template table header
 
 ===== Template definition
 
-A template definition is variable of size and consists of:
+A template definition is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2141,7 +2153,7 @@ A template definition is variable of size and consists of:
 Including the template header
 | 8 | 4 | | Number of variable descriptors
 | 12 | 4 | | Number of variable names
-| 16 | 4 | | Instance variables offset +
+| 16 | 4 | | Template items offset +
 The offset is relative to the start of the instrumentation manifest
 | 20 | 4 | [yellow-background]*1* | [yellow-background]*Unknown (number of BinXML fragments?)*
 | 24 | 16 | | Identifier +
@@ -2153,7 +2165,7 @@ Contains a GUID
 
 [NOTE]
 If the number of variable descriptors (and number of variable names) the
-instance variables offset is either 0 or contains the template size.
+template items offset is either 0 or contains the template size.
 
 ===== Template binary XML fragment
 
@@ -2161,11 +2173,11 @@ The binary XML is slightly different to that of EVTX.
 
 * the name offset is not used
 * the name does not contain the additional unknown 4 byte value
-* the template instance variables are stored outside the template
+* the template items are stored outside the template
 
-===== Template instance variable descriptor
+===== Template item descriptor
 
-The template instance variable descriptor is 20 bytes of size and consists of:
+The template item descriptor is 20 bytes in size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2176,13 +2188,13 @@ The template instance variable descriptor is 20 bytes of size and consists of:
 | 6 | 2 | | [yellow-background]*Unknown (empty value)*
 | 8 | 4 | | [yellow-background]*Unknown (empty value)*
 | 12 | 4 | | [yellow-background]*Unknown (empty value)*
-| 16 | 4 | | Template instance variable name offset +
+| 16 | 4 | | Template item name offset +
 The offset is relative to the start of the instrumentation manifest
 |===
 
-===== Template instance variable name
+===== Template item name
 
-The template instance variable name is variable of size and consists of:
+The template item name is of variable size and consists of:
 
 [cols="1,1,1,5",options="header"]
 |===
@@ -2288,26 +2300,25 @@ typedef struct _FPO_DATA {
 [appendix]
 == References
 
-`[CORION]`
+[cols="1,5",options="header"]
+|===
+| Title: | The MZ EXE File Format
+| Author(s): | Max Maischein
+| URL: | http://www.fileformat.info/format/exe/corion-mz.htm
+|===
 
 [cols="1,5",options="header"]
 |===
-| Title: | The EXE File Formats
+| Title: | The NE EXE File Format
 | Author(s): | Max Maischein
-| URL: | http://www.corion.net/fileformats/index.html +
-http://www.fileformat.info/format/exe/corion-mz.htm
-http://www.fileformat.info/format/exe/corion-ne.htm
+| URL: | http://www.fileformat.info/format/exe/corion-ne.htm
 |===
-
-`[DJGPP]`
 
 [cols="1,5",options="header"]
 |===
 | Title: | EXE Format
 | URL: | http://www.delorie.com/djgpp/doc/exe/
 |===
-
-`[KUHR06]`
 
 [cols="1,5",options="header"]
 |===
@@ -2317,40 +2328,79 @@ http://www.fileformat.info/format/exe/corion-ne.htm
 | URL: | http://www.codeproject.com/KB/system/msgdump.aspx
 |===
 
-`[MSDN]`
-
-[cols="1,5",options="header"]
-|===
-| Title: | MSDN articles about executable format
-| URL: | http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx +
-http://download.microsoft.com/download/e/b/a/eba1050f-a31d-436b-9281-92cdfeae4b45/pecoff.doc
-|===
-
 `[MSDN_RC]`
 
 [cols="1,5",options="header"]
 |===
-| Title: | MSDN articles about Resource types
-| URL: | http://msdn.microsoft.com/en-us/library/ms648009(v=VS.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/aa381058(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms647001(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646997(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646989(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646995(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646992(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646987(v=VS.85).aspx +
-http://msdn.microsoft.com/en-us/library/windows/desktop/ms646994(v=VS.85).aspx
+| Title: | Resource Types
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types
 |===
-
-`[MSDN_FORMATMESSAGE]`
 
 [cols="1,5",options="header"]
 |===
-| URL: | http://msdn.microsoft.com/en-us/library/windows/desktop/ms679351(v=vs.85).aspx +
-http://msdn.microsoft.com/en-us/library/56e442dc.aspx
+| Title: | VERSIONINFO resource
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource
 |===
 
-`[NTCORE]`
+[cols="1,5",options="header"]
+|===
+| Title: | VS_VERSIONINFO structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/vs-versioninfo
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | VS_FIXEDFILEINFO structure (verrsrc.h)
+| URL: | https://learn.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | StringFileInfo structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/stringfileinfo
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | VarFileInfo structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/varfileinfo
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | StringTable structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/stringtable
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | String structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/string-str
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | Var structure
+| URL: | https://learn.microsoft.com/en-us/windows/win32/menurc/var-str
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | FormatMessage function (winbase.h)
+| URL: | https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessage
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | Format specification syntax: printf and wprintf functions
+| URL: | https://learn.microsoft.com/en-us/cpp/c-runtime-library/format-specification-syntax-printf-and-wprintf-functions
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | EventManifest Schema
+| URL: | https://learn.microsoft.com/en-us/windows/win32/wes/eventmanifestschema-schema
+|===
 
 [cols="1,5",options="header"]
 |===
@@ -2363,29 +2413,16 @@ http://msdn.microsoft.com/en-us/library/56e442dc.aspx
 
 [cols="1,5",options="header"]
 |===
-| Title: | Locale identifier (LCID) definitions
-| URL: | https://downloads.sourceforge.net/project/libpff/documentation/MAPI%20definitions/
+| Title: | The Language Code Identifier (LCID)
+| URL: | https://github.com/libyal/libfwnt/blob/main/documentation/Language%20Code%20identifiers.asciidoc
 |===
-
-`[REVLABS]`
-
-[cols="1,5",options="header"]
-|===
-| Title: | Undocumented PECOFF
-| URL: | http://www.reversinglabs.com/blackhat/PECOFF_BlackHat-USA-11-Whitepaper.pdf
-|===
-
-`[SCHUSTER10]`
 
 [cols="1,5",options="header"]
 |===
 | Title: | Linking Event Messages and Resource DLLs
 | Author(s): | A. Schuster
 | Date: | October 5, 2010
-| URL: | http://computer.forensikblog.de/en/2010/10/linking-event-messages-and-resource-dlls.html
 |===
-
-`[SCHUSTER11]`
 
 [cols="1,5",options="header"]
 |===
@@ -2395,28 +2432,39 @@ http://msdn.microsoft.com/en-us/library/56e442dc.aspx
 | Date: | February 6, 2011
 |===
 
-`[TRIPOD]`
-
 [cols="1,5",options="header"]
 |===
 | Title: | LINEAR-EXECUTABLE File Header Layout
-| URL: | http://faydoc.tripod.com/formats/exe-LE.htm
+| URL: | https://faydoc.tripod.com/formats/exe-LE.htm
 |===
-
-`[WIKI]`
 
 [cols="1,5",options="header"]
 |===
-| URL: | http://en.wikipedia.org/wiki/DOS_MZ_executable +
-http://en.wikipedia.org/wiki/COFF +
-http://en.wikipedia.org/wiki/New_Executable +
-http://en.wikipedia.org/wiki/Portable_Executable
+| Title: | DOS MZ executable
+| URL: | http://en.wikipedia.org/wiki/DOS_MZ_executable
 |===
-
-`[WIKIBOOKS]`
 
 [cols="1,5",options="header"]
 |===
+| Title: | COFF
+| URL: | http://en.wikipedia.org/wiki/COFF
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | New Executable
+| URL: | http://en.wikipedia.org/wiki/New_Executable
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | Portable Executable
+| URL: | http://en.wikipedia.org/wiki/Portable_Executable
+|===
+
+[cols="1,5",options="header"]
+|===
+| Title: | x86 Disassembly/Windows Executable Files
 | URL: | http://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files
 |===
 
