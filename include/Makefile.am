@@ -15,13 +15,11 @@ EXTRA_DIST = \
 	libexe/features.h.in \
 	libexe/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libexe.h \
+	libexe/definitions.h \
+	libexe/features.h \
+	libexe/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libexe.h
-	-rm -f libexe/definitions.h
-	-rm -f libexe/features.h
-	-rm -f libexe/types.h
-	-rm -f Makefile
 

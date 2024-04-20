@@ -1,6 +1,6 @@
 AM_CPPFLAGS = \
-	-I$(top_srcdir)/include \
-	-I$(top_srcdir)/common \
+	-I../include -I$(top_srcdir)/include \
+	-I../common -I$(top_srcdir)/common \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCTHREADS_CPPFLAGS@ \
 	@LIBCDATA_CPPFLAGS@ \
@@ -83,13 +83,11 @@ EXTRA_DIST = \
 	libexe.rc \
 	libexe.rc.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libexe_definitions.h \
+	libexe.rc \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libexe_definitions.h
-	-rm -f libexe.rc
-	-rm -f Makefile
 
 sources-local: $(BUILT_SOURCES)
 

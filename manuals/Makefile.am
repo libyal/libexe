@@ -6,9 +6,7 @@ EXTRA_DIST = \
 	exeinfo.1 \
 	libexe.3
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f Makefile
 
