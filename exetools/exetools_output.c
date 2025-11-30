@@ -1,7 +1,7 @@
 /*
  * Common output functions for the exetools
  *
- * Copyright (C) 2011-2024, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (C) 2011-2025, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -101,7 +101,7 @@ void exeoutput_copyright_fprint(
 	 */
 	fprintf(
 	 stream,
-	 _( "Copyright (C) 2011-2024, %s.\n" ),
+	 _( "Copyright (C) 2011-2025, %s.\n" ),
 	 _( "Joachim Metz" ) );
 
 	fprintf(
