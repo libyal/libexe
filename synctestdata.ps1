@@ -1,7 +1,9 @@
 # Script that synchronizes the local test data
 #
-# Version: 20230709
+# Version: 20251217
 
+$Repository = "libyal/testdata"
+$TestDataPath = "pe_coff"
 $TestSet = "public"
 $TestInputDirectory = "tests/input"
 $TestFiles = "nowrc_test.dll wrc_test.dll"
@@ -16,7 +18,7 @@ If (-Not (Test-Path "${TestInputDirectory}\${TestSet}"))
 }
 ForEach ($TestFile in ${TestFiles} -split " ")
 {
-	$Url = "https://github.com/libyal/testdata/blob/main/pe_coff/${TestFile}?raw=true"
+	$Url = "https://raw.githubusercontent.com/${Repository}/refs/heads/main/${TestDataPath}/${TestFile}"
 
 	Invoke-WebRequest -Uri ${Url} -OutFile "${TestInputDirectory}\${TestSet}\${TestFile}"
 }
