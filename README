@@ -6,7 +6,7 @@ This functionality is used in libevt and libevx to parse EventLog messages from 
 Project information:
 
 * Status: experimental
-* Licence: LGPLv3+
+* Licence: LGPL-3.0-or-later
 
 Planned:
 

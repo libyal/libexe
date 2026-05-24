@@ -31,14 +31,17 @@
  */
 #if defined( LIBEXE_DLL_EXPORT )
 #define LIBEXE_EXTERN __declspec(dllexport)
+#define LIBEXE_EXTERN_VARIABLE extern __declspec(dllexport)
 
 #elif defined( LIBEXE_DLL_IMPORT )
-#define LIBEXE_EXTERN extern __declspec(dllimport)
+#define LIBEXE_EXTERN __declspec(dllimport)
+#define LIBEXE_EXTERN_VARIABLE extern __declspec(dllimport)
 
 #else
 #define LIBEXE_EXTERN extern
+#define LIBEXE_EXTERN_VARIABLE extern
 
-#endif
+#endif /* defined( LIBEXE_DLL_EXPORT ) */
 
 #endif /* !defined( _LIBEXE_EXTERN_H ) */
 
