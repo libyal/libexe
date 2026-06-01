@@ -1,11 +1,11 @@
 # Script that synchronizes the local test data
 #
-# Version: 20251217
+# Version: 20260531
 
 $Repository = "libyal/testdata"
 $TestDataPath = "pe_coff"
 $TestSet = "public"
-$TestInputDirectory = "tests/input"
+$TestInputDirectory = "tests\input"
 $TestFiles = "nowrc_test.dll wrc_test.dll"
 
 If (-Not (Test-Path ${TestInputDirectory}))

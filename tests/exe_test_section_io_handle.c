@@ -118,7 +118,11 @@ int main(
 
 	return( EXIT_SUCCESS );
 
+#if defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT )
+
 on_error:
 	return( EXIT_FAILURE );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBEXE_DLL_IMPORT ) */
 }
 

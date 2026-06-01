@@ -909,12 +909,12 @@ int libexe_io_handle_read_section_table(
 	ssize_t read_count                              = 0;
 	uint32_t section_data_offset                    = 0;
 	uint32_t section_data_size                      = 0;
-	uint16_t section_index                          = 0;
 	int entry_index                                 = 0;
 
 #if defined( HAVE_DEBUG_OUTPUT )
 	uint32_t value_32bit                            = 0;
 	uint16_t value_16bit                            = 0;
+	uint16_t section_index                          = 0;
 #endif
 
 	if( io_handle == NULL )
@@ -1123,7 +1123,8 @@ int libexe_io_handle_read_section_table(
 			libcnotify_printf(
 			 "\n" );
 		}
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) */
+
 		section_table_data += sizeof( exe_section_table_entry_t );
 		section_table_size -= sizeof( exe_section_table_entry_t );
 
@@ -1159,7 +1160,9 @@ int libexe_io_handle_read_section_table(
 		}
 		section_descriptor = NULL;
 
+#if defined( HAVE_DEBUG_OUTPUT )
 		section_index++;
+#endif
 	}
 	memory_free(
 	 section_table );

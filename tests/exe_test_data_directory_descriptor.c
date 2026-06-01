@@ -50,7 +50,9 @@ int main(
 
 	return( EXIT_SUCCESS );
 
+/* TODO
 on_error:
 	return( EXIT_FAILURE );
+*/
 }
 

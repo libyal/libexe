@@ -19,6 +19,10 @@ AM_CPPFLAGS = \
 	@PTHREAD_CPPFLAGS@ \
 	@LIBEXE_DLL_IMPORT@
 
+AM_TESTS_ENVIRONMENT = \
+	export PYTHON="@PYTHON@"; \
+	export TESTS_USE_WINAPI="@TESTS_USE_WINAPI@";
+
 if HAVE_PYTHON_TESTS
 TESTS_PYEXE = \
 	test_python_module.sh
@@ -317,7 +321,8 @@ exe_test_tools_output_SOURCES = \
 
 exe_test_tools_output_LDADD = \
 	../libexe/libexe.la \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
+	@LIBINTL@
 
 exe_test_tools_signal_SOURCES = \
 	../exetools/exetools_signal.c ../exetools/exetools_signal.h \
