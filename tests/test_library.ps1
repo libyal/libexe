@@ -1,26 +1,49 @@
 # Tests library functions and types.
 #
-# Version: 20251224
+# Version: 20260608
 
 $ExitSuccess = 0
 $ExitFailure = 1
 $ExitIgnore = 77
 
-$LibraryTests = "data_directory_descriptor debug_data error export_table import_table io_handle le_header mz_header ne_header notify section section_descriptor section_io_handle"
+$LibraryTests = "coff_header coff_optional_header data_directory_descriptor debug_data error export_table import_table io_handle le_header mz_header ne_header notify section section_descriptor section_io_handle"
 $LibraryTestsWithInput = "file support"
 $OptionSets = ""
 
 $InputGlob = "*"
 
+$VSDirectories = @(
+	"msvscpp",
+	"vs2008",
+	"vs2010",
+	"vs2012",
+	"vs2013",
+	"vs2015",
+	"vs2017",
+	"vs2019",
+	"vs2022",
+	"vs2026"
+)
+
+$VSConfigurations = @(
+	"Release",
+	"VSDebug"
+)
+
+$VSPlatforms = @(
+	"Win32",
+	"x64"
+)
+
 Function GetTestExecutablesDirectory
 {
 	$TestExecutablesDirectory = ""
 
-	ForEach (${VSDirectory} in ("msvscpp", "vs2008", "vs2010", "vs2012", "vs2013", "vs2015", "vs2017", "vs2019", "vs2022"))
+	ForEach (${VSDirectory} in $VSDirectories)
 	{
-		ForEach (${VSConfiguration} in ("Release", "VSDebug"))
+		ForEach (${VSConfiguration} in $VSConfigurations)
 		{
-			ForEach (${VSPlatform} in ("Win32", "x64"))
+			ForEach (${VSPlatform} in $VSPlatforms)
 			{
 				$TestExecutablesDirectory = "..\${VSDirectory}\${VSConfiguration}\${VSPlatform}"
 
@@ -49,7 +72,8 @@ Function ReadIgnoreList
 
 	If (Test-Path -Path ${IgnoreFile} -PathType Leaf)
 	{
-		$IgnoreList = Get-Content -Path ${IgnoreFile} | Where {$_ -notmatch '^#.*'}
+		$IgnoreList = Get-Content -Path ${IgnoreFile} |
+			Where {$_ -notmatch '^#.*'}
 	}
 	Return $IgnoreList
 }
@@ -130,7 +154,8 @@ Function RunTestWithInput
 
 		If (Test-Path -Path "${TestProfileDirectory}\${TestSetName}\files" -PathType Leaf)
 		{
-			$InputFiles = Get-Content -Path "${TestProfileDirectory}\${TestSetName}\files" | Where {$_ -ne ""}
+			$InputFiles = Get-Content -Path "${TestProfileDirectory}\${TestSetName}\files" |
+				Where {$_ -ne ""}
 			$InputFiles = $InputFiles -replace "^","${TestSetInputDirectory}\"
 		}
 		Else
@@ -156,7 +181,8 @@ Function RunTestWithInput
 				{
 					Continue
 				}
-				$InputOptions = Get-content -Path "${TestDataOptionFile}" | Select-Object -Skip 1
+				$InputOptions = Get-content -Path "${TestDataOptionFile}" |
+					Select-Object -Skip 1
 
 				$InputOptions = $InputOptions -replace "^offset=","-o"
 				$InputOptions = $InputOptions -replace "^password=","-p"

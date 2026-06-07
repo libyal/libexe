@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20251129
+# Version: 20260604
 
 # Generic auto-generated build files
 *~
@@ -130,7 +130,12 @@ stamp-h[1-9]
 /pyproject.toml
 /exetools/*.exe
 /exetools/exeinfo
+/tests/*.dir
 /tests/*.exe
+/tests/*.log
+/tests/*.tmp
+/tests/atconfig
+/tests/atlocal
 /tests/exe_test_coff_header
 /tests/exe_test_coff_optional_header
 /tests/exe_test_data_directory_descriptor
@@ -153,6 +158,12 @@ stamp-h[1-9]
 /tests/exe_test_tools_signal
 /tests/input
 /tests/notify_stream.log
+/tests/package.m4
+/tests/test_inputs_*.at
+/tests/test_library
+/tests/test_manpages
+/tests/test_python_module
+/tests/test_tools
 /tests/tmp*
 
 # Local library dependencies specific files
