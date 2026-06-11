@@ -90,7 +90,7 @@ int exetools_output_initialize(
 
 /* Prints the copyright information
  */
-void exeoutput_copyright_fprint(
+void exetools_output_copyright_fprint(
       FILE *stream )
 {
 	if( stream == NULL )
@@ -116,13 +116,13 @@ void exeoutput_copyright_fprint(
 	 */
 	fprintf(
 	 stream,
-	 _( "Report bugs to <%s>.\n" ),
+	 _( "Report bugs via <%s>.\n" ),
 	 PACKAGE_BUGREPORT );
 }
 
 /* Prints the version information
  */
-void exeoutput_version_fprint(
+void exetools_output_version_fprint(
       FILE *stream,
       const char *program )
 {
@@ -143,7 +143,7 @@ void exeoutput_version_fprint(
 
 /* Prints the detailed version information
  */
-void exeoutput_version_detailed_fprint(
+void exetools_output_version_detailed_fprint(
       FILE *stream,
       const char *program )
 {
