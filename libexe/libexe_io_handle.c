@@ -518,12 +518,14 @@ int libexe_io_handle_read_extended_header(
 int libexe_io_handle_read_le_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
-     uint32_t le_header_offset,
+     uint32_t le_header_offset LIBEXE_ATTRIBUTE_UNUSED,
      uint16_t *number_of_sections,
      libcerror_error_t **error )
 {
 	libexe_le_header_t *le_header = NULL;
 	static char *function         = "libexe_io_handle_read_le_header";
+
+	LIBEXE_UNREFERENCED_PARAMETER( le_header_offset )
 
 	if( io_handle == NULL )
 	{
@@ -610,12 +612,14 @@ on_error:
 int libexe_io_handle_read_ne_header(
      libexe_io_handle_t *io_handle,
      libbfio_handle_t *file_io_handle,
-     uint32_t ne_header_offset,
+     uint32_t ne_header_offset LIBEXE_ATTRIBUTE_UNUSED,
      uint16_t *number_of_sections,
      libcerror_error_t **error )
 {
 	libexe_ne_header_t *ne_header = NULL;
 	static char *function         = "libexe_io_handle_read_ne_header";
+
+	LIBEXE_UNREFERENCED_PARAMETER( ne_header_offset )
 
 	if( io_handle == NULL )
 	{

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Script to generate test_inputs.at
 #
-# Version: 20260610
+# Version: 20260614
 
 ignore_list_add() {
     if ! ignore_list_contains "$1"; then
@@ -90,7 +90,7 @@ glob_test_files() {
     TEST_FILES=""
 
     for LINE in "$1"/${INPUT_GLOB}; do
-        if test -e ${LINE}; then
+        if test -e "${LINE}"; then
             test_files_push "${LINE}"
 	fi
     done
@@ -164,17 +164,11 @@ read_project_ini() {
                     if test "${CURRENT_SECTION}" = "tests"; then
                         case "${LINE}" in
                             input_glob:*)
-                                INPUT_GLOB="${LINE#*:}"
-                                INPUT_GLOB="${INPUT_GLOB//\"/}"
-                                INPUT_GLOB="${INPUT_GLOB// /}"
+				INPUT_GLOB=`printf '%s' "${LINE#*:}" | tr -d '" '`
                                 ;;
 
                             option_sets:*)
-                                OPTION_SETS="${LINE#*:}"
-                                OPTION_SETS="${OPTION_SETS//\[/}"
-                                OPTION_SETS="${OPTION_SETS//\]/}"
-                                OPTION_SETS="${OPTION_SETS//\"/}"
-                                OPTION_SETS="${OPTION_SETS// /}"
+				OPTION_SETS=`printf '%s' "${LINE#*:}" | tr -d '[]" '`
                                 ;;
                         esac
                     fi
@@ -202,7 +196,7 @@ if test -d "${INPUT}"; then
     read_ignore_list "${INPUT}/.${TEST_PROFILE}"
 
     for TEST_SET in "${INPUT}"/*; do
-        TEST_SET=`basename ${TEST_SET}`
+        TEST_SET=`basename "${TEST_SET}"`
 
         if test ! -d "${INPUT}/${TEST_SET}"; then
             echo "Skipping '${TEST_SET}' not a directory"
@@ -227,13 +221,17 @@ if test -d "${INPUT}"; then
             continue
         fi
         while test_files_pop; test -n "${TEST_FILE}"; do
-            TEST_FILENAME=`basename ${TEST_FILE}`
+            TEST_FILENAME=`basename "${TEST_FILE}"`
 
             if test ${GLOB_FILES} -eq 0 && test ! -f "${TEST_FILE}"; then
                 echo "Skipping missing file '${TEST_FILENAME}' defined in '${TEST_SET}/files'"
                 continue
             fi
             TEST_FILE="${TEST_FILE#*input/}"
+
+            # Escape [ and ] as @<:@ and @:>@
+            TEST_FILE=`echo "${TEST_FILE}" | sed 's/\[/@<:@/g;s/\]/@:>@/g'`
+
             TEST_WITH_OPTIONS=0
 
             while option_sets_pop; test -n "${OPTION_SET}"; do
@@ -241,7 +239,6 @@ if test -d "${INPUT}"; then
 
                 if test -n "${OPTIONS}"; then
                     TEST_INPUT="[${OPTION_SET}], [${OPTIONS}], [${TEST_FILE}]"
-                    echo "Adding ${TEST_INPUT}"
                     test_inputs_push "${TEST_INPUT}"
 
                     TEST_WITH_OPTIONS=1
@@ -250,7 +247,6 @@ if test -d "${INPUT}"; then
 
             if test ${TEST_WITH_OPTIONS} -eq 0; then
                 TEST_INPUT="[], [], [${TEST_FILE}]"
-                echo "Adding ${TEST_INPUT}"
                 test_inputs_push "${TEST_INPUT}"
             fi
         done
