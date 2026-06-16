@@ -371,13 +371,27 @@ test_inputs_pyexe.at: generate_test_inputs.sh
 test_inputs_exeinfo.at: generate_test_inputs.sh
 	$(SHELL) $(srcdir)/generate_test_inputs.sh $(PACKAGE_NAME) exeinfo
 
-test_library: package.m4 test_inputs_libexe.at test_library.at test_macros.at
+test_library: \
+	package.m4 \
+	test_inputs_libexe.at \
+	test_library.at \
+	test_macros.at
 
-test_manpages: package.m4 test_manpages.at
+test_manpages: \
+	package.m4 \
+	test_manpages.at
 
-test_python_module: package.m4 test_inputs_pyexe.at test_macros.at test_python_module.at
+test_python_module: \
+	package.m4 \
+	test_inputs_pyexe.at \
+	test_macros.at \
+	test_python_module.at
 
-test_tools: package.m4 test_inputs_exeinfo.at test_macros.at test_tools.at
+test_tools: \
+	package.m4 \
+	test_inputs_exeinfo.at \
+	test_macros.at \
+	test_tools.at
 
 EXTRA_DIST = \
 	$(check_AUTOTESTS:=.at) \
