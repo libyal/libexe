@@ -1,5 +1,5 @@
 /*
- * Section decriptor functions
+ * Section descriptor functions
  *
  * Copyright (C) 2011-2026, Joachim Metz <joachim.metz@gmail.com>
  *
