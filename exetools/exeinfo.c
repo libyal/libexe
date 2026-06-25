@@ -124,14 +124,14 @@ int main( int argc, char * const argv[] )
 	};
 	system_character_t options_string[ 32 ];
 
-	libexe_error_t *error                     = NULL;
-	system_character_t *option_ascii_codepage = NULL;
-	system_character_t *source                = NULL;
-	char *program                             = "exeinfo";
-	system_integer_t option                   = 0;
-	int number_of_options                     = (int) ( sizeof( options ) / sizeof( exetools_option_t ) );
-	int result                                = 0;
-	int verbose                               = 0;
+	libexe_error_t *error               = NULL;
+	system_character_t *option_codepage = NULL;
+	system_character_t *source          = NULL;
+	char *program                       = "exeinfo";
+	system_integer_t option             = 0;
+	int number_of_options               = (int) ( sizeof( options ) / sizeof( exetools_option_t ) );
+	int result                          = 0;
+	int verbose                         = 0;
 
 #if defined( __MINGW32__ ) && defined( HAVE_MINGW_BINMODE )
 	_setmode( _fileno( stdout ), _O_BINARY );
@@ -204,7 +204,7 @@ int main( int argc, char * const argv[] )
 				return( EXIT_FAILURE );
 
 			case (system_integer_t) 'c':
-				option_ascii_codepage = optarg;
+				option_codepage = optarg;
 
 				break;
 
@@ -265,11 +265,11 @@ int main( int argc, char * const argv[] )
 
 		goto on_error;
 	}
-	if( option_ascii_codepage != NULL )
+	if( option_codepage != NULL )
 	{
 		result = info_handle_set_ascii_codepage(
 		          exeinfo_info_handle,
-		          option_ascii_codepage,
+		          option_codepage,
 		          &error );
 
 		if( result == -1 )

@@ -3,8 +3,7 @@ man_MANS = \
 	libexe.3
 
 EXTRA_DIST = \
-	exeinfo.1 \
-	libexe.3
+	$(man_MANS)
 
 DISTCLEANFILES = \
 	Makefile \
