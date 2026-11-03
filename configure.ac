@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libexe],
-  [20261009],
+  [20261103],
   [https://github.com/libyal/libexe/issues])
 
 AC_CONFIG_SRCDIR(
